@@ -1,16 +1,16 @@
 // server/models/dbSetup.js
 import mongoose from "mongoose";
 
-// Connect to MongoDB
 export async function connectDB() {
-    await mongoose.connect("mongodb://localhost:27017/gameDatabase", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
-    console.log("Connected to MongoDB");
+    try {
+        await mongoose.connect("mongodb://localhost:27017/database");
+        console.log("Connected to MongoDB");
+    } catch (err) {
+        console.error("MongoDB connection error:", err);
+    }
 }
 
-// === SCHEMAS ===
+// Schema
 
 // Users collection
 const userSchema = new mongoose.Schema({
@@ -87,7 +87,7 @@ const tagSchema = new mongoose.Schema({
     },
 });
 
-// === MODELS ===
+// Models
 export const User = mongoose.model("User", userSchema);
 export const Game = mongoose.model("Game", gameSchema);
 export const GameMedia = mongoose.model("GameMedia", gameMediaSchema);

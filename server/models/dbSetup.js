@@ -1,12 +1,9 @@
 // server/models/dbSetup.js
 import mongoose from "mongoose";
-
+j
 // Connect to MongoDB
 export async function connectDB() {
-    await mongoose.connect("mongodb://localhost:27017/gameDatabase", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("Connected to MongoDB");
 }
 

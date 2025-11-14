@@ -1,26 +1,26 @@
-import { useEffect, useState } from 'react'
 import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import {Footer} from "./components/Footer.tsx";
+import {Navigation} from "./components/Navigation.tsx";
+
+import {Games} from "./pages/Games.tsx";
 
 function App() {
-
-    const [games, setGames] = useState([]);
-    useEffect(() => {
-        fetch("http://localhost:5000/api/games")
-            .then((res) => res.json())
-            .then((data) => setGames(data))
-            .catch(console.error)
-    }, []);
-
     return (
-        <div>
-            <h1>Game List</h1>
-            <ul>
-                {games.map((g: any) => (
-                    <li key={g._id}>{g.title}</li>
-                ))}
-            </ul>
-        </div>
-    );
+        <BrowserRouter>
+            // Navigation
+            <Navigation />
+
+            // Routes
+            <Routes>
+                <Route path="/games" element={<Games />} />
+            </Routes>
+
+            // Footer
+            <Footer />
+        </BrowserRouter>
+    )
 }
 
 export default App

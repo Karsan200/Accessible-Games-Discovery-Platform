@@ -14,8 +14,13 @@ interface TrendingGamesProps {
 
 export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
     return (
-        <div className="container my-5">
-            <h2 className="fw-bold mb-4 text-center">Trending Games</h2>
+        <section
+            className="container my-5"
+            aria-labelledby="trending-games-title"
+        >
+            <h2 id="trending-games-title" className="fw-bold mb-4 text-center">
+                Trending Games
+            </h2>
 
             <div className="row g-4 justify-content-center">
                 {games.map((game) => (
@@ -28,6 +33,6 @@ export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
                     </div>
                 ))}
             </div>
-        </div>
+        </section>
     );
 };

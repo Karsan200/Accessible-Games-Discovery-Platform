@@ -31,9 +31,8 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
         };
     }, []);
 
-
     return (
-        <div className="my-5">
+        <section className="my-5" aria-label="Hero Carousel">
             {/* Full-width wrapper */}
             <div
                 style={{
@@ -58,6 +57,8 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                                 data-bs-target="#heroCarousel"
                                 data-bs-slide-to={index}
                                 className={index === 0 ? "active" : ""}
+                                aria-current={activeIndex === index ? "true" : undefined}
+                                aria-label={`Slide ${index + 1}: ${slide.title}`}
                             />
                         ))}
                     </div>
@@ -79,6 +80,8 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                                         backgroundPosition: "center",
                                         backgroundRepeat: "no-repeat",
                                     }}
+                                    role="img"
+                                    aria-label={slide.title}
                                 />
                             </div>
                         ))}
@@ -101,13 +104,13 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                             border: "none",
                             zIndex: 2,
                         }}
+                        aria-label="Previous Slide"
                     >
             <span
                 className="carousel-control-prev-icon"
                 aria-hidden="true"
                 style={{ filter: "invert(1)" }}
             ></span>
-                        <span className="visually-hidden">Previous</span>
                     </button>
 
                     <button
@@ -126,13 +129,13 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                             border: "none",
                             zIndex: 2,
                         }}
+                        aria-label="Next Slide"
                     >
             <span
                 className="carousel-control-next-icon"
                 aria-hidden="true"
                 style={{ filter: "invert(1)" }}
             ></span>
-                        <span className="visually-hidden">Next</span>
                     </button>
                 </div>
             </div>
@@ -147,10 +150,10 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                 <h2 className="fw-bold display-6">{slides[activeIndex].title}</h2>
 
                 <div className="d-flex justify-content-center gap-3 mt-3">
-                    <BlackButton text="Play Now" />
-                    <WhiteButton text="Review" />
+                    <BlackButton text="Play Now" aria-label={`Play ${slides[activeIndex].title}`} />
+                    <WhiteButton text="Review" aria-label={`Review ${slides[activeIndex].title}`} />
                 </div>
             </div>
-        </div>
+        </section>
     );
 };

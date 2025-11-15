@@ -1,6 +1,6 @@
 // server/models/dbSetup.js
 import mongoose from "mongoose";
-j
+
 // Connect to MongoDB
 export async function connectDB() {
     await mongoose.connect(process.env.MONGO_URI);

@@ -8,16 +8,16 @@ import {Games} from "./pages/Games.tsx";
 
 function App() {
     return (
-        <BrowserRouter>
-            // Navigation
+        <BrowserRouter >
+            {/* Navigation */}
             <Navigation />
 
-            // Routes
+            {/* Routes */}
             <Routes>
                 <Route path="/games" element={<Games />} />
             </Routes>
 
-            // Footer
+            {/* Footer */}
             <Footer />
         </BrowserRouter>
     )

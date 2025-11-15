@@ -33,8 +33,8 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                         ))}
                     </div>
 
+                    {/* Slides */}
                     <div className="carousel-inner">
-
                         {slides.map((slide, index) => (
                             <div
                                 key={slide.id}
@@ -53,7 +53,6 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                                 />
                             </div>
                         ))}
-
                     </div>
 
                     {/* Controls */}
@@ -62,8 +61,24 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                         type="button"
                         data-bs-target="#heroCarousel"
                         data-bs-slide="prev"
+                        style={{
+                            backgroundColor: "rgb(238,238,238)",
+                            borderRadius: "50%",
+                            width: "50px",
+                            height: "50px",
+                            top: "50%",
+                            left: "20px",           // add padding from left edge
+                            transform: "translateY(-50%)",
+                            border: "none",
+                            zIndex: 2,
+                        }}
                     >
-                        <span className="carousel-control-prev-icon"></span>
+            <span
+                className="carousel-control-prev-icon"
+                aria-hidden="true"
+                style={{ filter: "invert(1)" }}
+            ></span>
+                        <span className="visually-hidden">Previous</span>
                     </button>
 
                     <button
@@ -71,9 +86,26 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                         type="button"
                         data-bs-target="#heroCarousel"
                         data-bs-slide="next"
+                        style={{
+                            backgroundColor: "rgb(238,238,238)",
+                            borderRadius: "50%",
+                            width: "50px",
+                            height: "50px",
+                            top: "50%",
+                            right: "20px",          // add padding from right edge
+                            transform: "translateY(-50%)",
+                            border: "none",
+                            zIndex: 2,
+                        }}
                     >
-                        <span className="carousel-control-next-icon"></span>
+            <span
+                className="carousel-control-next-icon"
+                aria-hidden="true"
+                style={{ filter: "invert(1)" }}
+            ></span>
+                        <span className="visually-hidden">Next</span>
                     </button>
+
                 </div>
             </div>
 

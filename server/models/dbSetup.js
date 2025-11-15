@@ -1,6 +1,6 @@
 // server/models/dbSetup.js
 import mongoose from "mongoose";
-j
+
 // Connect to MongoDB
 export async function connectDB() {
     await mongoose.connect(process.env.MONGO_URI);
@@ -26,7 +26,7 @@ const gameSchema = new mongoose.Schema({
     title: { type: String, required: true },
     body: String, // Description of the game
     release_date: Date,
-    publisher_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    publisher_id: { type: mongoose.Schema.Types.ObjectId, ref: "Publisher" },
     genre_id: { type: mongoose.Schema.Types.ObjectId, ref: "Genre" },
     last_update: Date,
     age_rating: Number,
@@ -42,6 +42,13 @@ const gameMediaSchema = new mongoose.Schema({
     },
     url: { type: String, required: true },
     description: String, // Alt text or caption
+});
+
+// Publisher collection
+const publisherSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    description: String, // Optional: info about the company
+    email: { type: String, required: true },
 });
 
 // Genre collection
@@ -88,6 +95,7 @@ const tagSchema = new mongoose.Schema({
 export const User = mongoose.model("User", userSchema);
 export const Game = mongoose.model("Game", gameSchema);
 export const GameMedia = mongoose.model("GameMedia", gameMediaSchema);
+export const Publisher = mongoose.model("Publisher", publisherSchema);
 export const Genre = mongoose.model("Genre", genreSchema);
 export const Wishlist = mongoose.model("Wishlist", wishlistSchema);
 export const Review = mongoose.model("Review", reviewSchema);

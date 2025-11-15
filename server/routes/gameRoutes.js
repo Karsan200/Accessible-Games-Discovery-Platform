@@ -1,6 +1,9 @@
 // server/routes/gameRoutes.js
 import express from "express";
 import { Game, GameMedia } from "../models/dbSetup.js";
+import {addGame} from "../controllers/gameController";
+import {addPublisher} from "../controllers/publisherController";
+import {addGenre} from "../controllers/genreController";
 
 const router = express.Router();
 
@@ -17,4 +20,7 @@ router.get("/:id", async (req, res) => {
     res.json({ ...game.toObject(), media });
 });
 
+router.post("/", addGame);
+router.post("/", addPublisher);
+router.put("/", addGenre);
 export default router;

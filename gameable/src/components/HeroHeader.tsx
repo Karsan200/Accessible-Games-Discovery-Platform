@@ -88,8 +88,8 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                 </h2>
 
                 <div className="d-flex justify-content-center gap-3 mt-3">
-                    <BlackButton text="Learn More" />
-                    <WhiteButton text="View Details" />
+                    <BlackButton text="Play Now" />
+                    <WhiteButton text="Review" />
                 </div>
             </div>
         </div>

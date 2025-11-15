@@ -43,24 +43,28 @@ export const Home: React.FC = () => {
             image: "https://image.api.playstation.com/vulcan/ap/rnd/202206/0720/0kRqUeSBIbQzz7cen3c989c6.jpg",
             name: "Blind-Friendly RPG",
             description: "An epic RPG designed with screen reader accessibility in mind.",
+            tags: ["Visual"] as TagType[],
         },
         {
             id: 2,
             image: "https://cdn1.epicgames.com/spt-assets/e56a7411805046d3b5b7253a6e4e0faa/monument-valley-1gys5.jpg",
             name: "One-Hand Platformer",
             description: "Challenging platforming with one-hand control.",
+            tags: ["Visual", "Cognitive"] as TagType[],
         },
         {
             id: 3,
             image: "https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_download_software_1/2x1_NSwitchDS_Balatro.jpg",
             name: "Voice-Control Adventure",
             description: "Explore a rich world controlled entirely by voice commands.",
+            tags: ["Visual", "Motor"] as TagType[],
         },
         {
             id: 4,
             image: "https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_4/H2x1_NSwitch_Doom.jpg",
             name: "Colorblind Puzzle",
             description: "Puzzle game optimized for colorblind players.",
+            tags: ["Audio", "Cognitive", "Motor"] as TagType[],
         },
     ];
 

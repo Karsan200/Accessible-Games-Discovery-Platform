@@ -1,10 +1,12 @@
 import React from "react";
 import { BlackButton } from "./BlackButton";
+import { GameTag } from "./GameTag";
 
 interface GameCardProps {
     image: string;
     name: string;
     description: string;
+    tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
     onClick?: () => void;
 }
 
@@ -12,6 +14,7 @@ export const GameCard: React.FC<GameCardProps> = ({
                                                       image,
                                                       name,
                                                       description,
+                                                      tags,
                                                       onClick,
                                                   }) => {
     const cardId = `gamecard-${name.replace(/\s+/g, "-").toLowerCase()}`;
@@ -44,7 +47,22 @@ export const GameCard: React.FC<GameCardProps> = ({
             />
 
             {/* Card body */}
-            <div className="card-body d-flex flex-column" style={{ height: "220px" }}>
+            <div className="card-body d-flex flex-column" style={{ height: "240px" }}>
+
+                {/* Accessibility Tags */}
+                <div
+                    className="mb-2 d-flex flex-wrap gap-1 justify-content-center"
+                    role="list"
+                    aria-label="Accessibility features"
+                    style={{ overflow: "visible" }}
+                >
+                    {tags.map((tag) => (
+                        <span key={tag} role="listitem">
+                            <GameTag type={tag} />
+                        </span>
+                    ))}
+                </div>
+
                 <h5 id={`${cardId}-title`} className="card-title fw-bold">
                     {name}
                 </h5>
@@ -52,7 +70,10 @@ export const GameCard: React.FC<GameCardProps> = ({
                 <p
                     id={`${cardId}-desc`}
                     className="card-text flex-grow-1"
-                    style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+                    style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                    }}
                 >
                     {description}
                 </p>

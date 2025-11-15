@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BlackButton } from "./BlackButton";
 import { WhiteButton } from "./WhiteButton";
 
@@ -13,13 +13,42 @@ interface HeroHeaderProps {
 }
 
 export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const carouselRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const carouselEl = carouselRef.current;
+        if (!carouselEl) return;
+
+        const handleSlide = (event: CustomEvent & { to: number }) => {
+            setActiveIndex(event.to);
+        };
+
+        carouselEl.addEventListener("slid.bs.carousel", handleSlide as EventListener);
+
+        return () => {
+            carouselEl.removeEventListener("slid.bs.carousel", handleSlide as EventListener);
+        };
+    }, []);
+
+
     return (
         <div className="my-5">
-
             {/* Full-width wrapper */}
-            <div style={{ position: "relative", left: "50%", transform: "translateX(-50%)", width: "100vw" }}>
-                <div id="heroCarousel" className="carousel slide" data-bs-ride="carousel">
-
+            <div
+                style={{
+                    position: "relative",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "100vw",
+                }}
+            >
+                <div
+                    id="heroCarousel"
+                    className="carousel slide"
+                    data-bs-ride="carousel"
+                    ref={carouselRef}
+                >
                     {/* Indicators */}
                     <div className="carousel-indicators">
                         {slides.map((slide, index) => (
@@ -67,7 +96,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                             width: "50px",
                             height: "50px",
                             top: "50%",
-                            left: "20px",           // add padding from left edge
+                            left: "20px",
                             transform: "translateY(-50%)",
                             border: "none",
                             zIndex: 2,
@@ -92,7 +121,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                             width: "50px",
                             height: "50px",
                             top: "50%",
-                            right: "20px",          // add padding from right edge
+                            right: "20px",
                             transform: "translateY(-50%)",
                             border: "none",
                             zIndex: 2,
@@ -105,7 +134,6 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
             ></span>
                         <span className="visually-hidden">Next</span>
                     </button>
-
                 </div>
             </div>
 
@@ -115,9 +143,8 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                     Accessibility Spotlight
                 </h5>
 
-                <h2 className="fw-bold display-6">
-                    {slides[0].title}
-                </h2>
+                {/* Dynamic Title */}
+                <h2 className="fw-bold display-6">{slides[activeIndex].title}</h2>
 
                 <div className="d-flex justify-content-center gap-3 mt-3">
                     <BlackButton text="Play Now" />

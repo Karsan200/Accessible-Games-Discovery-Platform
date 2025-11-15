@@ -20,45 +20,50 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                                                                 onViewGame,
                                                             }) => {
     return (
-        <div
+        <article
             className="card mb-3 shadow-sm d-flex align-items-center"
             style={{ height: "160px", padding: "10px" }}
+            tabIndex={0} // Make the card itself tabbable
+            aria-label={`${title}, rated ${rating} out of 5 stars, ${tags.join(", ")} tags, description: ${description}`}
         >
             <div className="d-flex w-100 align-items-center">
 
                 {/* Left: App Icon */}
-                <div
+                <img
+                    src={image}
+                    alt={`${title} app icon`}
                     style={{
                         width: "120px",
                         height: "120px",
-                        flexShrink: 0,
                         borderRadius: "15px",
-                        backgroundImage: `url(${image})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
+                        objectFit: "cover",
+                        flexShrink: 0,
                     }}
                 />
 
                 {/* Middle: Tags, Title, Description */}
                 <div className="flex-grow-1 ms-3 d-flex flex-column justify-content-center">
-                    {/* Tags */}
-                    <div className="mb-1">
+                    <ul className="list-inline mb-1" aria-label="Accessibility tags">
                         {tags.map((tag, idx) => (
-                            <GameTag key={idx} type={tag} />
+                            <li key={idx} className="list-inline-item">
+                                <GameTag type={tag} />
+                            </li>
                         ))}
-                    </div>
+                    </ul>
 
-                    {/* Title */}
                     <h5 className="fw-bold mb-1">{title}</h5>
 
-                    {/* Description */}
                     <p className="mb-0 text-truncate">{description}</p>
                 </div>
 
                 {/* Right: Rating and Button */}
                 <div className="d-flex flex-column align-items-center ms-3">
-                    {/* Rating Stars */}
-                    <div className="mb-2" style={{ fontSize: "1.5rem", lineHeight: 1 }}>
+                    <div
+                        className="mb-2"
+                        style={{ fontSize: "1.5rem", lineHeight: 1 }}
+                        aria-label={`Rating: ${rating} out of 5 stars`}
+                        role="img"
+                    >
                         {Array.from({ length: 5 }).map((_, i) => (
                             <span key={i} className="me-1">
                 {i < rating ? "★" : "☆"}
@@ -66,10 +71,9 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                         ))}
                     </div>
 
-                    {/* View Game Button */}
-                    <BlackButton text="View Game" onClick={onViewGame} />
+                    <BlackButton text="View Game" onClick={onViewGame} aria-label={`View ${title}`} />
                 </div>
             </div>
-        </div>
+        </article>
     );
 };

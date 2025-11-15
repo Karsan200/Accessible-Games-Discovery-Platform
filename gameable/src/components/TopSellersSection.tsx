@@ -14,12 +14,12 @@ interface TopSellersSectionProps {
     games: Game[];
 }
 
-export const TopSellersSection: React.FC<TopSellersSectionProps> = ({
-                                                                        games,
-                                                                    }) => {
+export const TopSellersSection: React.FC<TopSellersSectionProps> = ({ games }) => {
     return (
-        <div className="container my-5">
-            <h2 className="fw-bold mb-4 text-center">Top Sellers</h2>
+        <section className="container my-5" aria-labelledby="top-sellers-heading">
+            <h2 id="top-sellers-heading" className="fw-bold mb-4 text-center">
+                Top Sellers
+            </h2>
 
             <div className="d-flex flex-column">
                 {games.map((game) => (
@@ -30,9 +30,10 @@ export const TopSellersSection: React.FC<TopSellersSectionProps> = ({
                         description={game.description}
                         tags={game.tags}
                         rating={game.rating}
+                        onViewGame={() => console.log(`View Game: ${game.title}`)}
                     />
                 ))}
             </div>
-        </div>
+        </section>
     );
 };

@@ -1,4 +1,4 @@
-import { User } from "../models/dbSetup.js";
+import {Session, User} from "../models/dbSetup.js";
 import {httpError} from "../errors/httpError.js";
 import {cryptographyService} from "./cryptographyService.js";
 
@@ -31,5 +31,39 @@ export class authenticationService {
         })
 
         await newUser.save();
+    }
+
+    async login({ email, password }) {
+        // Ensure all fields are provided
+        if (!email || !password) {
+            throw new httpError(400, "Email and password are required");
+        }
+
+        // Find user by email
+        const user = await User.findOne({ 'email': email });
+        if (user === null) {
+            throw new httpError(401, "Invalid email or password");
+        }
+
+        // Verify password
+        const hashedPassword = cryptographyService.hashPassword(password, user.salt);
+        if (hashedPassword !== user.password) {
+            throw new httpError(401, "Invalid email or password");
+        }
+
+        // Create refresh token
+        const refreshToken = cryptographyService.createRefreshToken({ userId: user._id });
+
+        // Create session
+        const newSession = new Session({
+            user_id: user._id,
+            token: refreshToken
+        })
+        await newSession.save();
+
+        // Create access token
+        const accessToken = cryptographyService.createAccessToken({ userId: user._id });
+
+        return { accessToken, refreshToken };
     }
 }

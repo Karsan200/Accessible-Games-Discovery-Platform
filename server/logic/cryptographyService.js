@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import jsonwebtoken from "jsonwebtoken";
 
 export class cryptographyService {
 
@@ -34,5 +35,34 @@ export class cryptographyService {
     static verfiyPassword(password, salt, hash) {
         const hashedPassword = this.hashPassword(password, salt);
         return hashedPassword === hash;
+    }
+
+    static createRefreshToken(payload) {
+        return jsonwebtoken.sign(
+            payload,
+            process.env.REFRESH_TOKEN_SECRET,
+            { algorithm: 'HS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+        );
+    }
+
+    static verifyRefreshToken(token) {
+        try {
+            // This both verifies the signature and checks expiry
+            const decoded = jsonwebtoken.verify(
+                token,
+                process.env.REFRESH_TOKEN_SECRET
+        );
+            return { valid: true, payload: decoded };
+        } catch (err) {
+            return { valid: false, error: err };
+        }
+    }
+
+    static createAccessToken(payload) {
+        return jsonwebtoken.sign(
+            payload,
+            process.env.ACCESS_TOKEN_SECRET,
+            { algorithm: 'HS256', expiresIn: process.env.ACCESS_TOKEN_EXPIRY}
+        );
     }
 }

@@ -7,7 +7,7 @@ const _authenticationController = new authenticationController()
 
 // Register
 router.post("/login", async (req, res) => {
-
+    return await _authenticationController.login(req, res)
 })
 
 // Login

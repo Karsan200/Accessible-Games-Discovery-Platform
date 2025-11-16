@@ -24,7 +24,16 @@ export class authenticationController {
 
     async login(req, res) {
         try {
-            // Login logic here
+            const { accessToken, refreshToken } = await this.authenticationService.login(req.body);
+
+            // Set refresh token as HttpOnly cookie
+            res.cookie('token', refreshToken, {
+                httpOnly: true,
+                sameSite: 'None', secure: true,
+                maxAge: 24 * 60 * 60 * 1000
+            });
+
+            return res.status(201).json({ accessToken: accessToken });
         }
         catch (error) {
             // Check if the error is known

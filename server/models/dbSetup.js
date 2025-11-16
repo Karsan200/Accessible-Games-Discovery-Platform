@@ -1,6 +1,5 @@
 // server/models/dbSetup.js
 import mongoose from "mongoose";
-j
 // Connect to MongoDB
 export async function connectDB() {
     await mongoose.connect(process.env.MONGO_URI);
@@ -37,7 +36,7 @@ const gameMediaSchema = new mongoose.Schema({
     game_id: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
     type: {
         type: String,
-        enum: ["trailer", "screenshot", "cover", "concept_art", "other"],
+        enum: ["trailer", "screenshot", "cover", "concept_art", "other", "icon"],
         required: true,
     },
     url: { type: String, required: true },

@@ -73,27 +73,50 @@ async function seedDatabase() {
             },
         ]);
 
-        // === Game Media ===
+        // === Game Media === (2 per game: icon and cover)
         await GameMedia.insertMany([
-            { game_id: games[0]._id, type: "cover", url: "https://example.com/cover1.jpg" },
-            { game_id: games[1]._id, type: "trailer", url: "https://example.com/trailer2.mp4" },
-            { game_id: games[2]._id, type: "screenshot", url: "https://example.com/screenshot3.jpg" },
-            { game_id: games[3]._id, type: "cover", url: "https://example.com/cover4.jpg" },
+            { game_id: games[0]._id, type: "icon", url: "https://example.com/superfun_icon.png" },
+            { game_id: games[0]._id, type: "cover", url: "https://example.com/superfun_cover.jpg" },
+
+            { game_id: games[1]._id, type: "icon", url: "https://example.com/puzzlemania_icon.png" },
+            { game_id: games[1]._id, type: "cover", url: "https://example.com/puzzlemania_cover.jpg" },
+
+            { game_id: games[2]._id, type: "icon", url: "https://example.com/racingthunder_icon.png" },
+            { game_id: games[2]._id, type: "cover", url: "https://example.com/racingthunder_cover.jpg" },
+
+            { game_id: games[3]._id, type: "icon", url: "https://example.com/mysteryquest_icon.png" },
+            { game_id: games[3]._id, type: "cover", url: "https://example.com/mysteryquest_cover.jpg" },
         ]);
+
 
         // === Accessibility Groups ===
         const accessibilityGroups = await AccessibilityGroup.insertMany([
             { name: "Visual" },
-            { name: "Hearing" },
+            { name: "Audio" },
+            { name: "Motor" },
+            { name: "Cognitive" },
         ]);
 
-        // === Tags === (Accessibility-focused)
+
+        // === Tags ===
         await Tag.insertMany([
-            { game_id: games[0]._id, name: "Motor", description: "Aids physical interaction", accessibility_group_id: accessibilityGroups[0]._id },
-            { game_id: games[1]._id, name: "Audio", description: "Aids hearing", accessibility_group_id: accessibilityGroups[1]._id },
-            { game_id: games[2]._id, name: "Visual", description: "Aids visual attention", accessibility_group_id: accessibilityGroups[0]._id },
-            { game_id: games[3]._id, name: "Cognitive", description: "Aids problem-solving and thinking", accessibility_group_id: accessibilityGroups[1]._id },
+            // Game 1
+            { game_id: games[0]._id, name: "High Contrast", description: "High contrast visuals", accessibility_group_id: accessibilityGroups.find(g => g.name === "Visual")._id },
+            { game_id: games[0]._id, name: "One-Handed Mode", description: "Can be played with one hand", accessibility_group_id: accessibilityGroups.find(g => g.name === "Motor")._id },
+
+            // Game 2
+            { game_id: games[1]._id, name: "Subtitles", description: "Subtitles for all dialogue", accessibility_group_id: accessibilityGroups.find(g => g.name === "Hearing")._id },
+            { game_id: games[1]._id, name: "Simplified UI", description: "Simplified interface for easier comprehension", accessibility_group_id: accessibilityGroups.find(g => g.name === "Cognitive")._id },
+
+            // Game 3
+            { game_id: games[2]._id, name: "Color Blind Mode", description: "Adjustable colors for color blind players", accessibility_group_id: accessibilityGroups.find(g => g.name === "Visual")._id },
+            { game_id: games[2]._id, name: "Customizable Controls", description: "Fully remappable controls", accessibility_group_id: accessibilityGroups.find(g => g.name === "Motor")._id },
+
+            // Game 4
+            { game_id: games[3]._id, name: "Audio Cues", description: "Important events signaled with sound", accessibility_group_id: accessibilityGroups.find(g => g.name === "Hearing")._id },
+            { game_id: games[3]._id, name: "Tutorial Assistance", description: "Extra guidance for new players", accessibility_group_id: accessibilityGroups.find(g => g.name === "Cognitive")._id },
         ]);
+
 
 
         // === Wishlist ===

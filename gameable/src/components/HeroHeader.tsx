@@ -16,6 +16,16 @@ interface HeroHeaderProps {
 export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
     const [activeIndex, setActiveIndex] = useState(0);
 
+    // Transparent arrow style
+    const arrowStyle: React.CSSProperties = {
+        backgroundColor: "rgba(0,0,0,0.65)", // semi-transparent black
+        borderRadius: "50%",
+        padding: "10px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    };
+
     return (
         <section className="mb-5 overflow-hidden" aria-label="Hero Carousel">
             <Carousel
@@ -26,6 +36,16 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                 interval={5000}
                 slide={true}
                 className="w-100"
+                prevIcon={
+                    <div style={arrowStyle}>
+                        <span aria-hidden="true" className="carousel-control-prev-icon" />
+                    </div>
+                }
+                nextIcon={
+                    <div style={arrowStyle}>
+                        <span aria-hidden="true" className="carousel-control-next-icon" />
+                    </div>
+                }
             >
                 {slides.map((slide) => (
                     <Carousel.Item key={slide.id}>

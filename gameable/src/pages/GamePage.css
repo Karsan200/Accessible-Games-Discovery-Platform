@@ -13,6 +13,7 @@ body, #root {
     gap: 2rem;
     align-items: center;
     flex-wrap: nowrap;
+    overflow: visible;
 }
 
 /* Left column: image carousel and details */

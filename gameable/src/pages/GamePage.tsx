@@ -1,107 +1,126 @@
-// importing components
+import { useEffect, useState } from "react";
+import type { ReactElement } from "react";
+import { useParams } from "react-router-dom";
 import { GameBreadcrumbs } from "../components/game/GameBreadcrumbs";
 import { GameTags } from "../components/game/GameTags";
 import { GameStars } from "../components/game/GameStars";
 import { Carousel } from "../components/game/Carousel";
 import "./GamePage.css";
 
-//importing images (temporary placeholders)
-import img1 from "../assets/temporaryGamePageImages/game1.png";
-import img2 from "../assets/temporaryGamePageImages/game2.png";
-import img3 from "../assets/temporaryGamePageImages/game3.png";
-import img4 from "../assets/temporaryGamePageImages/game4.png";
-import img5 from "../assets/temporaryGamePageImages/game5.png";
-import img6 from "../assets/temporaryGamePageImages/game6.png";
-import profileImg from "../assets/temporaryGamePageImages/profilepicTemp.png";
+const DEFAULT_PROFILE_IMG = "http://localhost:5000/images/profilepicTemp.png";
 
-// Page component showing a game's details and customer reviews
+type UserSummary = {
+    _id?: string;
+    username?: string;
+    profilePicture?: string;
+};
+
+type Media = {
+    url: string;
+    type?: string;
+    description?: string;
+};
+
+type Tag = {
+    name: string;
+};
+
+type Review = {
+    rating: number;
+    body?: string;
+    user?: UserSummary;
+};
+
+type Game = {
+    _id: string;
+    title: string;
+    description?: string;
+    details?: string;
+    accessibility?: string;
+    media?: Media[];
+    reviews?: Review[];
+    tags?: Tag[];
+    rating?: number;
+    reviewCount?: number;
+};
+
 export function GamePage() {
-    // Static game for now as placeholder until backend is ready
-    const game = {
-        title: "Minecraft",
-        images: [img1, img2, img3, img4, img5, img6],
-        rating: 4.5,
-        reviewCount: 10,
-        tags: ["Vision", "Hearing", "Cognitive"],
-        description:
-            "Discover the world of Minecraft. Build anything you can imagine, uncover eerie mysteries, and survive the night in the ultimate sandbox adventure game. In Minecraft, every playthrough is different, and unforgettable adventures await behind every corner. Explore and craft your way through an infinite world that’s yours to shape, one block at a time.",
-        details:
-            "Gather Resources\nThe typical journey starts with punching a tree to gather wood. The rest of your Minecraft adventure is up to you, whether you mine for precious ores or seek out rare materials. Just make sure to stock up on food!\n\nSurvive the Night\nWhen the sun goes down, hostile mobs abound. Will you face them or sleep through the night? And remember: it’s always dark underground...\n\nBuild Amazing Things\nMinecraft is the ultimate building game. Craft tools, build a humble shelter, or engineer your base with redstone. Can you build a base in the Nether? Only one way to find out.",
+    const { id } = useParams<{ id: string }>();
+    const [game, setGame] = useState<Game | null>(null);
+    const [loading, setLoading] = useState(true);
 
-        accessibility:
-            "Minecraft includes a range of accessibility options that support players with vision, hearing, and cognitive impairments. The game offers a High Contrast Mode to improve visual clarity and readability, along with the Text-to-Speech Narrator, which can read menus and chat messages aloud for players with visual difficulties. Subtitles are available to provide visual cues for in-game sounds like footsteps, nearby mobs, or environmental effects, supporting those with hearing impairments. Minecraft also allows customizable controls and simplified interface settings to reduce cognitive load, helping players tailor gameplay to their individual needs and comfort levels.",
-    };
+    useEffect(() => {
+        async function fetchGame() {
+            try {
+                const res = await fetch(`http://localhost:5000/api/games/${id}`);
+                const data = await res.json();
+                setGame(data as Game);
+            } catch (err) {
+                console.error("Failed to fetch game:", err);
+            } finally {
+                setLoading(false);
+            }
+        }
 
-    // Array of customer reviews shown in the review carousel (temporary static data)
-    const reviews = [
-        {
-            rating: "★★★★★",
-            text: "The High Contrast Mode and adjustable UI scale made a huge difference for me. I could finally distinguish blocks and HUD elements during intense moments, and the ability to increase text size without breaking the layout meant menus remained usable. Accessibility options felt thoughtfully implemented rather than tacked on.",
-            user: "EllieFan99",
-            img: profileImg,
-        },
-        {
-            rating: "★★★★☆",
-            text: "Subtitles with speaker labels and environmental cues helped me follow multiplayer sessions and story moments. The captioning includes directional hints which is especially useful when I can’t rely on audio — clear, detailed, and configurable.",
-            user: "GamerGirl",
-            img: profileImg,
-        },
-        {
-            rating: "★★★★★",
-            text: "The Text-to-Speech Narrator and keyboard remapping allowed me to play comfortably without muscle strain. I mapped essential actions to a simplified layout and used narration for chat and menus. These features enabled longer play sessions and made navigation straightforward.",
-            user: "JoelLives",
-            img: profileImg,
-        },
-        {
-            rating: "★★★★☆",
-            text: "Customization for control sensitivity and toggle options for accessibility reduced cognitive load. The simplified interface mode removed clutter and highlighted essential actions, which helped me focus on building and exploring without being overwhelmed by UI noise.",
-            user: "BuilderBob",
-            img: profileImg,
-        },
-        {
-            rating: "★★★☆☆",
-            text: "Good accessibility foundations, but some tooltips and third‑party mods don’t always respect the high-contrast palette. Overall the in-game options are strong, but consistency across add-ons would push this from good to excellent.",
-            user: "Critic123",
-            img: profileImg,
-        },
-    ];
+        if (id) fetchGame();
+    }, [id]);
 
-    // Map images to carousel items
-    const imageItems = game.images.map((img, i) => (
-        <img
-            key={i}
-            src={img}
-            className="d-block w-100 rounded"
-            alt={`Game screenshot ${i + 1}`}
-        />
-    ));
+    if (loading) return <p>Loading...</p>;
+    if (!game) return <p>Game not found.</p>;
 
-    // Map reviews to review-box elements used inside the review carousel
-    const reviewItems = reviews.map((review, i) => (
-        <div className="review-box w-100 h-100" key={i}>
-            <h4 className="mb-1">{review.rating}</h4>
-            <p className="mb-2">{review.text}</p>
-            <div className="review-meta">
+    // Prepare images for carousel (skip items without url)
+    const imageItems: ReactElement[] = (game.media ?? [])
+        .filter((m) => !!m.url)
+        .map((m, i) => {
+            const src = m.url.startsWith("http") ? m.url : `http://localhost:5000${m.url}`;
+            return (
                 <img
-                    src={review.img}
-                    alt={review.user}
-                    style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                    }}
+                    key={i}
+                    src={src}
+                    className="d-block w-100 rounded"
+                    alt={m.description ?? `Game screenshot ${i + 1}`}
                 />
-                <strong>{review.user}</strong>
+            );
+        });
+
+    // Prepare reviews for carousel
+    const reviewItems: ReactElement[] = (game.reviews ?? []).map((r, i) => {
+        const ratingCount = Math.max(0, Math.floor(r.rating ?? 0));
+        const stars = Array(ratingCount).fill("★").join("");
+
+        return (
+            <div className="review-box w-100 h-100" key={i}>
+                <h4 className="mb-1">{stars}</h4>
+                <p className="mb-2">{r.body}</p>
+                <div className="review-meta">
+                    <img
+                        src={
+                            r.user?.profilePicture
+                                ? `http://localhost:5000${r.user.profilePicture}`
+                                : DEFAULT_PROFILE_IMG
+                        }
+                        alt={r.user?.username ?? "Anonymous"}
+                        style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                        }}
+                    />
+                    <strong>{r.user?.username ?? "Anonymous"}</strong>
+                </div>
             </div>
-        </div>
-    ));
+        );
+    });
+
+    const tags = (game.tags ?? []).map((t) => t.name);
+    const ratingValue = game.rating ?? 0;
+    const reviewCount = game.reviewCount ?? (game.reviews ? game.reviews.length : 0);
 
     return (
         <div className="container my-5">
             <div className="game-page-flex">
                 <div className="game-images-col">
-
                     <Carousel id="gameImages" items={imageItems} visibleCount={1} step={1} />
 
                     <div className="game-details-left mt-3">
@@ -118,14 +137,14 @@ export function GamePage() {
                     <h1 className="game-title">{game.title}</h1>
 
                     <div className="game-tags-wrapper">
-                        <GameTags tags={game.tags} />
+                        <GameTags tags={tags} />
                     </div>
 
                     <div className="game-rating-row">
-                        <GameStars rating={game.rating} />
-                        <span className="ms-2">({game.rating} stars)</span>
+                        <GameStars rating={ratingValue} />
+                        <span className="ms-2">({ratingValue.toFixed(1)} stars)</span>
                         <span className="mx-2">•</span>
-                        <span>{game.reviewCount} reviews</span>
+                        <span>{reviewCount} reviews</span>
                     </div>
 
                     <p className="game-description">{game.description}</p>

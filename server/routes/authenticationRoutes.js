@@ -17,7 +17,7 @@ router.post("/register", async (req, res) => {
 
 // Refresh Token
 router.get("/refresh", async (req, res) => {
-
+    return await _authenticationController.refreshToken(req, res)
 })
 
 export default router;

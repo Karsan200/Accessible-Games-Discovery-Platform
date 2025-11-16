@@ -66,4 +66,23 @@ export class authenticationService {
 
         return { accessToken, refreshToken };
     }
+
+    async refreshToken(token) {
+        // Verify refresh token
+        const { valid, payload, error } = cryptographyService.verifyRefreshToken(token);
+        if (!valid) {
+            throw new httpError(401, "Invalid or expired refresh token");
+        }
+
+        // Check if session exists
+        const session = await Session.findOne({ token: token });
+        if (session === null) {
+            throw new httpError(401, "Session not found");
+        }
+
+        // Create new access token
+        const accessToken = cryptographyService.createAccessToken({ userId: payload.userId });
+
+        return { accessToken };
+    }
 }

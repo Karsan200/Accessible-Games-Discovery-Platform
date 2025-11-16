@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser"; // Add this import
 import dotenv from "dotenv";
 import {expressjwt} from "express-jwt";
 import { connectDB } from "./models/dbSetup.js";
@@ -17,6 +18,7 @@ app.use((req, res, next) => {
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 // Connect to MongoDB
 await connectDB();

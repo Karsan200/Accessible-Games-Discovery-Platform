@@ -47,11 +47,26 @@ export class authenticationController {
 
     async refreshToken(req, res) {
         try {
-            // Refresh token logic here
+            // Get refresh token from cookies
+            if (!req.cookies || !req.cookies.token) {
+                throw new httpError(401, "Refresh token is missing");
+            }
+
+            const token = req.cookies.token;
+
+            const accessToken = await this.authenticationService.refreshToken(token);
+
+            return res.status(200).json({ accessToken: accessToken });
         }
         catch (error) {
+            console.error(error);
             // Check if the error is known
             if (error instanceof httpError) {
+                // Remove invalid refresh token cookie, if unauthorised
+                if (error.statusCode === 401) {
+                    res.clearCookie('token');
+                }
+
                 return res.status(error.statusCode).json({ error: error.message });
             }
 

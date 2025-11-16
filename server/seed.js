@@ -87,13 +87,14 @@ async function seedDatabase() {
             { name: "Hearing" },
         ]);
 
-        // === Tags ===
+        // === Tags === (Accessibility-focused)
         await Tag.insertMany([
-            { game_id: games[0]._id, name: "Exciting", description: "High-paced gameplay", accessibility_group_id: accessibilityGroups[0]._id },
-            { game_id: games[1]._id, name: "Mind-bending", description: "Puzzle challenges", accessibility_group_id: accessibilityGroups[1]._id },
-            { game_id: games[2]._id, name: "Fast", description: "High-speed racing", accessibility_group_id: accessibilityGroups[0]._id },
-            { game_id: games[3]._id, name: "Mysterious", description: "Hidden secrets", accessibility_group_id: accessibilityGroups[1]._id },
+            { game_id: games[0]._id, name: "Motor", description: "Aids physical interaction", accessibility_group_id: accessibilityGroups[0]._id },
+            { game_id: games[1]._id, name: "Audio", description: "Aids hearing", accessibility_group_id: accessibilityGroups[1]._id },
+            { game_id: games[2]._id, name: "Visual", description: "Aids visual attention", accessibility_group_id: accessibilityGroups[0]._id },
+            { game_id: games[3]._id, name: "Cognitive", description: "Aids problem-solving and thinking", accessibility_group_id: accessibilityGroups[1]._id },
         ]);
+
 
         // === Wishlist ===
         await Wishlist.insertMany([

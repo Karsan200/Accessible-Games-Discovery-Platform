@@ -96,9 +96,9 @@ export const Home: React.FC = () => {
         },
         {
             id: 4,
-            image: "https://play-lh.googleusercontent.com/3e_iyy1dolGSHqKFmwsao8SiMmqOtCuwD4CyKToLHoK34cchcH5PlG2VhOoE2_j-7FMH",
+            image: "https://play-lh.googleusercontent.com/aHnvdFTx0LVyfVHQLX51VcWBYkSVGvggr4FvIiP-iwBu4pKBiOQA1OnRi_nyFdCWqlU8",
             title: "Colorblind Puzzle",
-            description: "Puzzle game optimized for colorblind players.",
+            description: "Puzzle game optimized for colorblind players. Solve Puzzles!",
             tags: ["Visual", "Cognitive"] as TagType[],
             rating: 4,
         },

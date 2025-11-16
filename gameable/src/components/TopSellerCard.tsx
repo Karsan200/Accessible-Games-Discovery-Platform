@@ -32,16 +32,20 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                 if (e.key === "Enter" && onViewGame) onViewGame();
             }}
         >
-            <Row className="g-2 g-md-3 align-items-center flex-wrap">
+            <Row className="g-2 g-md-3 align-items-start flex-wrap">
                 {/* Left: App Icon */}
-                <Col xs={12} sm="auto" className="d-flex justify-content-center">
+                <Col
+                    xs={12}
+                    sm="auto"
+                    className="d-flex justify-content-center mb-2 mb-sm-0"
+                >
                     <Card.Img
                         src={image}
                         alt={`${title} app icon`}
                         style={{
                             width: "100%",
                             maxWidth: "120px",
-                            height: "auto",
+                            height: "120px",
                             borderRadius: "15px",
                             objectFit: "cover",
                         }}

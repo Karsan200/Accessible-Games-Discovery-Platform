@@ -37,14 +37,30 @@ export class cryptographyService {
         return hashedPassword === hash;
     }
 
-    static createRefreshToken(payload) {
+    /**
+     * Create a JWT refresh token for a user.
+     *
+     * @param userId {string} userId
+     * @returns {string} JWT refresh token
+     */
+    static createRefreshToken(userId) {
         return jsonwebtoken.sign(
-            payload,
+            {
+                userId: userId,
+                uuid: crypto.randomUUID(),
+                issued: Date.now()
+            },
             process.env.REFRESH_TOKEN_SECRET,
             { algorithm: 'HS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
         );
     }
 
+    /**
+     * Verify a JWT refresh token.
+     *
+     * @param token {string} JWT refresh token
+     * @returns {{valid: boolean, payload: JwtPayload | string}|{valid: boolean, error: *}} Verification result
+     */
     static verifyRefreshToken(token) {
         try {
             // This both verifies the signature and checks expiry
@@ -58,9 +74,19 @@ export class cryptographyService {
         }
     }
 
-    static createAccessToken(payload) {
+    /**
+     * Create a JWT access token for a user.
+     *
+     * @param userId {string} userId
+     * @returns {string} JWT access token
+     */
+    static createAccessToken(userId) {
         return jsonwebtoken.sign(
-            payload,
+            {
+                userId: userId,
+                uuid: crypto.randomUUID(),
+                issued: Date.now()
+            },
             process.env.ACCESS_TOKEN_SECRET,
             { algorithm: 'HS256', expiresIn: process.env.ACCESS_TOKEN_EXPIRY}
         );

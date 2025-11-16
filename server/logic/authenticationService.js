@@ -52,7 +52,7 @@ export class authenticationService {
         }
 
         // Create refresh token
-        const refreshToken = cryptographyService.createRefreshToken({ userId: user._id });
+        const refreshToken = cryptographyService.createRefreshToken(user._id);
 
         // Create session
         const newSession = new Session({
@@ -62,7 +62,7 @@ export class authenticationService {
         await newSession.save();
 
         // Create access token
-        const accessToken = cryptographyService.createAccessToken({ userId: user._id });
+        const accessToken = cryptographyService.createAccessToken(user._id);
 
         return { accessToken, refreshToken };
     }
@@ -81,7 +81,7 @@ export class authenticationService {
         }
 
         // Create new access token
-        const accessToken = cryptographyService.createAccessToken({ userId: payload.userId });
+        const accessToken = cryptographyService.createAccessToken(payload.userId);
 
         return accessToken;
     }

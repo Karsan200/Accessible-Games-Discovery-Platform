@@ -18,12 +18,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     // Check if the user is authenticated
     useEffect(() => {
-        // Has to be an inner function to be async
         async function initAuth() {
             setAccessToken(await Authentication.refreshToken())
         }
 
-        // Initialize authentication on mount
+        // Initialise authentication on mount
         void initAuth();
     }, []);
 
@@ -37,6 +36,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth() {
     const context = useContext(AuthContext);
     if (!context)
+        // If context is undefined, it means the provider is not the parent
         throw new Error("useAuth must be used inside an AuthProvider");
     return context;
 }

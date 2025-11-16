@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 
 interface ButtonProps {
     text: string;
@@ -7,11 +8,12 @@ interface ButtonProps {
 
 export const WhiteButton: React.FC<ButtonProps> = ({ text, onClick }) => {
     return (
-        <button
-            className="btn btn-light px-4 py-2 rounded-pill border"
+        <Button
+            variant="light"
+            className="px-4 py-2 rounded-pill border"
             onClick={onClick}
         >
             {text}
-        </button>
+        </Button>
     );
 };

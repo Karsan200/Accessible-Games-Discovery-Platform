@@ -1,6 +1,6 @@
 import React from "react";
+import { Card, Row, Col, Button } from "react-bootstrap";
 import { GameTag } from "./GameTag";
-import { BlackButton } from "./BlackButton";
 
 interface TopSellerCardProps {
     image: string;
@@ -20,44 +20,53 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                                                                 onViewGame,
                                                             }) => {
     return (
-        <article
-            className="card mb-3 shadow-sm d-flex align-items-center"
-            style={{ height: "160px", padding: "10px" }}
-            tabIndex={0} // Make the card itself tabbable
-            aria-label={`${title}, rated ${rating} out of 5 stars, ${tags.join(", ")} tags, description: ${description}`}
+        <Card
+            className="mb-3 shadow-sm"
+            style={{ height: "160px", cursor: "pointer" }}
+            tabIndex={0}
+            aria-label={`${title}, rated ${rating} out of 5 stars, tags: ${tags.join(
+                ", "
+            )}, description: ${description}`}
+            role="group"
+            onKeyDown={(e) => {
+                if (e.key === "Enter" && onViewGame) onViewGame();
+            }}
         >
-            <div className="d-flex w-100 align-items-center">
-
+            <Row className="g-0 align-items-center h-100">
                 {/* Left: App Icon */}
-                <img
-                    src={image}
-                    alt={`${title} app icon`}
-                    style={{
-                        width: "120px",
-                        height: "120px",
-                        borderRadius: "15px",
-                        objectFit: "cover",
-                        flexShrink: 0,
-                    }}
-                />
+                <Col xs="auto">
+                    <Card.Img
+                        src={image}
+                        alt={`${title} app icon`}
+                        style={{
+                            width: "120px",
+                            height: "120px",
+                            borderRadius: "15px",
+                            objectFit: "cover",
+                        }}
+                    />
+                </Col>
 
                 {/* Middle: Tags, Title, Description */}
-                <div className="flex-grow-1 ms-3 d-flex flex-column justify-content-center">
-                    <ul className="list-inline mb-1" aria-label="Accessibility tags">
+                <Col className="ms-3 d-flex flex-column justify-content-center">
+                    <div
+                        className="mb-1 d-flex flex-wrap justify-content-center"
+                        role="list"
+                        aria-label="Accessibility tags"
+                    >
                         {tags.map((tag, idx) => (
-                            <li key={idx} className="list-inline-item">
-                                <GameTag type={tag} />
-                            </li>
+                            <span key={idx} role="listitem">
+                <GameTag type={tag} />
+              </span>
                         ))}
-                    </ul>
+                    </div>
 
-                    <h5 className="fw-bold mb-1">{title}</h5>
-
-                    <p className="mb-0 text-truncate">{description}</p>
-                </div>
+                    <Card.Title className="fw-bold mb-1">{title}</Card.Title>
+                    <Card.Text className="mb-0 text-truncate">{description}</Card.Text>
+                </Col>
 
                 {/* Right: Rating and Button */}
-                <div className="d-flex flex-column align-items-center ms-3">
+                <Col xs="auto" className="d-flex flex-column align-items-center ms-3">
                     <div
                         className="mb-2"
                         style={{ fontSize: "1.5rem", lineHeight: 1 }}
@@ -71,9 +80,15 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                         ))}
                     </div>
 
-                    <BlackButton text="View Game" onClick={onViewGame} aria-label={`View ${title}`} />
-                </div>
-            </div>
-        </article>
+                    <Button
+                        variant="dark"
+                        onClick={onViewGame}
+                        aria-label={`View ${title}`}
+                    >
+                        View Game
+                    </Button>
+                </Col>
+            </Row>
+        </Card>
     );
 };

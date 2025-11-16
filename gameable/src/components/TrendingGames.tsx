@@ -1,4 +1,5 @@
 import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
 import { GameCard } from "./GameCard";
 
 interface Game {
@@ -6,7 +7,7 @@ interface Game {
     image: string;
     name: string;
     description: string;
-    tags?: string[];
+    tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
 }
 
 interface TrendingGamesProps {
@@ -16,32 +17,38 @@ interface TrendingGamesProps {
 export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
     return (
         <section
-            className="container my-5"
             role="region"
             aria-label="Trending games"
+            className="my-5"
         >
-            <h2 className="fw-bold mb-4 text-center">Trending Games</h2>
+            <Container>
+                <h2 className="fw-bold mb-4 text-center">Trending Games</h2>
 
-            <div
-                className="row g-4 justify-content-center"
-                role="list"
-                aria-label="Trending game list"
-            >
-                {games.map((game) => (
-                    <div
-                        key={game.id}
-                        className="col-12 col-sm-6 col-md-3 d-flex"
-                        role="listitem"
-                    >
-                        <GameCard
-                            image={game.image}
-                            name={game.name}
-                            description={game.description}
-                            tags={game.tags}
-                        />
-                    </div>
-                ))}
-            </div>
+                <Row
+                    className="g-4 justify-content-center"
+                    role="list"
+                    aria-label="Trending game list"
+                >
+                    {games.map((game) => (
+                        <Col
+                            key={game.id}
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
+                            role="listitem"
+                            className="d-flex justify-content-center"
+                        >
+                            <GameCard
+                                image={game.image}
+                                name={game.name}
+                                description={game.description}
+                                tags={game.tags}
+                            />
+                        </Col>
+                    ))}
+                </Row>
+            </Container>
         </section>
     );
 };

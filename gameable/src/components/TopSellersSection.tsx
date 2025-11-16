@@ -14,10 +14,16 @@ interface TopSellersSectionProps {
     games: Game[];
 }
 
-export const TopSellersSection: React.FC<TopSellersSectionProps> = ({ games }) => {
+export const TopSellersSection: React.FC<TopSellersSectionProps> = ({
+                                                                        games,
+                                                                    }) => {
     return (
         <section className="container my-5" aria-labelledby="top-sellers-heading">
-            <h2 id="top-sellers-heading" className="fw-bold mb-4 text-center">
+            <h2
+                id="top-sellers-heading"
+                className="fw-bold mb-4 text-center"
+                tabIndex={-1}
+            >
                 Top Sellers
             </h2>
 

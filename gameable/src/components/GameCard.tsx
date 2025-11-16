@@ -1,4 +1,5 @@
 import React from "react";
+import { Card, Image, Stack } from "react-bootstrap";
 import { BlackButton } from "./BlackButton";
 import { GameTag } from "./GameTag";
 
@@ -20,73 +21,71 @@ export const GameCard: React.FC<GameCardProps> = ({
     const cardId = `gamecard-${name.replace(/\s+/g, "-").toLowerCase()}`;
 
     return (
-        <div
-            className="card h-100 shadow-sm"
-            style={{ minWidth: "250px", maxWidth: "300px", cursor: "pointer" }}
+        <Card
+            className="h-100 shadow-sm"
             role="group"
             aria-labelledby={`${cardId}-title`}
             aria-describedby={`${cardId}-desc`}
             tabIndex={0}
             onKeyDown={(e) => {
-                if (e.key === "Enter" && onClick) {
-                    onClick();
-                }
+                if (e.key === "Enter" && onClick) onClick();
             }}
+            style={{ cursor: "pointer", minWidth: "250px", maxWidth: "300px" }}
         >
-            {/* Image at top */}
-            <img
+            {/* Image */}
+            <Image
                 src={image}
                 alt={`${name} game cover`}
                 style={{
-                    width: "100%",
                     height: "150px",
+                    width: "100%",
                     objectFit: "cover",
-                    borderTopLeftRadius: "4px",
-                    borderTopRightRadius: "4px",
+                    borderTopLeftRadius: "0.375rem",
+                    borderTopRightRadius: "0.375rem"
                 }}
             />
 
-            {/* Card body */}
-            <div className="card-body d-flex flex-column" style={{ height: "240px" }}>
+
+            <Card.Body className="d-flex flex-column">
 
                 {/* Accessibility Tags */}
-                <div
-                    className="mb-2 d-flex flex-wrap gap-1 justify-content-center"
+                <Stack
+                    direction="horizontal"
+                    className="flex-wrap justify-content-center mb-2"
                     role="list"
                     aria-label="Accessibility features"
-                    style={{ overflow: "visible" }}
+                    gap={2}
                 >
-                    {tags.map((tag) => (
+                    {tags?.map((tag) => (
                         <span key={tag} role="listitem">
                             <GameTag type={tag} />
                         </span>
                     ))}
-                </div>
+                </Stack>
 
-                <h5 id={`${cardId}-title`} className="card-title fw-bold">
+                {/* Title */}
+                <Card.Title id={`${cardId}-title`} className="fw-bold text-center">
                     {name}
-                </h5>
+                </Card.Title>
 
-                <p
+                {/* Description */}
+                <Card.Text
                     id={`${cardId}-desc`}
-                    className="card-text flex-grow-1"
-                    style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                    }}
+                    className="flex-grow-1 text-center"
+                    style={{ overflow: "hidden", textOverflow: "ellipsis" }}
                 >
                     {description}
-                </p>
+                </Card.Text>
 
-                {/* Button at bottom */}
-                <div className="mt-3">
+                {/* Button */}
+                <div className="mt-3 text-center">
                     <BlackButton
                         text="Play Now"
                         aria-label={`Play ${name}`}
                         onClick={onClick}
                     />
                 </div>
-            </div>
-        </div>
+            </Card.Body>
+        </Card>
     );
 };

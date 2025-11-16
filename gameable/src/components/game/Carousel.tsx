@@ -3,8 +3,8 @@ import type { ReactElement, CSSProperties } from "react";
 import "./Carousel.css";
 
 //Carousel arrow images
-import arrowLeft from "../../assets/temporaryGamePageImages/arrowLeft.png";
-import arrowRight from "../../assets/temporaryGamePageImages/arrowRight.png";
+import arrowLeft from "../../assets/gamePageImages/arrowLeft.png";
+import arrowRight from "../../assets/gamePageImages/arrowRight.png";
 
 type Props = {
     id: string;
@@ -14,25 +14,24 @@ type Props = {
 };
 
 export function Carousel({ id, items, visibleCount = 1, step = 1 }: Props) {
-    // index of the first visible item
     const [current, setCurrent] = useState(0);
     const total = items.length;
     if (total === 0) return null;
 
-    // normalize step to at least 1 and wrap to total
     const raw = Math.max(1, step);
     const s = (raw % total) || total;
 
-    // advance/rewind the current index with wrap-around
     const prev = () => setCurrent((c) => (c - s + total) % total);
     const next = () => setCurrent((c) => (c + s) % total);
 
-    // only show navigation when there are more items than visible slots
-    const showControls = total > visibleCount;
+    // don't render duplicate items when there are fewer items than requested visible slots
+    const actualVisible = Math.min(visibleCount, total);
 
-    // build the visible set of elements based on current index
-    const visibleElements = Array.from({ length: visibleCount }).map((_, i) => {
-        const idx = (current + i) % total; // wrap index safely
+    // show controls only when there are more items than the rendered slots
+    const showControls = total > actualVisible;
+
+    const visibleElements = Array.from({ length: actualVisible }).map((_, i) => {
+        const idx = (current + i) % total;
         return (
             <div className="carousel-item-flex" key={i}>
                 {items[idx]}
@@ -40,8 +39,8 @@ export function Carousel({ id, items, visibleCount = 1, step = 1 }: Props) {
         );
     });
 
-    // expose visible count to CSS via a custom property used in Carousel.css
-    const cssVars = ({ ["--visible-count"]: String(visibleCount) } as unknown) as CSSProperties;
+    // expose the actual visible count to CSS so sizing matches the rendered items
+    const cssVars = ({ ["--visible-count"]: String(actualVisible) } as unknown) as CSSProperties;
 
     return (
         <div id={id} className="game-carousel" style={cssVars}>

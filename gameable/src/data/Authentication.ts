@@ -1,0 +1,20 @@
+import { settings } from "../models/AppSettings.ts";
+
+export class Authentication {
+    static async refreshToken() {
+        // request new access token from backend
+        const response = await fetch(settings.apiBaseUrl + '/auth/refresh', {
+            method: 'GET',
+            credentials: 'include'
+        })
+
+        // User is not authenticated
+        if (!response.ok) {
+            return null
+        }
+
+        const data = await response.json();
+
+        return data.accessToken;
+    }
+}

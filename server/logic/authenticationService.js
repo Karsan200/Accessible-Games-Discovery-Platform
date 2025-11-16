@@ -83,6 +83,6 @@ export class authenticationService {
         // Create new access token
         const accessToken = cryptographyService.createAccessToken({ userId: payload.userId });
 
-        return { accessToken };
+        return accessToken;
     }
 }

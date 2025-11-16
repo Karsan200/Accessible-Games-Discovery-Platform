@@ -59,7 +59,6 @@ export class authenticationController {
             return res.status(200).json({ accessToken: accessToken });
         }
         catch (error) {
-            console.error(error);
             // Check if the error is known
             if (error instanceof httpError) {
                 // Remove invalid refresh token cookie, if unauthorised

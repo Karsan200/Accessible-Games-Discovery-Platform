@@ -1,6 +1,6 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import {Authentication} from "./Authentication.ts";
+import { Authentication } from "./Authentication.ts";
 
 type AuthContextType = {
     accessToken: string | null;
@@ -22,7 +22,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             setAccessToken(await Authentication.refreshToken())
         }
 
-        // Initialise authentication on mount
+        // Initialise forms on mount
         void initAuth();
     }, []);
 

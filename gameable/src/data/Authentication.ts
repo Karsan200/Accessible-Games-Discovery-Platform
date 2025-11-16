@@ -1,7 +1,7 @@
 import { settings } from "../models/AppSettings.ts";
 
 export class Authentication {
-    static async refreshToken() {
+    static async refreshToken(): Promise<string | null> {
         // request new access token from backend
         const response = await fetch(settings.apiBaseUrl + '/auth/refresh', {
             method: 'GET',

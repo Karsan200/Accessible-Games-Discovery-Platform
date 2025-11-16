@@ -1,5 +1,5 @@
-import {httpError} from "../errors/httpError.js";
-import {authenticationService} from "../logic/authenticationService.js";
+import { httpError } from "../errors/httpError.js";
+import { authenticationService } from "../logic/authenticationService.js";
 
 export class authenticationController {
     constructor() {

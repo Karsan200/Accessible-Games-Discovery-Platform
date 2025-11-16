@@ -1,6 +1,6 @@
-import {Session, User} from "../models/dbSetup.js";
-import {httpError} from "../errors/httpError.js";
-import {cryptographyService} from "./cryptographyService.js";
+import { Session, User } from "../models/dbSetup.js";
+import { httpError } from "../errors/httpError.js";
+import { cryptographyService } from "./cryptographyService.js";
 
 export class authenticationService {
     async registerTraditional({ username, email, password }) {
@@ -46,8 +46,7 @@ export class authenticationService {
         }
 
         // Verify password
-        const hashedPassword = cryptographyService.hashPassword(password, user.salt);
-        if (hashedPassword !== user.password) {
+        if (cryptographyService.verfiyPassword(password, user.salt, user.password) === false) {
             throw new httpError(401, "Invalid email or password");
         }
 

@@ -16,13 +16,11 @@ interface TrendingGamesProps {
 
 export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
     return (
-        <section
-            role="region"
-            aria-label="Trending games"
-            className="my-5"
-        >
+        <section role="region" aria-label="Trending games" className="my-5">
             <Container>
-                <h2 className="fw-bold mb-4 text-center">Trending Games</h2>
+                <h2 className="fw-bold mb-4 text-center" tabIndex={-1}>
+                    Trending Games
+                </h2>
 
                 <Row
                     className="g-4 justify-content-center"

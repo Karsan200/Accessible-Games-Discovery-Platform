@@ -26,7 +26,7 @@ export const GameCard: React.FC<GameCardProps> = ({
             role="group"
             aria-labelledby={`${cardId}-title`}
             aria-describedby={`${cardId}-desc`}
-            tabIndex={0}
+            tabIndex={0} // Makes the card focusable
             onKeyDown={(e) => {
                 if (e.key === "Enter" && onClick) onClick();
             }}
@@ -41,13 +41,11 @@ export const GameCard: React.FC<GameCardProps> = ({
                     width: "100%",
                     objectFit: "cover",
                     borderTopLeftRadius: "0.375rem",
-                    borderTopRightRadius: "0.375rem"
+                    borderTopRightRadius: "0.375rem",
                 }}
             />
 
-
-            <Card.Body className="d-flex flex-column">
-
+            <Card.Body className="d-flex flex-column align-items-center">
                 {/* Accessibility Tags */}
                 <Stack
                     direction="horizontal"
@@ -58,13 +56,17 @@ export const GameCard: React.FC<GameCardProps> = ({
                 >
                     {tags?.map((tag) => (
                         <span key={tag} role="listitem">
-                            <GameTag type={tag} />
-                        </span>
+              <GameTag type={tag} />
+            </span>
                     ))}
                 </Stack>
 
                 {/* Title */}
-                <Card.Title id={`${cardId}-title`} className="fw-bold text-center">
+                <Card.Title
+                    id={`${cardId}-title`}
+                    className="fw-bold text-center"
+                    tabIndex={0} // Ensures screen reader reads the title
+                >
                     {name}
                 </Card.Title>
 
@@ -73,12 +75,13 @@ export const GameCard: React.FC<GameCardProps> = ({
                     id={`${cardId}-desc`}
                     className="flex-grow-1 text-center"
                     style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+                    tabIndex={0} // Makes description readable with focus
                 >
                     {description}
                 </Card.Text>
 
                 {/* Button */}
-                <div className="mt-3 text-center">
+                <div className="mt-3">
                     <BlackButton
                         text="Play Now"
                         aria-label={`Play ${name}`}

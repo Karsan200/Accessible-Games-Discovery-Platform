@@ -14,20 +14,18 @@ interface TopSellersSectionProps {
     games: Game[];
 }
 
-export const TopSellersSection: React.FC<TopSellersSectionProps> = ({
-                                                                        games,
-                                                                    }) => {
+export const TopSellersSection: React.FC<TopSellersSectionProps> = ({ games }) => {
     return (
         <section className="container my-5" aria-labelledby="top-sellers-heading">
             <h2
                 id="top-sellers-heading"
-                className="fw-bold mb-4 text-center"
+                className="fw-bold mb-4 text-center fs-4 fs-md-2"
                 tabIndex={-1}
             >
                 Top Sellers
             </h2>
 
-            <div className="d-flex flex-column">
+            <div className="d-flex flex-column gap-3">
                 {games.map((game) => (
                     <TopSellerCard
                         key={game.id}

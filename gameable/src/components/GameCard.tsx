@@ -22,22 +22,28 @@ export const GameCard: React.FC<GameCardProps> = ({
 
     return (
         <Card
-            className="h-100 shadow-sm"
+            className="h-100 shadow-sm flex-grow-1"
             role="group"
             aria-labelledby={`${cardId}-title`}
             aria-describedby={`${cardId}-desc`}
-            tabIndex={0} // Makes the card focusable
+            tabIndex={0}
             onKeyDown={(e) => {
                 if (e.key === "Enter" && onClick) onClick();
             }}
-            style={{ cursor: "pointer", minWidth: "250px", maxWidth: "300px" }}
+            style={{
+                cursor: "pointer",
+                minWidth: "100%",
+                maxWidth: "300px", // limits max card size on large screens
+            }}
         >
             {/* Image */}
             <Image
                 src={image}
                 alt={`${name} game cover`}
+                fluid
                 style={{
-                    height: "150px",
+                    height: "auto",
+                    maxHeight: "200px",
                     width: "100%",
                     objectFit: "cover",
                     borderTopLeftRadius: "0.375rem",
@@ -56,16 +62,16 @@ export const GameCard: React.FC<GameCardProps> = ({
                 >
                     {tags?.map((tag) => (
                         <span key={tag} role="listitem">
-              <GameTag type={tag} />
-            </span>
+                            <GameTag type={tag} />
+                        </span>
                     ))}
                 </Stack>
 
                 {/* Title */}
                 <Card.Title
                     id={`${cardId}-title`}
-                    className="fw-bold text-center"
-                    tabIndex={0} // Ensures screen reader reads the title
+                    className="fw-bold text-center fs-5 fs-md-6"
+                    tabIndex={0}
                 >
                     {name}
                 </Card.Title>
@@ -73,21 +79,23 @@ export const GameCard: React.FC<GameCardProps> = ({
                 {/* Description */}
                 <Card.Text
                     id={`${cardId}-desc`}
-                    className="flex-grow-1 text-center"
-                    style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-                    tabIndex={0} // Makes description readable with focus
+                    className="flex-grow-1 text-center text-wrap"
+                    tabIndex={0}
                 >
                     {description}
                 </Card.Text>
 
                 {/* Button */}
-                <div className="mt-3">
-                    <BlackButton
-                        text="Play Now"
-                        aria-label={`Play ${name}`}
-                        onClick={onClick}
-                    />
+                <div className="mt-3 w-100 d-flex justify-content-center">
+                    <div className="w-100 w-md-auto">
+                        <BlackButton
+                            text="Play Now"
+                            aria-label={`Play ${name}`}
+                            onClick={onClick}
+                        />
+                    </div>
                 </div>
+
             </Card.Body>
         </Card>
     );

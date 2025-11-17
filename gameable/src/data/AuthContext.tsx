@@ -33,6 +33,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     );
 }
 
+/**
+ * Custom hook to access authentication context
+ * @returns AuthContextType containing `accessToken` and `setAccessToken`
+ * @throws Error if used outside AuthProvider
+ */
 export function useAuth() {
     const context = useContext(AuthContext);
     if (!context)

@@ -45,7 +45,7 @@ app.use(async (req, res, next) => {
     try {
         const user = await authenticationService.getCurrentUser(req, res);
 
-        req.currentUser = user || null
+        req.currentUser = user
         next();
     }
     catch (error) {

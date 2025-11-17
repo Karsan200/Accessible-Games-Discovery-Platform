@@ -1,4 +1,4 @@
-# Gameable
+# Gameable - Front-End
 
 ## Running the React App
 To run the React app, follow these steps:
@@ -15,4 +15,4 @@ To run the React app, follow these steps:
 ```
 
 ## Related Wiki Pages
-- [JWT Authentication (Front-End Guide)](https://git.cardiff.ac.uk/c23037502/group-11-commercial-frameworks/-/wikis/Authentication-(JWT))
+- [JWT Authentication (Front-End Guide)](https://git.cardiff.ac.uk/c23037502/group-11-commercial-frameworks/-/wikis/Authentication-(JWT)-Frontend)

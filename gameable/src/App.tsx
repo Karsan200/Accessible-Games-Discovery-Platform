@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import Navbar from './navbar.tsx'
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
 
     return (
         <div>
+            <Navbar />
             <h1>Game List</h1>
             <ul>
                 {games.map((g: any) => (

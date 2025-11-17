@@ -7,7 +7,7 @@ import { TopSellersSection } from "../components/TopSellersSection";
 type TagType = "Visual" | "Audio" | "Motor" | "Cognitive";
 
 interface TrendingGame {
-    id: number;
+    id: string;
     image: string;
     name: string;
     description: string;
@@ -15,7 +15,7 @@ interface TrendingGame {
 }
 
 interface TopSellerGame {
-    id: number;
+    id: string;
     image: string;
     title: string;
     description: string;
@@ -23,45 +23,41 @@ interface TopSellerGame {
     rating: number;
 }
 
+interface HeroSlide {
+    id: string;
+    image: string;
+    title: string;
+}
+
 export const Home: React.FC = () => {
     const [topSellers, setTopSellers] = useState<TopSellerGame[]>([]);
     const [trendingGames, setTrendingGames] = useState<TrendingGame[]>([]);
+    const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
 
     // Fetch DB data
     useEffect(() => {
+        // Top sellers
         fetch("http://localhost:5000/home/top-sellers")
             .then((res) => res.json())
             .then((data) => setTopSellers(data))
             .catch((err) => console.error("Error fetching top sellers:", err));
 
+        // Trending
         fetch("http://localhost:5000/home/trending")
             .then((res) => res.json())
             .then((data) => setTrendingGames(data))
             .catch((err) => console.error("Error fetching trending games:", err));
-    }, []);
 
-    // Hero slides (still static)
-    const slides = [
-        {
-            id: 1,
-            image: "https://image.api.playstation.com/vulcan/ap/rnd/202206/0720/0kRqUeSBIbQzz7cen3c989c6.jpg",
-            title: "Blind-Friendly RPG",
-        },
-        {
-            id: 2,
-            image: "https://cdn1.epicgames.com/spt-assets/e56a7411805046d3b5b7253a6e4e0faa/monument-valley-1gys5.jpg",
-            title: "One-Hand Accessible Platformer",
-        },
-        {
-            id: 3,
-            image: "https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_download_software_1/2x1_NSwitchDS_Balatro.jpg",
-            title: "Voice-Controlled Adventure",
-        },
-    ];
+        // Hero carousel (new)
+        fetch("http://localhost:5000/home/hero")
+            .then((res) => res.json())
+            .then((data) => setHeroSlides(data))
+            .catch((err) => console.error("Error fetching hero slides:", err));
+    }, []);
 
     return (
         <div>
-            <HeroHeader slides={slides} />
+            <HeroHeader slides={heroSlides} />
             <TrendingGames games={trendingGames} />
             <TopSellersSection games={topSellers} />
         </div>

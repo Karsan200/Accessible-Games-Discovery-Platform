@@ -2,7 +2,7 @@ import React from "react";
 import { TopSellerCard } from "./TopSellerCard";
 
 interface Game {
-    id: number;
+    id: string;
     image: string;
     title: string;
     description: string;

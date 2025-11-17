@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { GameCard } from "./GameCard";
 
 interface Game {
-    id: number;
+    id: string;
     image: string;
     name: string;
     description: string;

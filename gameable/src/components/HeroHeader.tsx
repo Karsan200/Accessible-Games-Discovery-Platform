@@ -4,7 +4,7 @@ import { BlackButton } from "./BlackButton";
 import { WhiteButton } from "./WhiteButton";
 
 interface HeroSlide {
-    id: number;
+    id: string;
     image: string;
     title: string;
 }
@@ -16,9 +16,17 @@ interface HeroHeaderProps {
 export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
     const [activeIndex, setActiveIndex] = useState(0);
 
-    // Transparent arrow style
+    // Prevent crashes while loading
+    if (!slides || slides.length === 0) {
+        return null; // or a loading spinner
+    }
+
+    // Make sure activeIndex is within bounds (in case slides change dynamically)
+    const safeIndex = Math.min(activeIndex, slides.length - 1);
+    const activeSlide = slides[safeIndex];
+
     const arrowStyle: React.CSSProperties = {
-        backgroundColor: "rgba(0,0,0,0.65)", // semi-transparent black
+        backgroundColor: "rgba(0,0,0,0.65)",
         borderRadius: "50%",
         padding: "10px",
         display: "flex",
@@ -29,7 +37,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
     return (
         <section className="mb-5 overflow-hidden" aria-label="Hero Carousel">
             <Carousel
-                activeIndex={activeIndex}
+                activeIndex={safeIndex}
                 onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
                 controls={true}
                 indicators={true}
@@ -73,17 +81,17 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                 </h5>
 
                 <h2 className="fw-bold display-6 fs-4 fs-md-2 text-wrap" tabIndex={0}>
-                    {slides[activeIndex].title}
+                    {activeSlide.title}
                 </h2>
 
                 <div className="d-flex flex-column flex-md-row justify-content-center gap-3 mt-3 flex-wrap">
                     <BlackButton
                         text="Play Now"
-                        aria-label={`Play ${slides[activeIndex].title}`}
+                        aria-label={`Play ${activeSlide.title}`}
                     />
                     <WhiteButton
                         text="Review"
-                        aria-label={`Review ${slides[activeIndex].title}`}
+                        aria-label={`Review ${activeSlide.title}`}
                     />
                 </div>
             </Container>

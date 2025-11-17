@@ -1,4 +1,4 @@
-import { settings } from "../models/AppSettings.ts";
+import { settings } from "../AppSettings.ts";
 
 export class Authentication {
     static async refreshToken(): Promise<string | null> {

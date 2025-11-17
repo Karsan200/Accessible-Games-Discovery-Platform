@@ -8,7 +8,7 @@ To run the React app, follow these steps:
 ```bash
    npm install
    ```
-4. Edit `/models/AppSettings.ts` to configure the app settings as needed, i.e. API endpoint.
+4. Edit `AppSettings.ts` to configure the app settings as needed, i.e. API endpoint.
 5. Start the development server with:
 ```bash
    npm run dev

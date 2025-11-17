@@ -22,7 +22,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             setAccessToken(await Authentication.refreshToken())
         }
 
-        // Initialise forms on mount
+        // Initialise authentication on mount
         void initAuth();
     }, []);
 

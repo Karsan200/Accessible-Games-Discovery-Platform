@@ -112,7 +112,7 @@ export function Register() {
                     </Form.Control.Feedback>
                 </Form.Floating>
                 <Button variant="primary" onClick={() => { void handleSubmit() }}>
-                    Submit
+                    Register
                 </Button>
             </Form>
         </Container>

@@ -22,6 +22,6 @@ export type RegisterFormModel = {
             value: string,
             status: [FeedbackType | undefined, React.Dispatch<React.SetStateAction<FeedbackType | undefined>>],
             message: [string, React.Dispatch<React.SetStateAction<string>>]
-        },
+        }
     }
 }

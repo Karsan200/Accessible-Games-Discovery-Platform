@@ -1,7 +1,7 @@
 import { useAuth } from "./AuthContext.tsx";
 import { Authentication } from "./Authentication.ts";
 import { HTTPError } from "../models/HttpError.ts";
-import { settings } from "../models/AppSettings.ts";
+import { settings } from "../AppSettings.ts";
 
 export async function ApiDataHelper(url: string, init: any, hasRefreshed = false) {
     // Get access token from local storage

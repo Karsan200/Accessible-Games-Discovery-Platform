@@ -1,5 +1,6 @@
 import type { RegisterFormModel } from "../models/forms/RegisterFormModel.ts";
-import { settings } from "../models/AppSettings.ts";
+import { settings } from "../AppSettings.ts";
+import {HTTPError} from "../models/HttpError.ts";
 
 export async function RegisterForm(body: RegisterFormModel) {
     let valid = true
@@ -84,7 +85,6 @@ export async function RegisterForm(body: RegisterFormModel) {
         }
         // Registration failed
         else {
-            valid = false
             if (data.status === 409) {
                 const res = await data.json();
                 if (res.error.includes('username')) {
@@ -97,7 +97,7 @@ export async function RegisterForm(body: RegisterFormModel) {
                 }
             }
             else {
-
+                throw new HTTPError(data.status, (await data.json()).error)
             }
         }
     }

@@ -68,7 +68,7 @@ export class authenticationService {
 
     async refreshToken(token) {
         // Verify refresh token
-        const { valid, payload, error } = cryptographyService.verifyRefreshToken(token);
+        const { valid, payload} = cryptographyService.verifyRefreshToken(token);
         if (!valid) {
             throw new httpError(401, "Invalid or expired refresh token");
         }
@@ -83,5 +83,36 @@ export class authenticationService {
         const accessToken = cryptographyService.createAccessToken(payload.userId);
 
         return accessToken;
+    }
+
+    /**
+     * Get current authenticated user
+     * @param req Express request object
+     * @param res Express response object
+     * @returns Current user object
+     */
+    static async getCurrentUser(req, res) {
+        // Get userID from access token
+        let userId;
+
+        try {
+            userId = req.auth.userId;
+        }
+        catch (error) {
+            return null
+        }
+
+        // Find user by ID
+        const user = await User.findOne({ _id: userId });
+
+        // If user not found
+        if (user === null) {
+            // Remove session cookie
+            res.cookie.remove("token");
+
+            return null
+        }
+
+        return user
     }
 }

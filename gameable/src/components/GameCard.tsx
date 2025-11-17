@@ -36,20 +36,27 @@ export const GameCard: React.FC<GameCardProps> = ({
                 maxWidth: "300px", // limits max card size on large screens
             }}
         >
-            {/* Image */}
-            <Image
-                src={image}
-                alt={`${name} game cover`}
-                fluid
+            {/* Image Wrapper */}
+            <div
                 style={{
-                    height: "auto",
-                    maxHeight: "200px",
                     width: "100%",
-                    objectFit: "cover",
+                    height: "150px",
+                    overflow: "hidden",
                     borderTopLeftRadius: "0.375rem",
                     borderTopRightRadius: "0.375rem",
                 }}
-            />
+            >
+                <img
+                    src={image}
+                    alt={`${name} game cover`}
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                    }}
+                />
+            </div>
+
 
             <Card.Body className="d-flex flex-column align-items-center">
                 {/* Accessibility Tags */}

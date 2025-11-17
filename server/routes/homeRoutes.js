@@ -96,4 +96,34 @@ router.get("/trending", async (req, res) => {
     }
 });
 
+// GET Home Page Carousel Games
+// TODO: Allow admin user to select the games to be shown in carousel
+router.get("/hero", async (req, res) => {
+    try {
+        // Get 3 random games
+        const randomGames = await Game.aggregate([{ $sample: { size: 3 } }]);
+
+        const slides = await Promise.all(
+            randomGames.map(async (game) => {
+                const media = await GameMedia.findOne({
+                    game_id: game._id,
+                    type: "cover",
+                });
+
+                return {
+                    id: game._id.toString(),
+                    image: media?.url || "",
+                    title: game.title,
+                };
+            })
+        );
+
+        res.json(slides);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error fetching hero slides" });
+    }
+});
+
+
 export default router;

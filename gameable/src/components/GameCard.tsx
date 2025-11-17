@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Image, Stack } from "react-bootstrap";
+import { Card, Stack } from "react-bootstrap";
 import { BlackButton } from "./BlackButton";
 import { GameTag } from "./GameTag";
 

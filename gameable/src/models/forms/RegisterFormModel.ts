@@ -1,5 +1,5 @@
 import React from "react";
-import type {FeedbackType} from "react-bootstrap/Feedback";
+import type { FeedbackType } from "react-bootstrap/Feedback";
 
 export type RegisterFormModel = {
     inputs: {

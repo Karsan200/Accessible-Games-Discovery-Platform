@@ -72,7 +72,7 @@ export function Login() {
                         {passwordMessage[0]}
                     </Form.Control.Feedback>
                 </Form.Floating>
-                <Button variant="outline-dark" className="w-100 py-2" onClick={() => { void handleSubmit() }}>
+                <Button variant="outline-primary" className="w-100 py-2" onClick={() => { void handleSubmit() }}>
                     Login
                 </Button>
             </Form>

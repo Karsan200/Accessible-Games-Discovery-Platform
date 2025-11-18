@@ -1,14 +1,18 @@
 import './navbar.css'
-import searchIcon from './assets/searchIcon.svg'
-import logout from './assets/logout.svg'
+import { NavLink } from 'react-router-dom';
 
-export default function Navbar() {
+interface NavbarProps {
+    onLogout: () => void;
+}
+
+export default function Navbar({ onLogout }: NavbarProps) {
     return (
         <nav className="nav">
             <div className="nav-header">
-                <a href="/" className="title">Game Able</a>
-                <button className="logout-btn mask-icon-logout" aria-label="Logout">
-                    <img src={logout} alt="Logout" />
+                <NavLink to="/" className="title">Game Able</NavLink>
+                <button className="auth-section auth-button" aria-label="Logout" onClick={onLogout}>
+                    <span className="user-greeting">Hello, User</span>
+                    <span className="mask-icon-logout"/>
                 </button>
             </div>
             <form className="search-container">
@@ -18,15 +22,13 @@ export default function Navbar() {
                     placeholder="Search games..."
                     className="search-bar"
                 />
-                <button type="submit" className="search-btn mask-icon-search" aria-label="Search">
-                    <img src={searchIcon} alt={"Search Icon"}/>
-                </button>
+                <button type="submit" className="search-btn mask-icon-search" aria-label="Search"/>
             </form>
             <ul>
-                <li><a href="/" className="home">Home</a></li>
-                <li><a href="/wishlist" className="wishlist">Wishlist</a></li>
-                <li><a href="/profile" className="profile">Profile</a></li>
-                <li><a href="/settings" className="settings">Settings</a></li>
+                <li><NavLink to="/" className="home">Home</NavLink></li>
+                <li><NavLink to="/wishlist" className="wishlist">Wishlist</NavLink></li>
+                <li><NavLink to="/profile" className="profile">Profile</NavLink></li>
+                <li><NavLink to="/settings" className="settings">Settings</NavLink></li>
             </ul>
         </nav>
     )

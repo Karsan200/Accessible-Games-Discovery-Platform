@@ -1,7 +1,7 @@
 import type { LoginFormModel } from "../models/forms/LoginFormModel.ts";
 import { settings } from "../AppSettings.ts";
 import { HTTPError } from "../models/HttpError.ts";
-import { useAuth } from "../data/AuthContext.tsx";
+import { Alert } from "react-bootstrap";
 
 export async function LoginForm(body: LoginFormModel) {
     let valid = true
@@ -51,12 +51,27 @@ export async function LoginForm(body: LoginFormModel) {
 
         if (data.ok) {
             // Get access token from memory
-            const token = useAuth()
+            const token = body.authContext
 
             const response = await data.json()
 
+            console.log(response.accessToken)
+
             // Store access token in memory
             token.setAccessToken(response.accessToken)
+
+            // Set success banner
+            body.banner[1](
+                <Alert variant="success">
+                    <Alert.Heading>Login successful! Redirecting...</Alert.Heading>
+                    If you are not redirected automatically, please <Alert.Link href="/dashboard">click here</Alert.Link>.
+                </Alert>
+            )
+
+            // Redirect to dashboard after a short delay
+            setTimeout(() => {
+                window.location.href = "/dashboard"
+            }, 5000)
         }
         else {
             if (data.status === 401) {

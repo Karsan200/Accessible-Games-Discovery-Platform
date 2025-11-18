@@ -4,6 +4,7 @@ import type { FeedbackType } from "react-bootstrap/Feedback";
 import { LoginForm } from "../logic/LoginForm.tsx";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { useAuth } from "../data/AuthContext.tsx";
 
 export function Login() {
     // Email States
@@ -14,8 +15,14 @@ export function Login() {
     const passwordStatus = useState<FeedbackType | undefined>();
     const passwordMessage = useState("");
 
+    // Other States
+    const banner = useState(<></>);
+    const auth = useAuth();
+
     async function handleSubmit() {
         await LoginForm({
+            banner: banner,
+            authContext: auth,
             inputs: {
                 email: {
                     value: (document.getElementById("email") as HTMLInputElement).value,
@@ -32,7 +39,10 @@ export function Login() {
     }
 
     return (
-        <Container>
+        <div className="auth-container"><Container fluid className="bg-light p-4 rounded-4">
+            {banner[0]}
+            <h1 className="mb-3">Login</h1>
+
             <Form noValidate>
                 <Form.Floating className="mb-3">
                     <Form.Control
@@ -62,10 +72,10 @@ export function Login() {
                         {passwordMessage[0]}
                     </Form.Control.Feedback>
                 </Form.Floating>
-                <Button variant="primary" onClick={() => { void handleSubmit() }}>
+                <Button variant="outline-dark" className="w-100 py-2" onClick={() => { void handleSubmit() }}>
                     Login
                 </Button>
             </Form>
-        </Container>
+        </Container></div>
     )
 }

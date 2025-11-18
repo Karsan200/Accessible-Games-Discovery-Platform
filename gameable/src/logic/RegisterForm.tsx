@@ -1,6 +1,7 @@
 import type { RegisterFormModel } from "../models/forms/RegisterFormModel.ts";
 import { settings } from "../AppSettings.ts";
 import {HTTPError} from "../models/HttpError.ts";
+import {Alert} from "react-bootstrap";
 
 export async function RegisterForm(body: RegisterFormModel) {
     let valid = true
@@ -81,7 +82,13 @@ export async function RegisterForm(body: RegisterFormModel) {
 
         // Registration successful
         if (data.ok) {
-
+            // Set banner to show success message
+            body.banner[1](
+                <Alert variant="success">
+                    <Alert.Heading>Registration Successful</Alert.Heading>
+                    You can now <Alert.Link href="/login">login</Alert.Link> to your new account.
+                </Alert>
+            );
         }
         // Registration failed
         else {

@@ -23,8 +23,12 @@ export function Register() {
     const passwordConfirmStatus = useState<FeedbackType | undefined>();
     const passwordConfirmMessage = useState("");
 
+    // Banner State
+    const banner = useState(<></>);
+
     async function handleSubmit() {
         await RegisterForm({
+            banner: banner,
             inputs: {
                 username: {
                     value: (document.getElementById("username") as HTMLInputElement).value,
@@ -51,8 +55,9 @@ export function Register() {
     }
 
     return (
-        <Container>
-            <h1>Register</h1>
+        <div className="auth-container"><Container fluid className="bg-light p-4 rounded-4">
+            {banner[0]}
+            <h1 className="mb-3">Register</h1>
 
             <Form noValidate>
                 <Form.Floating className="mb-3">
@@ -111,10 +116,10 @@ export function Register() {
                         {passwordConfirmMessage[0]}
                     </Form.Control.Feedback>
                 </Form.Floating>
-                <Button variant="primary" onClick={() => { void handleSubmit() }}>
+                <Button variant="outline-dark" className="w-100 py-2" onClick={() => { void handleSubmit() }}>
                     Register
                 </Button>
             </Form>
-        </Container>
+        </Container></div>
     )
 }

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Authentication } from "./Authentication.ts";
 
-type AuthContextType = {
+export type AuthContextType = {
     accessToken: string | null;
     setAccessToken: (token: string | null) => void;
 };

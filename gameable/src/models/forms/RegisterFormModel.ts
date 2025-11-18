@@ -2,6 +2,7 @@ import React from "react";
 import type { FeedbackType } from "react-bootstrap/Feedback";
 
 export type RegisterFormModel = {
+    banner: [React.JSX.Element, React.Dispatch<React.SetStateAction<React.JSX.Element>>],
     inputs: {
         username: {
             value: string,

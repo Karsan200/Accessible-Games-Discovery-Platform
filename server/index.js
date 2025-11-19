@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser"; // Add this import
 import dotenv from "dotenv";
-import {expressjwt} from "express-jwt";
+import { expressjwt } from "express-jwt";
 import { connectDB } from "./models/dbSetup.js";
 import homeRoutes from "./routes/homeRoutes.js";
 
@@ -25,9 +25,6 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Add home routes
-app.use("/home", homeRoutes);
-
 // Connect to MongoDB
 await connectDB();
 
@@ -39,7 +36,8 @@ app.use(
     }).unless({
         // Paths exempt from JWT authentication
         path: [
-            "/auth/login", "/auth/register", "/auth/refresh" // Authentication paths
+            "/auth/login", "/auth/register", "/auth/refresh", // Authentication paths
+            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers" // Public home page paths
         ]
     })
 );
@@ -63,6 +61,7 @@ app.use(async (req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 // Routers
+app.use("/api/home", homeRoutes);
 app.use("/auth", authenticationRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

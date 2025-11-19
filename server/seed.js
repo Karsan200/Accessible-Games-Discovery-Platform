@@ -23,8 +23,8 @@ async function seedDatabase() {
 
         // === Users ===
         const users = await User.insertMany([
-            { username: "Alice", email: "alice@example.com", password: "pass123" },
-            { username: "Bob", email: "bob@example.com", password: "pass123" },
+            { username: "Alice", email: "alice@example.com", password: "pass123", salt: "random_salt" },
+            { username: "Bob", email: "bob@example.com", password: "pass123", salt: "random_salt" },
         ]);
 
         // === Genres ===

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { HeroHeader } from "../components/HeroHeader";
 import { TrendingGames } from "../components/TrendingGames";
 import { TopSellersSection } from "../components/TopSellersSection";
+import { settings } from "../AppSettings.ts";
 
 // Define the tag type
 type TagType = "Visual" | "Audio" | "Motor" | "Cognitive";
@@ -37,19 +38,19 @@ export const Home: React.FC = () => {
     // Fetch DB data
     useEffect(() => {
         // Top sellers
-        fetch("http://localhost:5000/home/top-sellers")
+        fetch(settings.apiBaseUrl + "/api/home/top-sellers")
             .then((res) => res.json())
             .then((data) => setTopSellers(data))
             .catch((err) => console.error("Error fetching top sellers:", err));
 
         // Trending
-        fetch("http://localhost:5000/home/trending")
+        fetch(settings.apiBaseUrl + "/api/home/trending")
             .then((res) => res.json())
             .then((data) => setTrendingGames(data))
             .catch((err) => console.error("Error fetching trending games:", err));
 
         // Hero carousel (new)
-        fetch("http://localhost:5000/home/hero")
+        fetch(settings.apiBaseUrl + "/api/home/hero")
             .then((res) => res.json())
             .then((data) => setHeroSlides(data))
             .catch((err) => console.error("Error fetching hero slides:", err));

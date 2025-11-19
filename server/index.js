@@ -8,6 +8,8 @@ import { connectDB } from "./models/dbSetup.js";
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
 
+import wishlistRoutes from "./routes/wishlistRoutes.js";
+
 dotenv.config();
 const app = express();
 
@@ -60,5 +62,6 @@ const PORT = process.env.PORT || 5000;
 
 // Routers
 app.use("/auth", authenticationRoutes);
+app.use("/wishlist", wishlistRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

@@ -19,7 +19,17 @@ const userSchema = new mongoose.Schema({
     role: String,
     date_of_birth: Date,
     setting1: { type: Boolean, default: false },
-    setting2: { type: Boolean, default: false }, // Editable settings add more where needed
+    setting2: { type: Boolean, default: false },
+    permissions: {
+        type: Object,
+        default: null,
+        types: {
+            isAdmin: Boolean, // Provides all permissions, required for giving other permissions
+            manageGames: Boolean,
+            manageUsers: Boolean,
+            moderateReviews: Boolean
+        }
+    }
 });
 
 // Sessions collection

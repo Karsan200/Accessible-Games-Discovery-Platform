@@ -7,6 +7,7 @@ const router = express.Router();
 router.get("/:userId", async (req, res) => {
     try {
         const items = await Wishlist.find({ user_id: req.params.userId })
+            .sort({ weight: 1 })
             .populate("game_id");
 
         // Attach media (e.g., cover)
@@ -20,10 +21,12 @@ router.get("/:userId", async (req, res) => {
         }
 
         res.json(result);
+
     } catch (err) {
-        res.status(500).json({ error: "Failed to load wishlist" });
+        res.status(500).json({ error: "Error fetching wishlist" });
     }
 });
+
 
 // Remove from wishlist
 router.delete("/:id", async (req, res) => {

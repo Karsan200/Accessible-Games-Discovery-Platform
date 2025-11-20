@@ -22,7 +22,7 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
     return (
         <Card
             className="mb-3 shadow-sm"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", padding: "16px" }}
             tabIndex={0}
             aria-label={`${title}, rated ${rating} out of 5 stars, tags: ${tags.join(
                 ", "
@@ -32,7 +32,7 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                 if (e.key === "Enter" && onViewGame) onViewGame();
             }}
         >
-            <Row className="g-2 g-md-3 align-items-start flex-wrap">
+            <Row className="g-3 align-items-center flex-wrap">
                 {/* Left: App Icon */}
                 <Col
                     xs={12}
@@ -56,7 +56,7 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                 <Col
                     xs={12}
                     sm
-                    className="d-flex flex-column justify-content-center align-items-start"
+                    className="d-flex flex-column justify-content-start align-items-start"
                 >
                     <Stack
                         direction="horizontal"
@@ -85,7 +85,7 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                 <Col
                     xs={12}
                     sm="auto"
-                    className="d-flex flex-column align-items-center mt-2 mt-sm-0"
+                    className="d-flex flex-column align-items-center justify-content-center"
                 >
                     <div
                         className="mb-2"

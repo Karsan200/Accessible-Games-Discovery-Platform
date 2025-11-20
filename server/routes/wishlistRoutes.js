@@ -3,14 +3,16 @@ import { Wishlist, Game, GameMedia } from "../models/dbSetup.js";
 
 const router = express.Router();
 
-// Get a user's wishlist
+// Get a user's wishlist ACTIVE ONLY
 router.get("/:userId", async (req, res) => {
     try {
-        const items = await Wishlist.find({ user_id: req.params.userId })
+        const items = await Wishlist.find({
+            user_id: req.params.userId,
+            removed_at: null // Only show active items
+        })
             .sort({ weight: 1 })
             .populate("game_id");
 
-        // Attach media (e.g., cover)
         const result = [];
         for (const item of items) {
             const media = await GameMedia.find({ game_id: item.game_id._id });
@@ -21,20 +23,21 @@ router.get("/:userId", async (req, res) => {
         }
 
         res.json(result);
-
     } catch (err) {
-        res.status(500).json({ error: "Error fetching wishlist" });
+        res.status(500).json({ error: "Failed to load wishlist" });
     }
 });
 
-
-// Remove from wishlist
+// Soft remove from wishlist
 router.delete("/:id", async (req, res) => {
     try {
-        await Wishlist.findByIdAndDelete(req.params.id);
-        res.json({ message: "Removed from wishlist" });
+        await Wishlist.findByIdAndUpdate(req.params.id, {
+            removed_at: new Date()
+        });
+
+        res.json({ message: "Wishlist item removed (soft delete)" });
     } catch (err) {
-        res.status(500).json({ error: "Failed to delete" });
+        res.status(500).json({ error: "Failed to remove item" });
     }
 });
 

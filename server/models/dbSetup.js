@@ -64,6 +64,7 @@ const wishlistSchema = new mongoose.Schema({
     game_id: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
     status: String,
     created_at: { type: Date, default: Date.now },
+    removed_at: {type: Date, default: null }, // For soft delete, Active items removed_at = null, Deleted items removed_at = Date
     weight: { type: Number, default: 0 },
 });
 

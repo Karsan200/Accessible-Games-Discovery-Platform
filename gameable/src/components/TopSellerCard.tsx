@@ -7,7 +7,7 @@ interface TopSellerCardProps {
     title: string;
     description: string;
     tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
-    rating: number; // 0-5
+    rating: number; // 0-10 from DB
     onViewGame?: () => void;
 }
 
@@ -19,12 +19,15 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                                                                 rating,
                                                                 onViewGame,
                                                             }) => {
+    // Convert 0–10 rating to 0–5 stars
+    const starRating = Math.round((rating / 10) * 5);
+
     return (
         <Card
             className="mb-3 shadow-sm"
             style={{ cursor: "pointer", padding: "16px" }}
             tabIndex={0}
-            aria-label={`${title}, rated ${rating} out of 5 stars, tags: ${tags.join(
+            aria-label={`${title}, rated ${rating} out of 10, tags: ${tags.join(
                 ", "
             )}, description: ${description}`}
             role="group"
@@ -90,12 +93,12 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                     <div
                         className="mb-2"
                         style={{ fontSize: "1.2rem", lineHeight: 1 }}
-                        aria-label={`Rating: ${rating} out of 5 stars`}
+                        aria-label={`Rating: ${rating} out of 10`}
                         role="img"
                     >
                         {Array.from({ length: 5 }).map((_, i) => (
                             <span key={i} className="me-1">
-                                {i < rating ? "★" : "☆"}
+                                {i < starRating ? "★" : "☆"}
                             </span>
                         ))}
                     </div>

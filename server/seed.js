@@ -110,7 +110,7 @@ async function seedDatabase() {
             { game_id: games[0]._id, name: "One-Handed Mode", description: "Can be played with one hand", accessibility_group_id: accessibilityGroups.find(g => g.name === "Motor")._id },
 
             // Game 2
-            { game_id: games[1]._id, name: "Subtitles", description: "Subtitles for all dialogue", accessibility_group_id: accessibilityGroups.find(g => g.name === "Hearing")._id },
+            { game_id: games[1]._id, name: "Subtitles", description: "Subtitles for all dialogue", accessibility_group_id: accessibilityGroups.find(g => g.name === "Audio")._id },
             { game_id: games[1]._id, name: "Simplified UI", description: "Simplified interface for easier comprehension", accessibility_group_id: accessibilityGroups.find(g => g.name === "Cognitive")._id },
 
             // Game 3
@@ -118,7 +118,7 @@ async function seedDatabase() {
             { game_id: games[2]._id, name: "Customizable Controls", description: "Fully remappable controls", accessibility_group_id: accessibilityGroups.find(g => g.name === "Motor")._id },
 
             // Game 4
-            { game_id: games[3]._id, name: "Audio Cues", description: "Important events signaled with sound", accessibility_group_id: accessibilityGroups.find(g => g.name === "Hearing")._id },
+            { game_id: games[3]._id, name: "Audio Cues", description: "Important events signaled with sound", accessibility_group_id: accessibilityGroups.find(g => g.name === "Audio")._id },
             { game_id: games[3]._id, name: "Tutorial Assistance", description: "Extra guidance for new players", accessibility_group_id: accessibilityGroups.find(g => g.name === "Cognitive")._id },
         ]);
 
@@ -132,12 +132,16 @@ async function seedDatabase() {
             { user_id: users[1]._id, game_id: games[2]._id, status: "owned" },
         ]);
 
-        // === Reviews ===
+// === Reviews ===
         await Review.insertMany([
             { user_id: users[0]._id, game_id: games[0]._id, rating: 8, body: "Really fun!" },
             { user_id: users[1]._id, game_id: games[1]._id, rating: 9, body: "Challenging puzzles!" },
             { user_id: users[0]._id, game_id: games[2]._id, rating: 7, body: "Exciting races!" },
             { user_id: users[1]._id, game_id: games[3]._id, rating: 8, body: "Loved the mystery!" },
+            { user_id: users[1]._id, game_id: games[0]._id, rating: 9, body: "Addictive gameplay!" },
+            { user_id: users[0]._id, game_id: games[1]._id, rating: 8, body: "Great for puzzle lovers!" },
+            { user_id: users[1]._id, game_id: games[2]._id, rating: 6, body: "Fun, but a bit short." },
+            { user_id: users[0]._id, game_id: games[3]._id, rating: 7, body: "Interesting storyline." },
         ]);
 
         console.log("Database seeded successfully!");

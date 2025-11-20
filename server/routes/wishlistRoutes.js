@@ -52,5 +52,37 @@ router.patch("/:id/weight", async (req, res) => {
     }
 });
 
+// Restore a wishlist item that has
+router.put("/restore/:id", async (req, res) => {
+    try {
+        await Wishlist.findByIdAndUpdate(req.params.id, {
+            removed_at: null
+        });
+
+        res.json({ message: "Wishlist item restored" });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to restore item" });
+    }
+});
+
+// Restore the most recently removed item -- usage for undo button
+router.put("/restore-last/:userId", async (req, res) => {
+    try {
+        const item = await Wishlist.findOne({
+            user_id: req.params.userId,
+            removed_at: { $ne: null }
+        }).sort({ removed_at: -1 });
+
+        if (!item) return res.status(404).json({ message: "No items to restore" });
+
+        item.removed_at = null;
+        await item.save();
+
+        res.json({ message: "Last removed wishlist item restored", item });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to restore last item" });
+    }
+});
+
 export default router;
 

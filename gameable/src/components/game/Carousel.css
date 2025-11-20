@@ -78,7 +78,7 @@ button.control-btn .control-arrow {
 /* make opaque when hovered */
 button.control-btn:hover,
 button.control-btn:active {
-    background: #ffffff;
+    background: #F2F0EF;
     transform: translateY(-50%) scale(1.06);
     box-shadow: 0 10px 26px rgba(0,0,0,0.10);
 }

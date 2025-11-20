@@ -84,13 +84,13 @@ export function GamePage() {
         });
 
     // Prepare reviews for carousel
-    const reviewItems: ReactElement[] = (game.reviews ?? []).map((r, i) => {
-        const ratingCount = Math.max(0, Math.floor(r.rating ?? 0));
-        const stars = Array(ratingCount).fill("★").join("");
 
+    const reviewItems: ReactElement[] = (game.reviews ?? []).map((r, i) => {
         return (
             <div className="review-box w-100 h-100" key={i}>
-                <h4 className="mb-1">{stars}</h4>
+                <h4 className="mb-1">
+                    <GameStars rating={r.rating ?? 0} />
+                </h4>
                 <p className="mb-2">{r.body}</p>
                 <div className="review-meta">
                     <img
@@ -100,12 +100,7 @@ export function GamePage() {
                                 : DEFAULT_PROFILE_IMG
                         }
                         alt={r.user?.username ?? "Anonymous"}
-                        style={{
-                            width: "40px",
-                            height: "40px",
-                            borderRadius: "50%",
-                            objectFit: "cover",
-                        }}
+                        className="review-avatar"
                     />
                     <strong>{r.user?.username ?? "Anonymous"}</strong>
                 </div>
@@ -161,7 +156,14 @@ export function GamePage() {
             <hr className="my-5 full-width-hr" />
 
             <h2 className="mb-2">Customer Reviews</h2>
-            <p className="text-muted mb-4">This is what the customers have to say.</p>
+            <div className="reviews-header-row">
+                <p className="text-muted mb-4">This is what the customers have to say.</p>
+                <button type="button" className="btn btn-primary game-fav-btn reviews-add-btn">
+                    Add a Review
+                </button>
+
+            </div>
+
 
             <Carousel id="reviewCarousel" items={reviewItems} visibleCount={3} step={1} />
         </div>

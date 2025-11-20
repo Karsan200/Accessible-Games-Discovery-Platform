@@ -6,3 +6,20 @@ $body-bg: #F2F0EF;
 // Import Bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+// Dark Mode Overwrites
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bs-primary: #36AB78;
+    --bs-body-color: #F2F0EF;
+    --bs-body-bg: #1B1B1B;
+    --bs-link-color: #67C4A1;
+    --bs-btn-primary-bg: #67C4A1;
+    --bs-btn-primary-border-color: #67C4A1;
+  }
+
+  .text-muted {
+    color: #f3f3f3 !important;
+  }
+
+}
+

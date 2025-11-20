@@ -3,24 +3,59 @@ import { useEffect, useState } from "react";
 export function Wishlist() {
     const userId = "1"; // TODO: THIS IS A HARDCODED VALUE AT THE MOMENT
     const [wishlist, setWishlist] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    // Load wishlist
+    function loadWishlist() {
         fetch(`http://localhost:5000/api/wishlist/${userId}`)
             .then((res) => res.json())
-            .then((data) => setWishlist(data))
-            .catch(console.error);
-    }, []);
-
-    function removeItem(id: string) {
-        fetch(`http://localhost:5000/api/wishlist/${id}`, {
-            method: "DELETE",
-        })
-            .then(() => {
-                // Remove from state
-                setWishlist((prev) => prev.filter((item: any) => item._id !== id));
+            .then((data) => {
+                setWishlist(data);
+                setLoading(false);
             })
             .catch(console.error);
     }
+
+    useEffect(() => {
+        loadWishlist();
+    }, []);
+
+    // Soft delete
+    function softRemove(id: string) {
+        fetch(`http://localhost:5000/api/wishlist/${id}`, { method: "DELETE" })
+            .then(() => loadWishlist())
+            .catch(console.error);
+    }
+
+    // Hard delete
+    function hardRemove(id: string) {
+        fetch(`http://localhost:5000/api/wishlist/${id}?hard=true`, { method: "DELETE" })
+            .then(() => loadWishlist())
+            .catch(console.error);
+    }
+
+    // Restore last removed
+    function restoreLast() {
+        fetch(`http://localhost:5000/api/wishlist/restore-last/${userId}`, {
+            method: "PUT",
+        })
+            .then((res) => res.json())
+            .then(() => loadWishlist())
+            .catch(console.error);
+    }
+
+    // Update weight
+    function updateWeight(id: string, weight: number) {
+        fetch(`http://localhost:5000/api/wishlist/${id}/weight`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ weight }),
+        })
+            .then(() => loadWishlist())
+            .catch(console.error);
+    }
+
+    if (loading) return <p>Loading wishlist...</p>;
 
     return (
         <div className="wishlist-page">
@@ -55,7 +90,7 @@ export function Wishlist() {
 
                                     <button
                                         style={{ marginLeft: "20px" }}
-                                        onClick={() => removeItem(item._id)}
+                                        onClick={() => softRemove(item._id)}
                                     >
                                         Remove
                                     </button>

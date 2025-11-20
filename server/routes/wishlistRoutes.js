@@ -28,27 +28,24 @@ router.get("/:userId", async (req, res) => {
     }
 });
 
-// Soft remove from wishlist
-router.delete("/soft/:id", async (req, res) => {
+// Delete Functions -  call fetch(`/api/wishlist/${id}?hard=true`, { method: "DELETE" }) for hard delete
+router.delete("/:id", async (req, res) => {
     try {
+        const hardDelete = req.query.hard === "true";
+
+        if (hardDelete) {
+            await Wishlist.findByIdAndDelete(req.params.id);
+            return res.json({ message: "Hard delete complete" });
+        }
+
         await Wishlist.findByIdAndUpdate(req.params.id, {
             removed_at: new Date()
         });
 
-        res.json({ message: "Wishlist item removed (soft delete)" });
-    } catch (err) {
-        res.status(500).json({ error: "Failed to remove item" });
-    }
-});
+        res.json({ message: "Soft delete complete" });
 
-// Hard delete - PERMANENT REMOVAL FROM WISHLIST
-router.delete("/hard/:id", async (req, res) => {
-    try {
-        await Wishlist.findByIdAndDelete(req.params.id);
-
-        res.json({ message: "Wishlist item permanently deleted" });
     } catch (err) {
-        res.status(500).json({ error: "Failed to hard delete item" });
+        res.status(500).json({ error: "Delete failed" });
     }
 });
 

@@ -12,7 +12,7 @@ export class permissionsService {
      */
     async setUserPermissions(userId, permissions) {
         // Validate that all permissions are included
-        const validPermissions = ['isAdmin', 'manageGames', 'manageUsers', 'moderateReviews'];
+        const validPermissions = ['isAdmin', 'manageGames', 'manageUsers', 'moderateReviews', 'manageFeaturedContent'];
         for (const perm of validPermissions) {
             if (!(perm in permissions)) {
                 // Set the missing permission to false

@@ -27,7 +27,8 @@ const userSchema = new mongoose.Schema({
             isAdmin: Boolean, // Provides all permissions, required for giving other permissions
             manageGames: Boolean,
             manageUsers: Boolean,
-            moderateReviews: Boolean
+            moderateReviews: Boolean,
+            manageFeaturedContent: Boolean
         }
     }
 });

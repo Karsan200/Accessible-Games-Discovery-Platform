@@ -10,6 +10,7 @@ import { Navigation } from "./components/Navigation.tsx";
 import { Games } from "./pages/Games.tsx";
 import { Register } from "./pages/Register.tsx";
 import { Login } from "./pages/Login.tsx";
+import { Home } from "./pages/Home.tsx";
 
 function App() {
     return (
@@ -20,7 +21,9 @@ function App() {
 
                 {/* Routes */}
                 <Routes>
-                    <Route path="/login" element={< Login />} />
+                    <Route path="/" element={<Home />} />
+
+                    <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/games" element={<Games />} />
                 </Routes>

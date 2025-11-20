@@ -45,7 +45,7 @@ const gameMediaSchema = new mongoose.Schema({
     game_id: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
     type: {
         type: String,
-        enum: ["trailer", "screenshot", "cover", "concept_art", "other"],
+        enum: ["trailer", "screenshot", "cover", "concept_art", "other", "icon"],
         required: true,
     },
     url: { type: String, required: true },

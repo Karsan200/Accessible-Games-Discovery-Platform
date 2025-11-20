@@ -19,7 +19,6 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                                                                 rating,
                                                                 onViewGame,
                                                             }) => {
-    // Convert 0–10 rating to 0–5 stars
     const starRating = Math.round((rating / 10) * 5);
 
     return (
@@ -35,13 +34,9 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                 if (e.key === "Enter" && onViewGame) onViewGame();
             }}
         >
-            <Row className="g-3 align-items-center flex-wrap">
+            <Row className="align-items-center" style={{ flexWrap: "nowrap" }}>
                 {/* Left: App Icon */}
-                <Col
-                    xs={12}
-                    sm="auto"
-                    className="d-flex justify-content-center mb-2 mb-sm-0"
-                >
+                <Col xs="auto" className="d-flex justify-content-center mb-2 mb-sm-0">
                     <Card.Img
                         src={image}
                         alt={`${title} app icon`}
@@ -57,9 +52,8 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
 
                 {/* Middle: Tags, Title, Description */}
                 <Col
-                    xs={12}
-                    sm
                     className="d-flex flex-column justify-content-start align-items-start"
+                    style={{ minWidth: 0, flex: "1 1 auto" }}
                 >
                     <Stack
                         direction="horizontal"
@@ -70,25 +64,24 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                     >
                         {tags.map((tag, idx) => (
                             <span key={idx} role="listitem">
-                                <GameTag type={tag} />
-                            </span>
+                <GameTag type={tag} />
+              </span>
                         ))}
                     </Stack>
 
-                    <Card.Title className="fw-bold mb-1 text-truncate" title={title}>
+                    <Card.Title className="fw-bold mb-1" title={title} style={{ wordBreak: "break-word" }}>
                         {title}
                     </Card.Title>
 
-                    <Card.Text className="mb-0 text-truncate" title={description}>
+                    <Card.Text className="mb-0" title={description} style={{ wordBreak: "break-word" }}>
                         {description}
                     </Card.Text>
                 </Col>
 
                 {/* Right: Rating and Button */}
                 <Col
-                    xs={12}
-                    sm="auto"
-                    className="d-flex flex-column align-items-center justify-content-center"
+                    xs="auto"
+                    className="d-flex flex-column align-items-center justify-content-center ms-3"
                 >
                     <div
                         className="mb-2"
@@ -98,8 +91,8 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                     >
                         {Array.from({ length: 5 }).map((_, i) => (
                             <span key={i} className="me-1">
-                                {i < starRating ? "★" : "☆"}
-                            </span>
+                {i < starRating ? "★" : "☆"}
+              </span>
                         ))}
                     </div>
 
@@ -107,7 +100,6 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                         variant="dark"
                         onClick={onViewGame}
                         aria-label={`View ${title}`}
-                        className="w-100"
                     >
                         View Game
                     </Button>

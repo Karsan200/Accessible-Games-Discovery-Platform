@@ -23,40 +23,48 @@ export function Wishlist() {
     }
 
     return (
-        <div>
-            <h1>My Wishlist</h1>
+        <div className="wishlist-page">
 
-            <ul>
-                {wishlist.map((item: any) => {
-                    const game = item.game_id;
+            {/* --- Wishlist Header Banner --- */}
+            <div className="wishlist-header">
+                <h1>My Wishlist</h1>
 
-                    // Try to find a cover image via type
-                    const cover = item.media?.find((m: any) => m.type === "cover");
+                <p className="wishlist-subtitle">
+                    Your saved games, all in one place. Explore, track, and manage your favourites.
+                </p>
 
-                    return (
-                        <li key={item._id}>
-                            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                                {cover && (
-                                    <img
-                                        src={cover.url}
-                                        alt={cover.description || game.title}
-                                        style={{ width: "60px", borderRadius: "6px" }}
-                                    />
-                                )}
+                <ul>
+                    {wishlist.map((item: any) => {
+                        const game = item.game_id;
 
-                                <span>{game.title}</span>
+                        // Try to find a cover image via type
+                        const cover = item.media?.find((m: any) => m.type === "cover");
 
-                                <button
-                                    style={{ marginLeft: "20px" }}
-                                    onClick={() => removeItem(item._id)}
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                        </li>
-                    );
-                })}
-            </ul>
+                        return (
+                            <li key={item._id}>
+                                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                                    {cover && (
+                                        <img
+                                            src={cover.url}
+                                            alt={cover.description || game.title}
+                                            style={{ width: "60px", borderRadius: "6px" }}
+                                        />
+                                    )}
+
+                                    <span>{game.title}</span>
+
+                                    <button
+                                        style={{ marginLeft: "20px" }}
+                                        onClick={() => removeItem(item._id)}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
         </div>
     );
 }

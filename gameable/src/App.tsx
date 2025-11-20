@@ -10,6 +10,7 @@ import { Navigation } from "./components/Navigation.tsx";
 import { Games } from "./pages/Games.tsx";
 import { Register } from "./pages/Register.tsx";
 import { Login } from "./pages/Login.tsx";
+import { Wishlist } from "./pages/Wishlist.tsx";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                     <Route path="/login" element={< Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/games" element={<Games />} />
+                    <Route path="/wishlist" element={<Wishlist />} />
                 </Routes>
 
                 {/* Footer */}

@@ -64,6 +64,7 @@ const wishlistSchema = new mongoose.Schema({
     game_id: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
     status: String,
     created_at: { type: Date, default: Date.now },
+    weight: Number,
 });
 
 // Reviews collection

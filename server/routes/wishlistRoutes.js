@@ -29,7 +29,7 @@ router.get("/:userId", async (req, res) => {
 });
 
 // Soft remove from wishlist
-router.delete("/:id", async (req, res) => {
+router.delete("/soft/:id", async (req, res) => {
     try {
         await Wishlist.findByIdAndUpdate(req.params.id, {
             removed_at: new Date()
@@ -38,6 +38,17 @@ router.delete("/:id", async (req, res) => {
         res.json({ message: "Wishlist item removed (soft delete)" });
     } catch (err) {
         res.status(500).json({ error: "Failed to remove item" });
+    }
+});
+
+// Hard delete - PERMANENT REMOVAL FROM WISHLIST
+router.delete("/hard/:id", async (req, res) => {
+    try {
+        await Wishlist.findByIdAndDelete(req.params.id);
+
+        res.json({ message: "Wishlist item permanently deleted" });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to hard delete item" });
     }
 });
 

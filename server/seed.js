@@ -73,20 +73,25 @@ async function seedDatabase() {
             },
         ]);
 
-        // === Game Media === (2 per game: icon and cover)
+// === Game Media ===
         await GameMedia.insertMany([
-            { game_id: games[0]._id, type: "icon", url: "https://example.com/superfun_icon.png" },
-            { game_id: games[0]._id, type: "cover", url: "https://example.com/superfun_cover.jpg" },
+            // Game 1
+            { game_id: games[0]._id, type: "icon", url: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1888930/capsule_616x353.jpg?t=1750959031" },
+            { game_id: games[0]._id, type: "cover", url: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1888930/capsule_616x353.jpg?t=1750959031" },
 
-            { game_id: games[1]._id, type: "icon", url: "https://example.com/puzzlemania_icon.png" },
-            { game_id: games[1]._id, type: "cover", url: "https://example.com/puzzlemania_cover.jpg" },
+            // Game 2
+            { game_id: games[1]._id, type: "icon", url: "https://gaming-cdn.com/images/news/articles/7191/cover/minecraft-gets-a-new-artwork-cover66856ea7d02ad.jpg" },
+            { game_id: games[1]._id, type: "cover", url: "https://gaming-cdn.com/images/news/articles/7191/cover/minecraft-gets-a-new-artwork-cover66856ea7d02ad.jpg" },
 
-            { game_id: games[2]._id, type: "icon", url: "https://example.com/racingthunder_icon.png" },
-            { game_id: games[2]._id, type: "cover", url: "https://example.com/racingthunder_cover.jpg" },
+            // Game 3
+            { game_id: games[2]._id, type: "icon", url: "https://gaming-cdn.com/images/products/5661/orig/disco-elysium-the-final-cut-pc-game-gog-com-cover.jpg?v=1701269736" },
+            { game_id: games[2]._id, type: "cover", url: "https://gaming-cdn.com/images/products/5661/orig/disco-elysium-the-final-cut-pc-game-gog-com-cover.jpg?v=1701269736" },
 
-            { game_id: games[3]._id, type: "icon", url: "https://example.com/mysteryquest_icon.png" },
-            { game_id: games[3]._id, type: "cover", url: "https://example.com/mysteryquest_cover.jpg" },
+            // Game 4
+            { game_id: games[3]._id, type: "icon", url: "https://m.media-amazon.com/images/I/51tOYuCeiEL._UXNaN_FMjpg_QL85_.jpg" },
+            { game_id: games[3]._id, type: "cover", url: "https://m.media-amazon.com/images/I/51tOYuCeiEL._UXNaN_FMjpg_QL85_.jpg" },
         ]);
+
 
 
         // === Accessibility Groups ===

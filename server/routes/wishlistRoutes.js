@@ -38,5 +38,16 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+// Update Weighting
+router.patch("/:id/weight", async (req, res) => {
+    try {
+        const { weight } = req.body;
+        await Wishlist.findByIdAndUpdate(req.params.id, { weight });
+        res.json({ message: "Weight updated" });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to update weight" });
+    }
+});
+
 export default router;
 

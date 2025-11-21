@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import type { ReactElement } from "react";
 import { useParams } from "react-router-dom";
-import { GameBreadcrumbs } from "../components/game/GameBreadcrumbs";
-import { GameTags } from "../components/game/GameTags";
-import { GameStars } from "../components/game/GameStars";
-import { Carousel } from "../components/game/Carousel";
+import { GameBreadcrumbs } from "../game/GameBreadcrumbs";
+import { GameTags } from "../game/GameTags";
+import { GameStars } from "../game/GameStars";
+import { Carousel } from "../game/Carousel";
 import "./GamePage.css";
 
 const DEFAULT_PROFILE_IMG = "http://localhost:5000/images/profilepicTemp.png";

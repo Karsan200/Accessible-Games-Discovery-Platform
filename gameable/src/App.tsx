@@ -4,8 +4,8 @@ import {Footer} from "./components/common/Footer.tsx";
 import Navbar from "./components/common/Navigation.tsx";
 import Breadcrumb from "./components/common/Breadcrumb.tsx";
 
-import {Games} from "./pages/Games.tsx";
-import {GamePage} from "./pages/GamePage.tsx";
+import {Games} from "./components/pages/Games.tsx"
+import {GamePage} from "./components/pages/GamePage.tsx";
 
 function App() {
     return (

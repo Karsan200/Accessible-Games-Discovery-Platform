@@ -4,5 +4,5 @@ export interface AppSettings {
 }
 
 export const settings: AppSettings = {
-    apiBaseUrl: "http://localhost:5000"
+    apiBaseUrl: "http://localhost:3001"
 }

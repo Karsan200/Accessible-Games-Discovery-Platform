@@ -1,8 +1,8 @@
-import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import {Footer} from "./components/Footer.tsx";
-import {Navigation} from "./components/Navigation.tsx";
+import {Footer} from "./components/common/Footer.tsx";
+import Navbar from "./components/common/Navigation.tsx";
+import Breadcrumb from "./components/common/Breadcrumb.tsx";
 
 import {Games} from "./pages/Games.tsx";
 import {GamePage} from "./pages/GamePage.tsx";
@@ -11,7 +11,8 @@ function App() {
     return (
         <BrowserRouter>
             {/* Navigation */}
-            <Navigation />
+            <Navbar />
+            <Breadcrumb />
 
             {/* Routes */}
             <Routes>

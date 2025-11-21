@@ -1,16 +1,31 @@
 import './navbar.css'
-import { NavLink } from 'react-router-dom';
+import {NavLink, useNavigate} from 'react-router-dom';
+import {useAuth} from "../../data/AuthContext.tsx";
+import {settings} from "../../AppSettings.ts";
 
-interface NavbarProps {
-    onLogout: () => void;
-}
+export default function Navbar() {
+    const { setAccessToken } = useAuth();
+    const navigate = useNavigate();
 
-export default function Navbar({ onLogout }: NavbarProps) {
+    async function handleLogout() {
+        try {
+            await fetch(settings.apiBaseUrl + '/auth/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            setAccessToken(null);
+            navigate('/');
+        }
+    }
+
     return (
         <nav className="nav">
             <div className="nav-header">
                 <NavLink to="/" className="title">Game Able</NavLink>
-                <button className="auth-section auth-button" aria-label="Logout" onClick={onLogout}>
+                <button className="auth-section auth-button" aria-label="Logout" onClick={ void handleLogout}>
                     <span className="user-greeting">Hello, User</span>
                     <span className="mask-icon-logout"/>
                 </button>

@@ -7,50 +7,28 @@ import ContactUs from "./components/navbarAndFooter/footerPages/contactUs.tsx";
 import AccessibilityStatement from "./components/navbarAndFooter/footerPages/acessibilityStatement.tsx";
 import "./theme.scss"
 
-import {BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {AuthProvider, useAuth} from "./data/AuthContext.tsx";
 
 import Footer from "./components/navbarAndFooter/footer.tsx";
-import { Navigation } from "./components/Navigation.tsx";
 
-import { Games } from "./components/navbarAndFooter/pages/Games.tsx";
-import { Register } from "./components/navbarAndFooter/pages/Register.tsx";
-import { Login } from "./components/navbarAndFooter/pages/Login.tsx";
-import { Home } from "./components/navbarAndFooter/pages/Home.tsx";
-import {settings} from "./AppSettings.ts";
+import { Games } from "./components/pages/Games.tsx";
+import { Register } from "./components/pages/Register.tsx";
+import { Login } from "./components/pages/Login.tsx";
+import { Home } from "./components/pages/Home.tsx";
 
 function AppContent() {
-    const { accessToken, setAccessToken } = useAuth();
-    const navigate = useNavigate();
+    const { accessToken } = useAuth();
     const isLoggedIn = accessToken !== null;
 
-    const handleLogout = async () => {
-        try {
-            await fetch(settings.apiBaseUrl + '/auth/logout', {
-                method: 'POST',
-                credentials: 'include'
-            });
-        } catch (error) {
-            console.error('Logout error:', error);
-        } finally {
-            setAccessToken(null);
-            navigate('/');
-        }
-    };
-
-    const handleLoginClick = () => {
-        navigate('/login');
-    };
 
     return (
         <>
             {isLoggedIn ? (
-                <Navbar onLogout={handleLogout} />
+                <Navbar />
             ) : (
-                <NavbarLoggedOut onLogin={handleLoginClick} />
+                <NavbarLoggedOut />
             )}
-            <Navigation />
-
             <main className="main">
                 <Routes>
                     <Route path="/" element={<Home />} />

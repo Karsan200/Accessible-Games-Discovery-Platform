@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { HeroHeader } from "../../HeroHeader.tsx";
-import { TrendingGames } from "../../TrendingGames.tsx";
-import { TopSellersSection } from "../../TopSellersSection.tsx";
-import { settings } from "../../../AppSettings.ts";
+import { HeroHeader } from "../HeroHeader.tsx";
+import { TrendingGames } from "../TrendingGames.tsx";
+import { TopSellersSection } from "../TopSellersSection.tsx";
+import { settings } from "../../AppSettings.ts";
 
 // Define the tag type
 type TagType = "Visual" | "Audio" | "Motor" | "Cognitive";

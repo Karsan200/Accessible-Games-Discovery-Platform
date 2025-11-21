@@ -1,18 +1,16 @@
 import './navbar.css'
 import { NavLink } from 'react-router-dom';
 
-interface NavbarLoggedOutProps {
-    onLogin: () => void;
-}
-
-export default function NavbarLoggedOut({ onLogin }: NavbarLoggedOutProps) {
+export default function NavbarLoggedOut() {
     return (
-        <nav className="nav">
-            <div className="nav-header">
-                <NavLink to="/" className="title">Game Able</NavLink>
-                <button className="auth-section auth-button" aria-label="Login" onClick={onLogin}>
+        <>
+            <nav className="nav">
+                <div className="nav-header">
+                    <NavLink to="/" className="title">Game Able</NavLink>
+                    <button className="auth-section auth-button" aria-label="Login"
+                            onClick={() => window.location.href = "/login"}>
                     <span className="auth-text">Login</span>
-                    <span className="mask-icon-login" />
+                    <span className="mask-icon-login"/>
                 </button>
             </div>
             <form className="search-container">
@@ -20,8 +18,7 @@ export default function NavbarLoggedOut({ onLogin }: NavbarLoggedOutProps) {
                     type="text"
                     name="search"
                     placeholder="Search games..."
-                    className="search-bar"
-                />
+                    className="search-bar"/>
                 <button type="submit" className="search-btn mask-icon-search" aria-label="Search"/>
             </form>
             <ul>
@@ -31,5 +28,6 @@ export default function NavbarLoggedOut({ onLogin }: NavbarLoggedOutProps) {
                 <li><NavLink to="/settings" className="settings">Settings</NavLink></li>
             </ul>
         </nav>
+    </>
     )
 }

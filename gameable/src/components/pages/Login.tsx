@@ -1,10 +1,10 @@
 import Container from "react-bootstrap/Container";
 import { useState } from "react";
 import type { FeedbackType } from "react-bootstrap/Feedback";
-import { LoginForm } from "../../../logic/LoginForm.tsx";
+import { LoginForm } from "../../logic/LoginForm.tsx";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { useAuth } from "../../../data/AuthContext.tsx";
+import { useAuth } from "../../data/AuthContext.tsx";
 
 export function Login() {
     // Email States

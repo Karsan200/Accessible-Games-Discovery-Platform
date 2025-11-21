@@ -36,7 +36,7 @@ app.use(
     }).unless({
         // Paths exempt from JWT authentication
         path: [
-            "/auth/login", "/auth/register", "/auth/refresh", // Authentication paths
+            "/auth/login", "/auth/register", "/auth/refresh", "/auth/logout", // Authentication paths
             "/api/home/hero", "/api/home/trending", "/api/home/top-sellers" // Public home page paths
         ]
     })

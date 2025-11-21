@@ -11,7 +11,7 @@ export default function Navbar() {
         try {
             await fetch(settings.apiBaseUrl + '/auth/logout', {
                 method: 'POST',
-                credentials: 'include'
+                credentials: 'include' as RequestCredentials,
             });
         } catch (error) {
             console.error('Logout error:', error);
@@ -25,7 +25,7 @@ export default function Navbar() {
         <nav className="nav">
             <div className="nav-header">
                 <NavLink to="/" className="title">Game Able</NavLink>
-                <button className="auth-section auth-button" aria-label="Logout" onClick={ void handleLogout}>
+                <button className="auth-section auth-button" aria-label="Logout" onClick={handleLogout}>
                     <span className="user-greeting">Hello, User</span>
                     <span className="mask-icon-logout"/>
                 </button>

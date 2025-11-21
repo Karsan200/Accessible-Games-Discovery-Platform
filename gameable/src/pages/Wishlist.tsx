@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { WishlistGameCard } from "../components/WishlistGameCard.tsx";
+import { IconCheckbox } from "../components/IconCheckbox.tsx";
 
-export function Wishlist() {
+export default function Wishlist() {
     const userId = "1"; // TODO: THIS IS A HARDCODED VALUE AT THE MOMENT
     const [wishlist, setWishlist] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -68,37 +70,26 @@ export function Wishlist() {
                     Your saved games, all in one place. Explore, track, and manage your favourites.
                 </p>
 
-                <ul>
-                    {wishlist.map((item: any) => {
-                        const game = item.game_id;
+                <div style={{ marginTop: "20px" }}>
+                    {wishlist
+                        .map((item: any) => {
+                            const game = item.game_id;
 
-                        // Try to find a cover image via type
-                        const cover = item.media?.find((m: any) => m.type === "cover");
+                            const cover = item.media?.find(
+                                (m: any) => m.type === "cover"
+                            )?.url;
 
-                        return (
-                            <li key={item._id}>
-                                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                                    {cover && (
-                                        <img
-                                            src={cover.url}
-                                            alt={cover.description || game.title}
-                                            style={{ width: "60px", borderRadius: "6px" }}
-                                        />
-                                    )}
-
-                                    <span>{game.title}</span>
-
-                                    <button
-                                        style={{ marginLeft: "20px" }}
-                                        onClick={() => softRemove(item._id)}
-                                    >
-                                        Remove
-                                    </button>
-                                </div>
-                            </li>
-                        );
-                    })}
-                </ul>
+                            return (
+                                <WishlistGameCard
+                                    key={item._id}
+                                    id={item._id}
+                                    title={game.title}
+                                    cover={cover}
+                                    onRemove={softRemove}
+                                />
+                            );
+                        })}
+                </div>
             </div>
         </div>
     );

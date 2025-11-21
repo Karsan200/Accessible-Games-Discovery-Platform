@@ -22,7 +22,7 @@ router.get("/refresh", async (req, res) => {
 
 // Logout
 router.post("/logout", async (req, res) => {
-    res.clearCookie('refreshToken');
+    res.clearCookie('token');
     res.status(200).json({ message: "Log out successful" });
 });
 

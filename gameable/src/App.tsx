@@ -1,26 +1,38 @@
 import './App.css'
+import "./theme.scss"
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from "./data/AuthContext.tsx";
 
-import {Footer} from "./components/Footer.tsx";
-import {Navigation} from "./components/Navigation.tsx";
+import { Footer } from "./components/Footer.tsx";
+import { Navigation } from "./components/Navigation.tsx";
 
-import {Games} from "./pages/Games.tsx";
+import { Games } from "./pages/Games.tsx";
+import { Register } from "./pages/Register.tsx";
+import { Login } from "./pages/Login.tsx";
+import { Home } from "./pages/Home.tsx";
 import {GamePage} from "./pages/GamePage.tsx";
 
 function App() {
     return (
-        <BrowserRouter>
-            {/* Navigation */}
-            <Navigation />
+        <BrowserRouter >
+            <AuthProvider>
+                {/* Navigation */}
+                <Navigation />
 
-            {/* Routes */}
-            <Routes>
-                <Route path="/games" element={<Games />} />
-                <Route path="/games/:id" element={<GamePage />} />
-            </Routes>
+                {/* Routes */}
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/games" element={<Games />} />
+                    <Route path="/games/:id" element={<GamePage />} />
 
-            {/* Footers */}
-            <Footer />
+                </Routes>
+
+                {/* Footer */}
+                <Footer />
+            </AuthProvider>
         </BrowserRouter>
     )
 }

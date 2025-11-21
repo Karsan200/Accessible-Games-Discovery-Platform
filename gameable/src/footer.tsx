@@ -6,9 +6,9 @@ export default function Footer() {
         <footer className="footer">
             <div className="footer-content">
                 <ul>
-                    <li><NavLink to="/about">About Us</NavLink></li>
-                    <li><NavLink to="/accessibility">Accessibility Statement</NavLink></li>
-                    <li><NavLink to="/contact">Contact Us</NavLink></li>
+                    <li><NavLink to="/footerPages/aboutUs">About Us</NavLink></li>
+                    <li><NavLink to="/footerPages/accessibilityStatement">Accessibility Statement</NavLink></li>
+                    <li><NavLink to="/footerPages/contactUs">Contact Us</NavLink></li>
                 </ul>
             </div>
             <div className="footer-bottom">

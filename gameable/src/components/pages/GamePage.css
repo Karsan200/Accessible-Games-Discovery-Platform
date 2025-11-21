@@ -1,0 +1,192 @@
+/* css */
+/* file: `gameable/src/pages/GamePage.css` */
+
+/* Page background and base text color */
+body, #root {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Two-column layout container (images left, info right) */
+.game-page-flex {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow: visible;
+}
+
+/* Left column: image carousel and details */
+.game-images-col {
+    flex: 0 0 50%;
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.92rem;
+}
+
+/* Details block below images  */
+.game-details-left {
+    width: 100%;
+    max-width: 640px;
+    margin-top: 1rem;
+    padding: 0 0.25rem;
+    box-sizing: border-box;
+    text-align: left;
+    font-size: 0.92rem;
+}
+
+/* Right column: title, tags, rating, description, actions */
+.game-info-col {
+    flex: 0 0 50%;
+    max-width: 50%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    text-align: left;
+    color: inherit;
+}
+
+/* Game title sizing and spacing */
+.game-title {
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.35rem;
+    font-weight: 600;
+    text-align: left;
+}
+
+/* Breadcrumbs styling (small inline list) */
+.game-breadcrumbs .breadcrumb {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: transparent;
+    justify-content: flex-start;
+    font-size: 0.85rem;
+}
+/* keep breadcrumb text on one line */
+.game-breadcrumbs .breadcrumb .breadcrumb-item { white-space: nowrap; }
+/* separator arrow between breadcrumb items */
+.game-breadcrumbs .breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    display: inline-block;
+    margin: 0 0.5rem;
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+/* Tags container spacing */
+.game-tags-wrapper { margin-bottom: 0.5rem; }
+
+/* Rating row: stars + counts */
+.game-rating-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+
+/* Short description block under title */
+.game-description { margin-bottom: 0.75rem; text-align: left; font-size: 0.92rem; }
+
+/* Details and accessibility text blocks: preserve newlines and spacing */
+.game-details,
+.game-accessibility {
+    white-space: pre-wrap;
+    line-height: 1.45;
+    text-align: left;
+    margin-bottom: 0.75rem;
+    font-size: 0.92rem;
+}
+
+/* Review card styling: card border, padding and subtle shadow */
+.review-box {
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    padding: 1rem;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+    text-align: left;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    box-sizing: border-box;
+}
+/* makes review cards stretch to fill the carousel item flex container */
+.carousel-item-flex > .review-box {
+    height: 100%;
+}
+
+.review-box h4 { margin: 0; }
+.review-box p { margin: 0; }
+
+/* puts profile pic and name on the same line */
+.review-meta { display: flex; gap: 0.75rem; align-items: center; }
+
+/* Favourite button styling */
+.game-fav-btn {
+    display: block;
+    width: 95%;
+    margin: 0.75rem auto 1.25rem;
+    padding: 0.5rem 1rem;
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 0.25rem;
+    text-align: center;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+}
+.game-fav-btn:hover,
+.game-fav-btn:focus {
+    background-color: #222222;
+    border-color: #222222;
+    color: #ffffff;
+}
+
+/* Line separating game and review */
+.full-width-hr {
+    width: 100%;
+    border: none;
+    border-top: 2px solid rgba(0,0,0,0.12);
+    margin: 4rem 0 4.5rem;
+    box-sizing: border-box;
+}
+
+/* Make gab between the review box top and bottom */
+#reviewCarousel {
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+
+/* Making Screen Dynamic */
+@media (max-width: 991.98px) {
+    .game-page-flex {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    .game-images-col {
+        flex: 0 0 auto;
+        max-width: 100%;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.95rem;
+    }
+    .game-info-col {
+        flex: 1 1 auto;
+        max-width: 100%;
+        font-size: 0.92rem;
+    }
+    .game-title { font-size: 1.25rem; }
+    .game-details-left { max-width: 100%; padding: 0; }
+}
+@media (max-width: 575.98px) {
+    .full-width-hr {
+        border-top-width: 2px;
+        margin: 3rem 0 3.5rem;
+    }
+}

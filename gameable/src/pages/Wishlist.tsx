@@ -71,24 +71,23 @@ export default function Wishlist() {
                 </p>
 
                 <div style={{ marginTop: "20px" }}>
-                    {wishlist
-                        .map((item: any) => {
-                            const game = item.game_id;
+                    {wishlist.map((item: any) => {
+                        const game = item.game_id;
 
-                            const cover = item.media?.find(
-                                (m: any) => m.type === "cover"
-                            )?.url;
+                        // Find cover
+                        const cover = item.media?.find(
+                            (m: any) => m.type === "cover"
+                        )?.url;
 
-                            return (
-                                <WishlistGameCard
-                                    key={item._id}
-                                    id={item._id}
-                                    title={game.title}
-                                    cover={cover}
-                                    onRemove={softRemove}
-                                />
-                            );
-                        })}
+                        return (
+                            <WishlistGameCard
+                                key={item._id}
+                                image={cover}
+                                name={game.title}
+                                description={game.body || "No description available."}
+                            />
+                        );
+                    })}
                 </div>
             </div>
         </div>

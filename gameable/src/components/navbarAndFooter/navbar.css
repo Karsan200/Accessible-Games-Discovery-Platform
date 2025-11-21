@@ -38,8 +38,8 @@
     height: 1.5rem;
     display: inline-block;
     background-color: white; /* default icon color */
-    -webkit-mask: url('./assets/logout.svg') no-repeat center;
-    mask: url('./assets/logout.svg') no-repeat center/contain;
+    -webkit-mask: url('../../assets/logout.svg') no-repeat center;
+    mask: url('../../assets/logout.svg') no-repeat center/contain;
     mask-size: contain;
     -webkit-mask-size: contain;
     border: none;
@@ -80,8 +80,8 @@
     height: 1.5rem;
     display: inline-block;
     background-color: white;
-    -webkit-mask: url('./assets/login.svg') no-repeat center;
-    mask: url('./assets/login.svg') no-repeat center/contain;
+    -webkit-mask: url('../../assets/login.svg') no-repeat center;
+    mask: url('../../assets/login.svg') no-repeat center/contain;
     mask-size: contain;
     -webkit-mask-size: contain;
     border: none;
@@ -146,8 +146,8 @@
     height: 1.5rem;
     display: inline-block;
     background-color: white; /* default icon color */
-    -webkit-mask: url('./assets/searchIcon.svg') no-repeat center;
-    mask: url('./assets/searchIcon.svg') no-repeat center/contain;
+    -webkit-mask: url('../../assets/searchIcon.svg') no-repeat center;
+    mask: url('../../assets/searchIcon.svg') no-repeat center/contain;
     mask-size: contain;
     -webkit-mask-size: contain;
     border: none;

@@ -1,0 +1,81 @@
+@use "bootstrap" as *;
+@use "sass:color";
+
+$primary: #1B1B1D;
+$primaryLight: #F2F0EF;
+$secondary: #337A5B;
+$secondaryLight: #36AB78;
+$font-family-base: 'Roboto', sans-serif;
+
+.brand-navbar {
+  background-color: $primary;
+}
+
+.brand-navbar .nav-link,
+.brand-navbar .navbar-brand,
+.brand-navbar .navbar-dropdown {
+  color: $primaryLight;
+  font-size: large;
+  font-weight: bold;
+}
+
+.brand-navbar .nav-link:hover,
+.brand-navbar .navbar-brand:hover,
+.brand-navbar .navbar-dropdown:hover,
+.brand-navbar .nav-link:focus,
+.brand-navbar .navbar-brand:focus,
+.brand-navbar .navbar-dropdown:focus{
+  color: $secondaryLight;
+}
+
+.brand-navbar .nav-link.active,
+.brand-navbar .navbar-brand.active,
+.brand-navbar .navbar-dropdown.active {
+  color: $secondaryLight;
+}
+
+.search-field {
+  width: 600px;
+}
+
+.search-field input{
+  height: 50px;
+  border-radius: 25px;
+}
+
+.search-icon {
+  fill: $secondaryLight;
+  width: 2rem;
+  height: 2rem;
+}
+
+.search-icon:hover, .search-icon:focus {
+  fill: $secondary;
+}
+
+.auth-button.btn-link,
+.auth-button.btn-link:hover,
+.auth-button.btn-link:focus,
+.auth-button.btn-link:active {
+  text-decoration: none !important;
+}
+
+.user-greeting{
+  color: $primaryLight;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.logout-icon {
+  fill: $secondaryLight;
+}
+
+.logout-icon:hover, .logout-icon:focus {
+  fill: $secondary;
+}
+
+form {
+  display: flex;
+  align-items: center;
+}
+

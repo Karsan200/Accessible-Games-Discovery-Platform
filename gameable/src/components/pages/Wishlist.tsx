@@ -21,7 +21,7 @@ interface WishlistItem {
     removed_at?: string | null;
 }
 
-export default function Wishlist() {
+export function Wishlist() {
     const userId = "1"; // TODO: THIS IS A HARDCODED VALUE AT THE MOMENT
     const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -117,7 +117,6 @@ export default function Wishlist() {
     return (
         <div className="wishlist-page">
 
-            {/* --- Wishlist Header Banner --- */}
             <div className="wishlist-header">
                 <h1>My Wishlist</h1>
 
@@ -125,25 +124,55 @@ export default function Wishlist() {
                     Your saved games, all in one place. Explore, track, and manage your favourites.
                 </p>
 
-                <div style={{ marginTop: "20px" }}>
-                    {wishlist.map((item: any) => {
-                        const game = item.game_id;
+                <button onClick={restoreLast}>
+                    Undo
+                </button>
+            </div>
 
-                        // Find cover
-                        const cover = item.media?.find(
-                            (m: any) => m.type === "cover"
-                        )?.url;
+            {/* Wishlist Items */}
+            <div className="wishlist-container">
+                {wishlist.map((item, index) => {
+                    const game = item.game_id;
+                    const cover = item.media?.find((m) => m.type === "cover")?.url;
 
-                        return (
+                    return (
+                        <div
+                            key={item._id}
+                            className="wishlist-item"
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                                marginBottom: "15px",
+                            }}
+                        >
                             <WishlistGameCard
-                                key={item._id}
-                                image={cover}
+                                image={cover || ""}
                                 name={game.title}
                                 description={game.body || "No description available."}
                             />
-                        );
-                    })}
-                </div>
+
+                            <div
+                                className="wishlist-actions"
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "5px",
+                                }}
+                            >
+                                <button onClick={() => moveUp(index)}>Move Up</button>
+                                <button onClick={() => moveDown(index)}>Move Down</button>
+                                <IconCheckbox
+                                    text="Remove"
+                                    checked={false} // initially unchecked
+                                    onChange={(checked) => {
+                                        if (checked) softRemove(item._id);
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

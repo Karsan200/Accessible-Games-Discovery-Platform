@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { Authentication } from "../../data/Authentication.ts";
+import { ApiDataHelper } from "../../data/ApiDataHelper.tsx";
+import { getUserIdFromToken } from "../../data/TokenUtility.ts"
 import { WishlistGameCard } from "../WishlistGameCard.tsx";
 import { IconCheckbox } from "../IconCheckbox.tsx";
 
@@ -22,24 +25,39 @@ interface WishlistItem {
 }
 
 export function Wishlist() {
-    const userId = "1"; // TODO: THIS IS A HARDCODED VALUE AT THE MOMENT
+    const [accessToken, setAccessToken] = useState<string | null>(null);
     const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
     const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        async function initAuth() {
+            const token = await Authentication.refreshToken();
+            setAccessToken(token);
+        }
+        void initAuth();
+    }, []);
+
+    const userId = getUserIdFromToken(accessToken);
+    const auth = { accessToken, setAccessToken };
+
     // Load wishlist
-    function loadWishlist() {
-        fetch(`http://localhost:5000/api/wishlist/${userId}`)
-            .then((res) => res.json())
-            .then((data: WishlistItem[]) => {
-                setWishlist(data);
-                setLoading(false);
-            })
-            .catch(console.error);
+    async function loadWishlist() {
+        if (!userId || !accessToken) return;
+        setLoading(true);
+        try {
+            const res = await ApiDataHelper(`/wishlist/${userId}`, { method: "GET", headers: {} }, auth);
+            const data: WishlistItem[] = await res.json();
+            setWishlist(data);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
-        loadWishlist();
-    }, []);
+        void loadWishlist();
+    }, [userId, accessToken]);
 
     // Soft delete
     function softRemove(id: string) {

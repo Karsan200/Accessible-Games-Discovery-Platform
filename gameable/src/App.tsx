@@ -36,7 +36,6 @@ function AppContent() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/games" element={<Games />} />
-                    <Route path="/wishlist" element={<h1>Wishlist</h1>} />
                     <Route path="/profile" element={<h1>Profile</h1>} />
                     <Route path="/errorPages/userNotLoggedIn" element={<UserNotLoggedIn />}/>
                     <Route path="/settings" element={<h1>Settings</h1>} />

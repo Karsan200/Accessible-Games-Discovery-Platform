@@ -78,11 +78,13 @@ body, #root {
     margin: 0 0.5rem;
     color: #337A5B;
     font-size: 0.9em;
+    text-decoration: none;
 }
 
 .game-breadcrumbs .breadcrumb .breadcrumb-item:first-child a {
     color: #337A5B;
     font-weight: 600;
+    text-decoration: none;
 }
 .game-breadcrumbs .breadcrumb .breadcrumb-item:first-child a:hover,
 .game-breadcrumbs .breadcrumb .breadcrumb-item:first-child a:focus {

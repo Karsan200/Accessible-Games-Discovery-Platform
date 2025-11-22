@@ -81,9 +81,9 @@ export function GamePage() {
     if (loading) return <p>Loading...</p>;
     if (!game) return <p>Game not found.</p>;
 
-    // Prepare images for carousel (skip items without url)
+    // Prepare images for carousel (only screenshots and covers, skip items without url)
     const imageItems: ReactElement[] = (game.media ?? [])
-        .filter((m) => !!m.url)
+        .filter((m) => !!m.url && (m.type === "screenshot" || m.type === "cover"))
         .map((m, i) => {
             const src = m.url.startsWith("http") ? m.url : `http://localhost:5000${m.url}`;
             return (

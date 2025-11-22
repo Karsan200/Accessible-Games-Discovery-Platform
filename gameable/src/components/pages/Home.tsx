@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { HeroHeader } from "../components/HeroHeader";
-import { TrendingGames } from "../components/TrendingGames";
-import { TopSellersSection } from "../components/TopSellersSection";
-import { settings } from "../AppSettings.ts";
+import { HeroHeader } from "../HeroHeader.tsx";
+import { TrendingGames } from "../TrendingGames.tsx";
+import { TopSellersSection } from "../TopSellersSection.tsx";
+import { settings } from "../../AppSettings.ts";
 
 // Define the tag type
 type TagType = "Visual" | "Audio" | "Motor" | "Cognitive";
@@ -12,7 +12,6 @@ interface TrendingGame {
     image: string;
     name: string;
     description: string;
-    tagline?: string;
     tags: TagType[];
 }
 
@@ -21,7 +20,6 @@ interface TopSellerGame {
     image: string;
     title: string;
     description: string;
-    tagline?: string;
     tags: TagType[];
     rating: number;
 }
@@ -37,35 +35,24 @@ export const Home: React.FC = () => {
     const [trendingGames, setTrendingGames] = useState<TrendingGame[]>([]);
     const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
 
+    // Fetch DB data
     useEffect(() => {
-        // helper to ensure tags is always an array
-        const normalize = <T extends { tags?: TagType[] }>(items?: T[] | null): T[] =>
-            (items ?? []).map((it) => ({ ...it, tags: Array.isArray(it.tags) ? it.tags : ([] as TagType[]) }));
         // Top sellers
         fetch(settings.apiBaseUrl + "/api/home/top-sellers")
             .then((res) => res.json())
-            .then((data) => {
-                console.log("API /api/home/top-sellers →", data);
-                setTopSellers(normalize(data) as TopSellerGame[]);
-            })
+            .then((data) => setTopSellers(data))
             .catch((err) => console.error("Error fetching top sellers:", err));
 
         // Trending
         fetch(settings.apiBaseUrl + "/api/home/trending")
             .then((res) => res.json())
-            .then((data) => {
-                console.log("API /api/home/trending →", data);
-                setTrendingGames(normalize(data) as TrendingGame[]);
-            })
+            .then((data) => setTrendingGames(data))
             .catch((err) => console.error("Error fetching trending games:", err));
 
         // Hero carousel (new)
         fetch(settings.apiBaseUrl + "/api/home/hero")
             .then((res) => res.json())
-            .then((data) => {
-                console.log("API /api/home/hero →", data);
-                setHeroSlides(data || []);
-            })
+            .then((data) => setHeroSlides(data))
             .catch((err) => console.error("Error fetching hero slides:", err));
     }, []);
 

@@ -12,6 +12,20 @@ import {
     connectDB,
 } from "./models/dbSetup.js";
 
+import crypto from "crypto";
+
+function createSalt(size = 16) {
+    return crypto.randomBytes(size).toString("hex");
+}
+
+function hashPassword(password, salt) {
+    return crypto.createHash("sha256")
+        .update(password + salt)
+        .digest("hex");
+}
+
+const salt1 = createSalt();
+
 dotenv.config();
 
 async function seedDatabase() {
@@ -26,124 +40,123 @@ async function seedDatabase() {
             {
                 username: "PixelPanda",
                 email: "alice@example.com",
-                password: "password123",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "user",
                 date_of_birth: new Date("1995-04-12"),
                 setting1: true,
                 setting2: false,
-                salt: "random_salt",
+                salt: salt1,
             },
             {
                 username: "RocketRaccoon",
                 email: "bob@example.com",
-                password: "hunter2",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "user",
                 date_of_birth: new Date("1990-09-01"),
                 setting1: false,
                 setting2: true,
-                salt: "random_salt",
+                salt: salt1,
             },
             {
                 username: "BouncyBear",
                 email: "charlie@example.com",
-                password: "password123",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "user",
                 date_of_birth: new Date("1985-02-20"),
                 setting1: true,
                 setting2: true,
-                salt: "random_salt",
+                salt: salt1,
             },
             {
                 username: "GigglyGiraffe",
                 email: "josh@example.com",
-                password: "josh123",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "user",
                 date_of_birth: new Date("1995-05-27"),
                 setting1: true,
                 setting2: true,
-                salt: "random_salt",
+                salt: salt1,
             },
             {
                 username: "Mojang",
                 email: "mojang@example.com",
-                password: "gaming222",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "publisher",
                 date_of_birth: new Date("1995-05-27"),
                 setting1: true,
                 setting2: true,
-                salt: "random_salt",
+                salt: salt1,
             },
             {
                 username: "RobTop",
                 email: "robtop@example.com",
-                password: "gaming222",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "publisher",
                 date_of_birth: new Date("1995-05-27"),
                 setting1: true,
                 setting2: true,
-                salt: "random_salt",
+                salt: salt1,
             },
-
             {
                 username: "Supercell",
                 email: "supercell@example.com",
-                password: "gaming222",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "publisher",
                 date_of_birth: new Date("1995-05-27"),
                 setting1: true,
                 setting2: true,
-                salt: "random_salt",
+                salt: salt1,
             },
             {
                 username: "TapBlaze",
                 email: "tapblaze@example.com",
-                password: "gaming222",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "publisher",
                 date_of_birth: new Date("1995-05-27"),
                 setting1: true,
                 setting2: true,
-                salt: "random_salt",
+                salt: salt1,
             },
             {
                 username: "Playrix",
                 email: "playrix@example.com",
-                password: "gaming222",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "publisher",
                 date_of_birth: new Date("1995-05-27"),
                 setting1: true,
                 setting2: true,
-                salt: "random_salt",
+                salt: salt1,
             },
             {
                 username: "Big Duck Games LLC",
                 email: "BigDuckGamesLLC@example.com",
-                password: "gaming222",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "publisher",
                 date_of_birth: new Date("1995-05-27"),
                 setting1: true,
                 setting2: true,
-                salt: "random_salt",
+                salt: salt1,
             },
             {
                 username: "Playstack",
                 email: "Playstack@example.com",
-                password: "gaming222",
+                password: hashPassword("password123", salt1),
                 profilePicture: "/images/profilepicTemp.png",
                 role: "publisher",
                 date_of_birth: new Date("1995-05-27"),
                 setting1: true,
                 setting2: true,
-                salt: "random_salt",
+                salt: salt1,
             },
         ]);
 
@@ -298,12 +311,12 @@ async function seedDatabase() {
 
             //Game 5
             { game_id: games[4]._id, type: "icon", url: "https://play-lh.googleusercontent.com/9KAPlokfzeEFb34Mwm7juoiC5-yjpf4JlRLguuAgn5fV7JcTECwJnu6guLxbaZBWDA", description: "Township icon",  },
-            { game_id: games[4]._id, type: "cover", url: "https://miro.medium.com/1*DYUlPBBjbkU9eQXthL0lNw.jpeg" },
+            { game_id: games[4]._id, type: "cover", url: "https://miro.medium.com/1*DYUlPBBjbkU9eQXthL0lNw.jpeg", description: "Township cover", },
             { game_id: games[4]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/bW2mxlLK5L65zTPCkMVhObnJb3wkweTO3zTHpqJTf6ekPQYNM2OWrfDrhQI-jaH-ILv_=w5120-h2880-rw", description: "Township screenshot 1", },
             { game_id: games[4]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/hBSrS83qhc_TNNaJsxDHu89NRpr1EQ9_Hvv8sDoip5QFLYF4ENLGa-24lYHZB2TAZQ=w5120-h2880-rw", description: "Township screenshot 2",  },
             { game_id: games[4]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/tn2CGAjRh6uAsGMrgT8x2LsH8ZvWTeacz8vZoR5WXLWw_T5j4pQ9J_5zs4cc58FAPWtD=w5120-h2880-rw", description: "Township screenshot 3",  },
             { game_id: games[4]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/3deeZTVI7dMp1LpSpQZZivwMlquv7VTKbmcXB6VcqW3XIrsYQEJNHO9pUC7DlTPxfwI=w5120-h2880-rw", description: "Township screenshot 4",  },
-            { game_id: games[4]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/cW3oJICJ5jsweoMZBgLRVS8A0CCYqS0pr3emVNsNkBD4U06xpRogbqoMKMI8Z-PSE8Fj=w5120-h2880-rw", description: "Township cover",  },
+            { game_id: games[4]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/cW3oJICJ5jsweoMZBgLRVS8A0CCYqS0pr3emVNsNkBD4U06xpRogbqoMKMI8Z-PSE8Fj=w5120-h2880-rw", description: "Township screenshot 5",  },
 
             //Game 6
             { game_id: games[5]._id, type: "icon", url: "https://play-lh.googleusercontent.com/cKgJRbFkjVAm6XkkSILGleGkT317BLLD8erTsrI1vo240a991MGJzbMryBKFG7Zw7tU=w480-h960-rw", description: "Flow Free icon",  },

@@ -1,6 +1,3 @@
-/* css */
-/* file: `gameable/src/pages/GamePage.css` */
-
 /* Page background and base text color */
 body, #root {
     background-color: #F2F0EF;
@@ -250,7 +247,7 @@ body, #root {
         display: contents;
     }
 
-    /* desired visual order: images (carousel) → game info → details */
+    /* desired visual order: images (carousel) >  game info > details */
     .game-carousel      { order: 0; width: 100%; }
     .game-info-col      { order: 1; width: 100%; }
     .game-details-left  { order: 2; width: 100%; }

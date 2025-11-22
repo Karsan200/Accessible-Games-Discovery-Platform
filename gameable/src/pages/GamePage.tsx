@@ -44,6 +44,19 @@ type Game = {
     reviewCount?: number;
 };
 
+// Local TagLabel type (matches GameTags)
+type TagLabel = "Visual" | "Audio" | "Motor" | "Cognitive";
+
+const toTagLabel = (s?: string | null): TagLabel | null => {
+    if (!s) return null;
+    const n = s.trim().toLowerCase();
+    if (n === "visual" || n === "vision") return "Visual";
+    if (n === "audio" || n === "hearing") return "Audio";
+    if (n === "motor") return "Motor";
+    if (n.startsWith("cognit") || n === "cognitive") return "Cognitive";
+    return null;
+};
+
 export function GamePage() {
     const { id } = useParams<{ id: string }>();
     const [game, setGame] = useState<Game | null>(null);
@@ -84,7 +97,6 @@ export function GamePage() {
         });
 
     // Prepare reviews for carousel
-
     const reviewItems: ReactElement[] = (game.reviews ?? []).map((r, i) => {
         return (
             <div className="review-box w-100 h-100" key={i}>
@@ -108,7 +120,10 @@ export function GamePage() {
         );
     });
 
-    const tags = (game.tags ?? []).map((t) => t.name);
+    const tags: TagLabel[] = (game.tags ?? [])
+        .map((t) => toTagLabel(t.name))
+        .filter((t): t is TagLabel => t !== null);
+
     const ratingValue = game.rating ?? 0;
     const reviewCount = game.reviewCount ?? (game.reviews ? game.reviews.length : 0);
 
@@ -161,9 +176,7 @@ export function GamePage() {
                 <button type="button" className="btn btn-primary game-fav-btn reviews-add-btn">
                     Add a Review
                 </button>
-
             </div>
-
 
             <Carousel id="reviewCarousel" items={reviewItems} visibleCount={3} step={1} />
         </div>

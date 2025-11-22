@@ -7,6 +7,7 @@ interface Game {
     image: string;
     name: string;
     description: string;
+    tagline?: string;
     tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
 }
 
@@ -41,6 +42,7 @@ export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
                                 image={game.image}
                                 name={game.name}
                                 description={game.description}
+                                tagline={game.tagline}
                                 tags={game.tags}
                             />
                         </Col>

@@ -1,4 +1,3 @@
-// seed.js
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import {
@@ -115,10 +114,10 @@ async function seedDatabase() {
         const games = await Game.insertMany([
             {
                 title: "Minecraft",
+                tagline: "Build anything, explore everywhere.",
                 description: "Discover the world of Minecraft. Build anything you can imagine, uncover eerie mysteries, and survive the night in the ultimate sandbox adventure game. In Minecraft, every playthrough is different, and unforgettable adventures await behind every corner. Explore and craft your way through an infinite world that’s yours to shape, one block at a time.",
                 details: "Gather Resources: The typical journey starts with punching a tree to gather wood. The rest of your Minecraft adventure is up to you, whether you mine for precious ores or seek out rare materials. Just make sure to stock up on food! Survive the Night: When the sun goes down, hostile mobs abound. Will you face them or sleep through the night? And remember: it’s always dark underground... Build Amazing Things: Minecraft is the ultimate building game. Craft tools, build a humble shelter, or engineer your base with redstone. Can you build a base in the Nether? Only one way to find out.",
                 accessibility: "Minecraft includes a range of accessibility options that support players with vision, hearing, and cognitive impairments. The game offers a High Contrast Mode to improve visual clarity and readability, along with the Text-to-Speech Narrator, which can read menus and chat messages aloud for players with visual difficulties. Subtitles are available to provide visual cues for in-game sounds like footsteps, nearby mobs, or environmental effects, supporting those with hearing impairments. Minecraft also allows customizable controls and simplified interface settings to reduce cognitive load, helping players tailor gameplay to their individual needs and comfort levels.",
-
                 release_date: new Date("2023-01-01"),
                 publisher_id: pubMojang._id,
                 genre_id: genres[0]._id,
@@ -127,6 +126,7 @@ async function seedDatabase() {
             },
             {
                 title: "Puzzle Mania",
+                tagline: "Rhythm, timing, and precision.",
                 description: "Geometry Dash is a fast-paced rhythm platformer that challenges your timing, reflexes, and precision as you jump, fly, and dodge obstacles in increasingly complex levels synced to energetic music.",
                 details: "Master Levels: Navigate tricky obstacle courses with perfect timing. Each level is designed to test your reflexes and rhythm. Customization: Adjust controls, colors, and difficulty to match your comfort level. The game offers a colorblind mode to assist visually impaired players. Challenge Yourself: Unlock new levels, create custom stages, and compete with friends online to climb leaderboards.",
                 accessibility: "Geometry Dash includes features to help players with visual and motor impairments. Customizable controls, colorblind mode, and adjustable input sensitivity ensure that players of all skill levels can enjoy the game without frustration.",
@@ -138,6 +138,7 @@ async function seedDatabase() {
             },
             {
                 title: "Racing Thunder",
+                tagline: "High-speed strategy and thrills.",
                 description: "Clash Royale is a real-time strategy card game where players collect and upgrade cards featuring Clash of Clans troops, spells, and defenses, and duel opponents in fast-paced arenas. Planning, strategy, and adaptability are key to victory.",
                 details: "Build Your Deck: Select cards wisely to create a balanced and powerful deck. Combining troops, spells, and defenses is crucial. Real-Time Battles: Compete against players worldwide in multiplayer arenas. Observe and adapt to opponents’ strategies quickly. Progress and Rewards: Complete daily quests, earn chests, and unlock powerful cards to enhance your deck and climb the ladder.",
                 accessibility: "Clash Royale includes accessibility options for players with hearing or cognitive challenges. Visual cues for actions, adjustable game speed, and simplified controls help ensure all players can participate in strategic gameplay.",
@@ -149,6 +150,7 @@ async function seedDatabase() {
             },
             {
                 title: "Mystery Quest",
+                tagline: "Uncover secrets and solve mysteries.",
                 description: "Clash Royale is a real-time strategy card game where players collect and upgrade cards featuring Clash of Clans troops, spells, and defenses, and duel opponents in fast-paced arenas. Planning, strategy, and adaptability are key to victory.",
                 details: "Build Your Deck: Select cards wisely to create a balanced and powerful deck. Combining troops, spells, and defenses is crucial. Real-Time Battles: Compete against players worldwide in multiplayer arenas. Observe and adapt to opponents’ strategies quickly. Progress and Rewards: Complete daily quests, earn chests, and unlock powerful cards to enhance your deck and climb the ladder.",
                 accessibility: "Clash Royale includes accessibility options for players with hearing or cognitive challenges. Visual cues for actions, adjustable game speed, and simplified controls help ensure all players can participate in strategic gameplay.",
@@ -233,31 +235,26 @@ async function seedDatabase() {
 
 
         // === Accessibility Groups ===
-        const accessibilityGroups = await AccessibilityGroup.insertMany([
-            { name: "Visual" },
-            { name: "Audio" },
-            { name: "Motor" },
-            { name: "Cognitive" },
+        const [visual, hearing, cognitive, motor] = await AccessibilityGroup.create([
+            { name: "Visual", description: "Visual accessibility features" },
+            { name: "Hearing", description: "Subtitles and audio alternatives" },
+            { name: "Cognitive", description: "Supports focus and eases cognitive load." },
+            { name: "Motor", description: "Supports limited motor control." },
         ]);
 
 
         // === Tags ===
-        await Tag.insertMany([
-            // Game 1
-            { game_id: games[0]._id, name: "High Contrast", description: "High contrast visuals", accessibility_group_id: accessibilityGroups.find(g => g.name === "Visual")._id },
-            { game_id: games[0]._id, name: "One-Handed Mode", description: "Can be played with one hand", accessibility_group_id: accessibilityGroups.find(g => g.name === "Motor")._id },
+        await Tag.create([
+            { game_id: games[0]._id, name: "Vision", accessibility_group_id: visual._id },
+            { game_id: games[0]._id, name: "Hearing", accessibility_group_id: hearing._id },
+            { game_id: games[0]._id, name: "Cognitive", accessibility_group_id: cognitive._id },
 
-            // Game 2
-            { game_id: games[1]._id, name: "Subtitles", description: "Subtitles for all dialogue", accessibility_group_id: accessibilityGroups.find(g => g.name === "Audio")._id },
-            { game_id: games[1]._id, name: "Simplified UI", description: "Simplified interface for easier comprehension", accessibility_group_id: accessibilityGroups.find(g => g.name === "Cognitive")._id },
+            { game_id: games[1]._id, name: "Vision", accessibility_group_id: visual._id },
+            { game_id: games[1]._id, name: "Motor", accessibility_group_id: motor._id },
+            { game_id: games[1]._id, name: "Cognitive", accessibility_group_id: cognitive._id },
 
-            // Game 3
-            { game_id: games[2]._id, name: "Color Blind Mode", description: "Adjustable colors for color blind players", accessibility_group_id: accessibilityGroups.find(g => g.name === "Visual")._id },
-            { game_id: games[2]._id, name: "Customizable Controls", description: "Fully remappable controls", accessibility_group_id: accessibilityGroups.find(g => g.name === "Motor")._id },
-
-            // Game 4
-            { game_id: games[3]._id, name: "Audio Cues", description: "Important events signaled with sound", accessibility_group_id: accessibilityGroups.find(g => g.name === "Audio")._id },
-            { game_id: games[3]._id, name: "Tutorial Assistance", description: "Extra guidance for new players", accessibility_group_id: accessibilityGroups.find(g => g.name === "Cognitive")._id },
+            { game_id: games[2]._id, name: "Hearing", accessibility_group_id: hearing._id },
+            { game_id: games[2]._id, name: "Cognitive", accessibility_group_id: cognitive._id },
         ]);
 
 

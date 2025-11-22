@@ -1,12 +1,13 @@
 import React from "react";
 import { Card, Stack } from "react-bootstrap";
 import { BlackButton } from "./BlackButton";
-import { GameTag } from "./GameTag";
+import { GameTags } from "./game/GameTags";
 
 interface GameCardProps {
     image: string;
     name: string;
     description: string;
+    tagline?: string;
     tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
     onClick?: () => void;
 }
@@ -15,6 +16,7 @@ export const GameCard: React.FC<GameCardProps> = ({
                                                       image,
                                                       name,
                                                       description,
+                                                      tagline,
                                                       tags,
                                                       onClick,
                                                   }) => {
@@ -25,7 +27,7 @@ export const GameCard: React.FC<GameCardProps> = ({
             className="h-100 shadow-sm flex-grow-1"
             role="group"
             aria-labelledby={`${cardId}-title`}
-            aria-describedby={`${cardId}-desc`}
+            aria-describedby={`${cardId}-tagline`}
             tabIndex={0}
             onKeyDown={(e) => {
                 if (e.key === "Enter" && onClick) onClick();
@@ -33,10 +35,9 @@ export const GameCard: React.FC<GameCardProps> = ({
             style={{
                 cursor: "pointer",
                 minWidth: "100%",
-                maxWidth: "300px", // limits max card size on large screens
+                maxWidth: "300px",
             }}
         >
-            {/* Image Wrapper */}
             <div
                 style={{
                     width: "100%",
@@ -57,24 +58,15 @@ export const GameCard: React.FC<GameCardProps> = ({
                 />
             </div>
 
-
             <Card.Body className="d-flex flex-column align-items-center">
-                {/* Accessibility Tags */}
                 <Stack
                     direction="horizontal"
                     className="flex-wrap justify-content-center mb-2"
-                    role="list"
-                    aria-label="Accessibility features"
                     gap={2}
                 >
-                    {tags?.map((tag) => (
-                        <span key={tag} role="listitem">
-                            <GameTag type={tag} />
-                        </span>
-                    ))}
+                    <GameTags tags={tags} />
                 </Stack>
 
-                {/* Title */}
                 <Card.Title
                     id={`${cardId}-title`}
                     className="fw-bold text-center fs-5 fs-md-6"
@@ -83,16 +75,14 @@ export const GameCard: React.FC<GameCardProps> = ({
                     {name}
                 </Card.Title>
 
-                {/* Description */}
                 <Card.Text
-                    id={`${cardId}-desc`}
-                    className="flex-grow-1 text-center text-wrap"
+                    id={`${cardId}-tagline`}
+                    className="flex-grow-1 text-center text-wrap text-muted mb-2"
                     tabIndex={0}
                 >
-                    {description}
+                    {tagline ?? description}
                 </Card.Text>
 
-                {/* Button */}
                 <div className="mt-3 w-100 d-flex justify-content-center">
                     <div className="w-100 w-md-auto">
                         <BlackButton
@@ -102,7 +92,6 @@ export const GameCard: React.FC<GameCardProps> = ({
                         />
                     </div>
                 </div>
-
             </Card.Body>
         </Card>
     );

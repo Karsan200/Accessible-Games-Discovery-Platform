@@ -49,15 +49,20 @@
 
 /* color variants for known accessibility types */
 .accessibility-tag--vision {
-    background: #FFB7B7;
+    background: #FFB7B7; /* red/pink for Visual */
 }
 
 .accessibility-tag--hearing {
-    background: #ACF2A8;
+    background: #ACF2A8; /* green for Audio */
 }
 
 .accessibility-tag--cognitive {
-    background: #BCF2FA;
+    background: #BCF2FA; /* blue for Cognitive */
+}
+
+/* Motor (yellow) */
+.accessibility-tag--motor {
+    background: #FFD966; /* yellow for Motor */
 }
 
 /* fallback color when no known modifier class is present */

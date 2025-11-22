@@ -32,6 +32,7 @@ const sessionSchema = new mongoose.Schema({
 // Games collection
 const gameSchema = new mongoose.Schema({
     title: { type: String, required: true },
+    tagline: { type: String },
     description: { type: String },
     details: { type: String },
     accessibility: { type: String },

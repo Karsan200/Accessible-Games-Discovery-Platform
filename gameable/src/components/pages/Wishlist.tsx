@@ -1,17 +1,36 @@
 import { useEffect, useState } from "react";
-import { WishlistGameCard } from "../components/WishlistGameCard.tsx";
-import { IconCheckbox } from "../components/IconCheckbox.tsx";
+import { WishlistGameCard } from "../WishlistGameCard.tsx";
+import { IconCheckbox } from "../IconCheckbox.tsx";
+
+// --- Interfaces ---
+interface Game {
+    title: string;
+    body?: string;
+}
+
+interface Media {
+    type: string;
+    url: string;
+}
+
+interface WishlistItem {
+    _id: string;
+    weight: number;
+    game_id: Game;
+    media?: Media[];
+    removed_at?: string | null;
+}
 
 export default function Wishlist() {
     const userId = "1"; // TODO: THIS IS A HARDCODED VALUE AT THE MOMENT
-    const [wishlist, setWishlist] = useState([]);
+    const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
     const [loading, setLoading] = useState(true);
 
     // Load wishlist
     function loadWishlist() {
         fetch(`http://localhost:5000/api/wishlist/${userId}`)
             .then((res) => res.json())
-            .then((data) => {
+            .then((data: WishlistItem[]) => {
                 setWishlist(data);
                 setLoading(false);
             })
@@ -55,6 +74,42 @@ export default function Wishlist() {
         })
             .then(() => loadWishlist())
             .catch(console.error);
+    }
+
+    // Move up
+    function moveUp(index: number) {
+        if (index === 0) return;
+        const newWishlist = [...wishlist];
+        const current = newWishlist[index];
+        const above = newWishlist[index - 1];
+
+        // Swap weights
+        const tempWeight = current.weight;
+        current.weight = above.weight;
+        above.weight = tempWeight;
+
+        updateWeight(current._id, current.weight);
+        updateWeight(above._id, above.weight);
+
+        setWishlist(newWishlist.sort((a, b) => a.weight - b.weight));
+    }
+
+    // Move down
+    function moveDown(index: number) {
+        if (index === wishlist.length - 1) return;
+        const newWishlist = [...wishlist];
+        const current = newWishlist[index];
+        const below = newWishlist[index + 1];
+
+        // Swap weights
+        const tempWeight = current.weight;
+        current.weight = below.weight;
+        below.weight = tempWeight;
+
+        updateWeight(current._id, current.weight);
+        updateWeight(below._id, below.weight);
+
+        setWishlist(newWishlist.sort((a, b) => a.weight - b.weight));
     }
 
     if (loading) return <p>Loading wishlist...</p>;

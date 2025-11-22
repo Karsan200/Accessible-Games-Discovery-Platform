@@ -16,7 +16,7 @@ import { Games } from "./components/pages/Games.tsx";
 import { Register } from "./components/pages/Register.tsx";
 import { Login } from "./components/pages/Login.tsx";
 import { Home } from "./components/pages/Home.tsx";
-import { Wishlist } from "./pages/Wishlist.tsx";
+import { Wishlist } from "./components/pages/Wishlist.tsx";
 
 function AppContent() {
     const { accessToken } = useAuth();

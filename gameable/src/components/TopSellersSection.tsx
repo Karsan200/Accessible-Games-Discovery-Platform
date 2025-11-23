@@ -20,7 +20,17 @@ export const TopSellersSection: React.FC<TopSellersSectionProps> = ({ games }) =
         <section className="container my-5" aria-labelledby="top-sellers-heading">
             <h2
                 id="top-sellers-heading"
-                className="fw-bold mb-4 text-center fs-4 fs-md-2"
+                style={{
+                    fontFamily: 'Poppins, sans-serif',
+                    fontStyle: 'normal',
+                    fontWeight: 600,
+                    fontSize: '48px',
+                    lineHeight: '120%',
+                    textAlign: 'center',
+                    color: '#000000',
+                    marginTop: '128px',
+                    marginBottom: '48px',
+                }}
                 tabIndex={-1}
             >
                 Highest Rated

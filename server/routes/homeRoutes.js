@@ -184,7 +184,7 @@ router.get("/top-sellers", async (req, res) => {
 router.get("/hero", async (req, res) => {
     try {
         // return a few featured slides (limit 3)
-        const games = await Game.find({}, "title tagline").limit(3).lean();
+        const games = await Game.find({}, "title tagline description").limit(3).lean();
         const ids = games.map((g) => g._id);
         const images = await loadImagesForGames(ids);
 
@@ -192,6 +192,7 @@ router.get("/hero", async (req, res) => {
             id: g._id,
             image: images[String(g._id)] || "",
             title: g.title || g.tagline || "",
+            description: g.description || "",
         }));
 
         res.json(slides);

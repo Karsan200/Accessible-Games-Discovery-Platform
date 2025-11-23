@@ -1,5 +1,5 @@
 import express from "express";
-import { Game, GameMedia, Review, Tag } from "../models/dbSetup.js";
+import { Game, GameMedia, Review, Tag, Wishlist } from "../models/dbSetup.js";
 
 const router = express.Router();
 
@@ -42,24 +42,76 @@ async function loadTagsForGames(gameIds) {
     return map;
 }
 
+// Helper function to get recent date N days ago
+const daysAgo = (n) => {
+    const date = new Date();
+    date.setDate(date.getDate() - n);
+    return date;
+};
+
 // /api/home/trending
 router.get("/trending", async (req, res) => {
     try {
-        const games = await Game.find({}, "title tagline description release_date age_rating").lean();
-        const ids = games.map((g) => g._id);
-        const [images, tagsMap] = await Promise.all([loadImagesForGames(ids), loadTagsForGames(ids)]);
+        const recentDate = daysAgo(7); // last 7 days
 
-        const payload = games.map((g) => ({
-            id: g._id,
-            image: images[String(g._id)] || "",
-            name: g.title,
-            description: g.description || "",
-            tagline: g.tagline || "",
-            tags: tagsMap[String(g._id)] || [],
-        }));
+        // Fetch recent reviews and wishlists
+        const recentReviews = await Review.find({ created_at: { $gte: recentDate } })
+            .select("game_id")
+            .lean();
+
+        const recentWishlists = await Wishlist.find({ created_at: { $gte: recentDate } })
+            .select("game_id")
+            .lean();
+
+        // Count occurrences for each game
+        const gameScores = {};
+
+        recentReviews.forEach((r) => {
+            const id = String(r.game_id);
+            if (!gameScores[id]) gameScores[id] = 0;
+            gameScores[id] += 2; // weight for reviews
+        });
+
+        recentWishlists.forEach((w) => {
+            const id = String(w.game_id);
+            if (!gameScores[id]) gameScores[id] = 0;
+            gameScores[id] += 1; // weight for wishlists
+        });
+
+        // Sort by score
+        const trendingGameIds = Object.entries(gameScores)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 4) // top 4
+            .map(([id]) => id);
+
+        // Load game data
+        const games = await Game.find({ _id: { $in: trendingGameIds } })
+            .select("title tagline description release_date age_rating")
+            .lean();
+
+        // Load images and tags
+        const [images, tagsMap] = await Promise.all([
+            loadImagesForGames(trendingGameIds),
+            loadTagsForGames(trendingGameIds),
+        ]);
+
+        // Build payload
+        const payload = trendingGameIds.map((id) => {
+            const g = games.find((game) => String(game._id) === id);
+            if (!g) return null;
+            return {
+                id: g._id,
+                image: images[String(g._id)] || "",
+                name: g.title,
+                description: g.description || "",
+                tagline: g.tagline || "",
+                tags: tagsMap[String(g._id)] || [],
+            };
+        }).filter(Boolean);
 
         res.json(payload);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: err.message });
     }
 });

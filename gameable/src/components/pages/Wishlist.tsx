@@ -4,6 +4,7 @@ import { ApiDataHelper } from "../../data/ApiDataHelper.tsx";
 import { getUserIdFromToken } from "../../data/TokenUtility.ts"
 import { WishlistGameCard } from "../WishlistGameCard.tsx";
 import { IconCheckbox } from "../IconCheckbox.tsx";
+import { BlackButton } from "../BlackButton.tsx";
 
 // --- Interfaces ---
 interface Game {
@@ -143,14 +144,12 @@ export function Wishlist() {
 
             <div className="wishlist-header">
                 <h1>My Wishlist</h1>
-
-                <p className="wishlist-subtitle">
-                    Your saved games, all in one place. Explore, track, and manage your favourites.
-                </p>
-
-                <button onClick={restoreLast}>
-                    Undo
-                </button>
+                <div className="wishlist-header-right">
+                    <p className="wishlist-subtitle">
+                        Your saved games, all in one place. Explore, track, and manage your favourites.
+                    </p>
+                    <BlackButton text="Undo" onClick={restoreLast} />
+                </div>
             </div>
 
             {/* Wishlist Items */}
@@ -162,13 +161,7 @@ export function Wishlist() {
                     return (
                         <div
                             key={item._id}
-                            className="wishlist-item"
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "10px",
-                                marginBottom: "15px",
-                            }}
+                            className="wishlist-item d-flex align-items-center justify-content-between mb-4"
                         >
                             <WishlistGameCard
                                 image={cover || ""}
@@ -176,19 +169,12 @@ export function Wishlist() {
                                 description={game.body || "No description available."}
                             />
 
-                            <div
-                                className="wishlist-actions"
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "5px",
-                                }}
-                            >
-                                <button onClick={() => moveUp(index)}>Move Up</button>
-                                <button onClick={() => moveDown(index)}>Move Down</button>
+                            <div className="wishlist-actions d-flex flex-column gap-1 ms-0">
+                                <BlackButton text="↑" onClick={() => moveUp(index)} />
+                                <BlackButton text="↓" onClick={() => moveDown(index)} />
                                 <IconCheckbox
-                                    text="Remove"
-                                    checked={false} // initially unchecked
+                                    text="⌫"
+                                    checked={false}
                                     onChange={(checked) => {
                                         if (checked) softRemove(item._id);
                                     }}

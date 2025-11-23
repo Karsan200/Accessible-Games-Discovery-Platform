@@ -183,16 +183,21 @@ router.get("/top-sellers", async (req, res) => {
 
 router.get("/hero", async (req, res) => {
     try {
-        // return a few featured slides (limit 3)
         const games = await Game.find({}, "title tagline description").limit(3).lean();
         const ids = games.map((g) => g._id);
-        const images = await loadImagesForGames(ids);
+
+        // Load images + tags the same way trending/top-sellers does
+        const [images, tagsMap] = await Promise.all([
+            loadImagesForGames(ids),
+            loadTagsForGames(ids),
+        ]);
 
         const slides = games.map((g) => ({
             id: g._id,
             image: images[String(g._id)] || "",
             title: g.title || g.tagline || "",
             description: g.description || "",
+            tags: tagsMap[String(g._id)] || [],  // ← ADD THIS
         }));
 
         res.json(slides);
@@ -200,5 +205,6 @@ router.get("/hero", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
 
 export default router;

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Carousel, Container } from "react-bootstrap";
 import { BlackButton } from "./BlackButton";
 import { WhiteButton } from "./WhiteButton";
+import { GameTags } from "./game/GameTags";
 import { useNavigate } from "react-router-dom";
 
 interface HeroSlide {
@@ -9,6 +10,7 @@ interface HeroSlide {
     image: string;
     title: string;
     description?: string;
+    tags?: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
 }
 
 interface HeroHeaderProps {
@@ -36,15 +38,12 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
         padding: "12px",
     };
 
-    // Navigate to game page
     const handlePlayNow = () => {
         navigate(`/games/${activeSlide.id}`);
     };
 
-    // Navigate to game page and scroll to review carousel
     const handleReview = () => {
         navigate(`/games/${activeSlide.id}`);
-        // Small delay to wait for the page to render
         setTimeout(() => {
             const el = document.getElementById("reviewCarousel");
             if (el) {
@@ -162,16 +161,26 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                     </div>
                 </div>
 
-                {/* Right Column: Description */}
-                {activeSlide.description && (
-                    <div
-                        style={{
-                            flex: 1,
-                            display: "flex",
-                            alignItems: "flex-start",
-                            justifyContent: "flex-start",
-                        }}
-                    >
+                {/* Right Column: Tags + Description */}
+                <div
+                    style={{
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "12px",
+                    }}
+                >
+                    {/* Accessibility Tags */}
+                    {activeSlide.tags && activeSlide.tags.length > 0 && (
+                        <div>
+                            <GameTags tags={activeSlide.tags} />
+                        </div>
+                    )}
+
+                    {/* Description */}
+                    {activeSlide.description && (
                         <p
                             style={{
                                 fontFamily: "'Poppins', sans-serif",
@@ -185,8 +194,8 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                         >
                             {activeSlide.description}
                         </p>
-                    </div>
-                )}
+                    )}
+                </div>
             </Container>
         </section>
     );

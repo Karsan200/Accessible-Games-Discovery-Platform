@@ -30,6 +30,7 @@ interface HeroSlide {
     image: string;
     title: string;
     description: string;
+    tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
 }
 
 export const Home: React.FC = () => {

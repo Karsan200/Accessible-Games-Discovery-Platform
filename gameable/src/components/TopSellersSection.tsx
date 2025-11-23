@@ -6,6 +6,7 @@ interface Game {
     image: string;
     title: string;
     description: string;
+    tagline?: string;
     tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
     rating: number;
 }
@@ -31,7 +32,7 @@ export const TopSellersSection: React.FC<TopSellersSectionProps> = ({ games }) =
                         key={game.id}
                         image={game.image}
                         title={game.title}
-                        description={game.description}
+                        tagline={game.tagline}
                         tags={game.tags}
                         rating={game.rating}
                         onViewGame={() => console.log(`View Game: ${game.title}`)}

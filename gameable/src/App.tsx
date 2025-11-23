@@ -13,6 +13,7 @@ import {AuthProvider, useAuth} from "./data/AuthContext.tsx";
 import Footer from "./components/navbarAndFooter/footer.tsx";
 
 import { Games } from "./components/pages/Games.tsx";
+import {GamePage} from "./components/pages/GamePage.tsx";
 import { Register } from "./components/pages/Register.tsx";
 import { Login } from "./components/pages/Login.tsx";
 import { Home } from "./components/pages/Home.tsx";
@@ -36,6 +37,7 @@ function AppContent() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/games" element={<Games />} />
+                    <Route path="/games/:id" element={<GamePage />} />
                     <Route path="/profile" element={<h1>Profile</h1>} />
                     <Route path="/errorPages/userNotLoggedIn" element={<UserNotLoggedIn />}/>
                     <Route path="/settings" element={<h1>Settings</h1>} />

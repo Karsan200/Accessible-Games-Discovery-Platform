@@ -1,0 +1,302 @@
+/* Page background and base text color */
+body, #root {
+    background-color: #ffffff;
+    color: #1B1B1B;
+}
+
+/* Two-column layout container (images left, info right) */
+.game-page-flex {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow: visible;
+    padding-right: 1.8rem;
+}
+
+/* Left column: image carousel and details */
+.game-images-col {
+    flex: 0 0 50%;
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.92rem;
+}
+
+/* Details block below images  */
+.game-details-left {
+    width: 100%;
+    max-width: 640px;
+    margin-top: 1rem;
+    padding: 0 0.25rem;
+    box-sizing: border-box;
+    text-align: justify;
+    font-size: 0.92rem;
+}
+
+/* Right column: title, tags, rating, description, actions */
+.game-info-col {
+    flex: 0 0 50%;
+    max-width: 50%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    text-align: left;
+    color: inherit;
+}
+
+/* Game title sizing and spacing */
+.game-title {
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.35rem;
+    font-weight: 600;
+    text-align: left;
+}
+
+/* Breadcrumbs styling (small inline list) */
+.game-breadcrumbs .breadcrumb {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: transparent;
+    justify-content: flex-start;
+    font-size: 0.85rem;
+}
+/* keep breadcrumb text on one line */
+.game-breadcrumbs .breadcrumb .breadcrumb-item { white-space: nowrap; }
+/* separator arrow between breadcrumb items */
+.game-breadcrumbs .breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    display: inline-block;
+    margin: 0 0.5rem;
+    color: #337A5B;
+    font-size: 0.9em;
+    text-decoration: none;
+}
+
+.game-breadcrumbs .breadcrumb .breadcrumb-item:first-child a {
+    color: #337A5B;
+    font-weight: 600;
+    text-decoration: none;
+}
+.game-breadcrumbs .breadcrumb .breadcrumb-item:first-child a:hover,
+.game-breadcrumbs .breadcrumb .breadcrumb-item:first-child a:focus {
+    color: #1f4c3a;
+    text-decoration: none;
+}
+
+/* Tags container spacing */
+.game-tags-wrapper { margin-bottom: 0.5rem; }
+
+/* Rating row: stars + counts */
+.game-rating-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Short description block under title */
+.game-description {
+    margin-bottom: 0.75rem;
+    text-align: justify;
+    font-size: 0.92rem; }
+
+/* Details and accessibility text blocks: preserve newlines and spacing */
+.game-details,
+.game-accessibility {
+    white-space: pre-wrap;
+    line-height: 1.45;
+    text-align: justify;
+    margin-bottom: 0.75rem;
+    font-size: 0.92rem;
+}
+
+/* Review card styling: card border, padding and subtle shadow */
+.review-box {
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    padding: 1rem;
+    background: #F2F0EF;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+    text-align: left;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    box-sizing: border-box;
+}
+/* makes review cards stretch to fill the carousel item flex container */
+.carousel-item-flex > .review-box {
+    height: 100%;
+}
+
+.review-box h4 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.review-box p { margin: 0; }
+
+/* puts profile pic and name on the same line */
+.review-meta { display: flex; gap: 0.75rem; align-items: center; }
+
+/* Favourite button styling */
+.game-fav-btn {
+    display: block;
+    width: 95%;
+    margin: 0.75rem auto 1.25rem;
+    padding: 0.5rem 1rem;
+    background-color: #337A5B;
+    color: #F2F0EF;
+    border: 1px solid #337A5B;
+    border-radius: 0.25rem;
+    text-align: center;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+}
+.game-fav-btn:hover,
+.game-fav-btn:focus {
+    background-color: #1f4c3a;
+    border-color: #1f4c3a;
+    color: #F2F0EF;
+}
+
+/* Line separating game and review */
+.full-width-hr {
+    width: 100%;
+    border: none;
+    border-top: 2px solid rgba(0,0,0,0.12);
+    margin: 4rem 0 4.5rem;
+    box-sizing: border-box;
+}
+
+/*Styling the inside of the review carousel*/
+
+#reviewCarousel .review-avatar,
+.review-meta .review-avatar {
+    width: 40px;
+    height: 40px;
+    max-width: none;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    flex-shrink: 0;
+}
+
+.reviews-header-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    min-height: 2.2rem;
+    position: relative;
+}
+.reviews-header-row .text-muted {
+    grid-column: 2;
+    margin: 0;
+    text-align: center;
+    white-space: normal;
+}
+
+.reviews-header-row .reviews-add-btn {
+    grid-column: 3;
+    justify-self: end;
+    width: auto;
+    margin: 0;
+    padding: 0.45rem 1rem;
+    box-sizing: border-box;
+    transform: translateX(-3.6rem);
+}
+
+
+/* Making Screen Dynamic */
+@media (max-width: 991.98px) {
+    .game-page-flex {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    .game-images-col {
+        flex: 0 0 auto;
+        max-width: 100%;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.95rem;
+    }
+    .game-info-col {
+        flex: 1 1 auto;
+        max-width: 100%;
+        font-size: 0.92rem;
+        padding-right: 1.5rem;
+    }
+    .game-title { font-size: 1.25rem; }
+    .game-details-left { max-width: 100%; padding: 0; }
+}
+
+/*Changing the order it is displayed on smaller screens*/
+@media (max-width: 991.98px) {
+    /* make carousel and details behave as siblings so we can reorder them */
+    .game-images-col {
+        display: contents;
+    }
+
+    /* desired visual order: images (carousel) >  game info > details */
+    .game-carousel      { order: 0; width: 100%; }
+    .game-info-col      { order: 1; width: 100%; }
+    .game-details-left  { order: 2; width: 100%; }
+
+    /* keep spacing/centering for those elements */
+    .game-carousel,
+    .game-details-left,
+    .game-info-col {
+        margin: 0 auto;
+    }
+}
+
+
+@media (max-width: 575.98px) {
+    .full-width-hr {
+        border-top-width: 2px;
+        margin: 3rem 0 3.5rem;
+    }
+}
+
+
+/* Prevent the reviews button from overlapping the centered text on medium-narrow screens */
+@media (max-width: 1100px) {
+    .reviews-header-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 0;
+    }
+
+    .reviews-header-row .text-muted {
+        grid-column: auto;
+        text-align: center;
+        margin: 0;
+        max-width: 100%;
+    }
+
+    .reviews-header-row .reviews-add-btn {
+        grid-column: auto;
+        justify-self: center;
+        align-self: center;
+        position: static;
+        transform: none;
+        width: auto;
+        margin: 0;
+        padding: 0.45rem 1rem;
+    }
+}
+

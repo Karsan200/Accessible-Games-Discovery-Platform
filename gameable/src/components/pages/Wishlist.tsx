@@ -39,13 +39,18 @@ export function Wishlist() {
 
     const userId = getUserIdFromToken(accessToken);
     const auth = { accessToken, setAccessToken };
+    // Helper: common headers with auth
+    const authHeaders = () => ({
+        "Content-Type": "application/json",
+        ...(accessToken ? { "Authorization": `Bearer ${accessToken}` } : {})
+    });
 
     // Load wishlist
     async function loadWishlist() {
         if (!userId || !accessToken) return;
         setLoading(true);
         try {
-            const res = await ApiDataHelper(`/wishlist/${userId}`, { method: "GET", headers: {} }, auth);
+            const res = await ApiDataHelper(`/wishlist/${userId}`, { method: "GET", headers: authHeaders() }, auth);
             const data: WishlistItem[] = await res.json();
             setWishlist(data);
         } catch (err) {
@@ -61,14 +66,14 @@ export function Wishlist() {
 
     // Soft delete
     function softRemove(id: string) {
-        fetch(`http://localhost:5000/wishlist/${id}`, { method: "DELETE" })
+        fetch(`http://localhost:5000/wishlist/${id}`, { method: "DELETE", headers: authHeaders() })
             .then(() => loadWishlist())
             .catch(console.error);
     }
 
     // Hard delete
     function hardRemove(id: string) {
-        fetch(`http://localhost:5000/wishlist/${id}?hard=true`, { method: "DELETE" })
+        fetch(`http://localhost:5000/wishlist/${id}?hard=true`, { method: "DELETE", headers: authHeaders() })
             .then(() => loadWishlist())
             .catch(console.error);
     }
@@ -77,6 +82,7 @@ export function Wishlist() {
     function restoreLast() {
         fetch(`http://localhost:5000/wishlist/restore-last/${userId}`, {
             method: "PUT",
+            headers: authHeaders()
         })
             .then((res) => res.json())
             .then(() => loadWishlist())
@@ -87,7 +93,7 @@ export function Wishlist() {
     function updateWeight(id: string, weight: number) {
         fetch(`http://localhost:5000/wishlist/${id}/weight`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json" },
+            headers: authHeaders(),
             body: JSON.stringify({ weight }),
         })
             .then(() => loadWishlist())

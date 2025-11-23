@@ -125,8 +125,9 @@ export function GamePage() {
             }
 
             const data = await res.json();
-            console.log("Added to wishlist:", data);
-            alert("Game added to wishlist!");
+            // console.log("Added to wishlist:", data);
+            const message = data + " added to wishlist!"
+            alert(message);
         } catch (err) {
             console.error(err);
             alert("Could not add to wishlist.");

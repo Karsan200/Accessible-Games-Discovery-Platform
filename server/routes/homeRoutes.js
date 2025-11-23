@@ -65,20 +65,46 @@ router.get("/trending", async (req, res) => {
 });
 
 // /api/home/top-sellers
+// Fetches the 10 highest rated games
 router.get("/top-sellers", async (req, res) => {
     try {
-        const games = await Game.find({}, "title tagline description release_date age_rating").lean();
-        const ids = games.map((g) => g._id);
-        const [images, tagsMap] = await Promise.all([loadImagesForGames(ids), loadTagsForGames(ids)]);
-
-        // compute average rating and review count per game
-        const agg = await Review.aggregate([
-            { $match: { game_id: { $in: ids } } },
-            { $group: { _id: "$game_id", avgRating: { $avg: "$rating" }, count: { $sum: 1 } } },
+        // Aggregate reviews to get avg ratings
+        const ratingAgg = await Review.aggregate([
+            {
+                $group: {
+                    _id: "$game_id",
+                    avgRating: { $avg: "$rating" },
+                    reviewCount: { $sum: 1 }
+                }
+            },
+            { $sort: { avgRating: -1 } },
+            { $limit: 8 }
         ]);
 
-        const ratingMap = Object.fromEntries(agg.map((a) => [String(a._id), { rating: a.avgRating || 0, reviewCount: a.count }]));
+        // extract the top 10 game IDs
+        const topGameIds = ratingAgg.map(r => r._id);
 
+        // convert agg to map for easy lookup later
+        const ratingMap = Object.fromEntries(
+            ratingAgg.map(r => [
+                String(r._id),
+                { rating: r.avgRating || 0, reviewCount: r.reviewCount }
+            ])
+        );
+
+        // Fetch Games
+        const games = await Game.find(
+            { _id: { $in: topGameIds } },
+            "title tagline description release_date age_rating"
+        ).lean();
+
+        // Load images tags for these games
+        const [images, tagsMap] = await Promise.all([
+            loadImagesForGames(topGameIds),
+            loadTagsForGames(topGameIds)
+        ]);
+
+        // Construct payload
         const payload = games.map((g) => {
             const rm = ratingMap[String(g._id)] || { rating: 0, reviewCount: 0 };
             return {
@@ -93,11 +119,15 @@ router.get("/top-sellers", async (req, res) => {
             };
         });
 
+        // Sort rating from highest to lowest
+        payload.sort((a, b) => b.rating - a.rating);
+
         res.json(payload);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
+
 
 router.get("/hero", async (req, res) => {
     try {

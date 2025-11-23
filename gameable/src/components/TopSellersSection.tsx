@@ -23,7 +23,7 @@ export const TopSellersSection: React.FC<TopSellersSectionProps> = ({ games }) =
                 className="fw-bold mb-4 text-center fs-4 fs-md-2"
                 tabIndex={-1}
             >
-                Top Sellers
+                Highest Rated
             </h2>
 
             <div className="d-flex flex-column gap-3">

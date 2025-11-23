@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Carousel, Container } from "react-bootstrap";
 import { BlackButton } from "./BlackButton";
 import { WhiteButton } from "./WhiteButton";
+import { useNavigate } from "react-router-dom";
 
 interface HeroSlide {
     id: string;
@@ -16,6 +17,7 @@ interface HeroHeaderProps {
 
 export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
     const [activeIndex, setActiveIndex] = useState(0);
+    const navigate = useNavigate();
 
     if (!slides || slides.length === 0) return null;
 
@@ -32,6 +34,23 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
         justifyContent: "center",
         alignItems: "center",
         padding: "12px",
+    };
+
+    // Navigate to game page
+    const handlePlayNow = () => {
+        navigate(`/games/${activeSlide.id}`);
+    };
+
+    // Navigate to game page and scroll to review carousel
+    const handleReview = () => {
+        navigate(`/games/${activeSlide.id}`);
+        // Small delay to wait for the page to render
+        setTimeout(() => {
+            const el = document.getElementById("reviewCarousel");
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth" });
+            }
+        }, 100);
     };
 
     return (
@@ -70,7 +89,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                         <div
                             style={{
                                 width: "100%",
-                                height: "345px", // half of previous
+                                height: "345px",
                                 backgroundImage: `url(${slide.image})`,
                                 backgroundSize: "cover",
                                 backgroundPosition: "center",
@@ -83,7 +102,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                 ))}
             </Carousel>
 
-            {/* Content Below Carousel: Two Columns */}
+            {/* Content Below Carousel */}
             <Container
                 style={{
                     display: "flex",
@@ -133,10 +152,12 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                         <BlackButton
                             text="Play Now"
                             aria-label={`Play ${activeSlide.title}`}
+                            onClick={handlePlayNow}
                         />
                         <WhiteButton
                             text="Review"
                             aria-label={`Review ${activeSlide.title}`}
+                            onClick={handleReview}
                         />
                     </div>
                 </div>

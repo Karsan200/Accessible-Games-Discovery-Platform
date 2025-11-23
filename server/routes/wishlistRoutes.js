@@ -28,6 +28,75 @@ router.get("/:userId", async (req, res) => {
     }
 });
 
+// Adds game to the users wishlist
+router.post("/add", async (req, res) => {
+    try {
+        const { userId, gameId } = req.body;
+
+        if (!userId || !gameId) {
+            return res.status(400).json({ error: "Missing userId or gameId" });
+        }
+
+        // Check if item exists and is active
+        const existing = await Wishlist.findOne({
+            user_id: userId,
+            game_id: gameId,
+            removed_at: null
+        });
+
+        if (existing) {
+            return res.status(400).json({ error: "Game already in wishlist" });
+        }
+
+        // If it existed but has been soft-deleted will restore it
+        const deletedItem = await Wishlist.findOne({
+            user_id: userId,
+            game_id: gameId,
+            removed_at: { $ne: null }
+        });
+
+        if (deletedItem) {
+            deletedItem.removed_at = null;
+            // give it a new max weight
+            const maxWeight = await Wishlist.find({ user_id: userId }).sort({ weight: -1 }).limit(1);
+            deletedItem.weight = maxWeight.length > 0 ? maxWeight[0].weight + 1 : 1;
+            await deletedItem.save();
+
+            return res.json({ message: "Restored", id: deletedItem._id });
+        }
+
+        // Create new entry
+        const maxWeight = await Wishlist.find({ user_id: userId })
+            .sort({ weight: -1 })
+            .limit(1);
+
+        const nextWeight = maxWeight.length > 0 ? maxWeight[0].weight + 1 : 1;
+
+        const newItem = await Wishlist.create({
+            user_id: userId,
+            game_id: gameId,
+            weight: nextWeight,
+            removed_at: null
+        });
+
+        // Load and return media (same as GET route)
+        const media = await GameMedia.find({ game_id: gameId });
+
+        const populatedGame = await Game.findById(gameId);
+
+        res.json({
+            ...newItem.toObject(),
+            game_id: populatedGame,
+            media
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to add to wishlist" });
+    }
+});
+
+
 // Delete Functions -  call fetch(`/api/wishlist/${id}?hard=true`, { method: "DELETE" }) for hard delete
 router.delete("/:id", async (req, res) => {
     try {

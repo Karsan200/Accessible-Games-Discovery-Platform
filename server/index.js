@@ -27,6 +27,9 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+app.listen(5000, () => {
+    console.log("API running on http://localhost:5000");
+});
 
 app.use("/images", express.static("public/gameImages"));
 app.use("/api/games", gamesRouter);

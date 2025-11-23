@@ -5,6 +5,7 @@ import { GameBreadcrumbs } from "../game/GameBreadcrumbs";
 import { GameTags } from "../game/GameTags";
 import { GameStars } from "../game/GameStars";
 import { Carousel } from "../game/Carousel";
+import ReviewModel from "../../models/forms/ReviewModel";
 import "./GamePage.css";
 
 const DEFAULT_PROFILE_IMG = "http://localhost:5000/images/profilepicTemp.png";
@@ -44,7 +45,6 @@ type Game = {
     reviewCount?: number;
 };
 
-// Local TagLabel type (matches GameTags)
 type TagLabel = "Visual" | "Audio" | "Motor" | "Cognitive";
 
 const toTagLabel = (s?: string | null): TagLabel | null => {
@@ -61,7 +61,12 @@ export function GamePage() {
     const { id } = useParams<{ id: string }>();
     const [game, setGame] = useState<Game | null>(null);
     const [loading, setLoading] = useState(true);
+    const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
+    // TEMP STATIC USER UNTIL LOGIN SYSTEM WORKS
+    const STATIC_PIXEL_PANDA_ID = "692217df37811630b3eeb25a";
+
+    // Fetch game
     useEffect(() => {
         async function fetchGame() {
             try {
@@ -78,14 +83,51 @@ export function GamePage() {
         if (id) fetchGame();
     }, [id]);
 
+    // Submit review
+    const handleReviewSubmit = async (rating: number, body: string) => {
+        if (!game?._id) return;
+
+        const newReview = {
+            user_id: STATIC_PIXEL_PANDA_ID,
+            rating,
+            body,
+        };
+
+        try {
+            const res = await fetch(`http://localhost:5000/api/reviews/${game._id}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newReview),
+            });
+
+            if (!res.ok) {
+                console.error("Failed to submit review");
+                return;
+            }
+
+            // Refresh updated game data
+            const updated = await fetch(
+                `http://localhost:5000/api/games/${game._id}`
+            ).then((r) => r.json());
+
+            setGame(updated);
+            setReviewModalOpen(false);
+
+        } catch (err) {
+            console.error("Review submit error:", err);
+        }
+    };
+
     if (loading) return <p>Loading...</p>;
     if (!game) return <p>Game not found.</p>;
 
-    // Prepare images for carousel (only screenshots and covers, skip items without url)
+    // Prepare images for carousel
     const imageItems: ReactElement[] = (game.media ?? [])
         .filter((m) => !!m.url && (m.type === "screenshot" || m.type === "cover"))
         .map((m, i) => {
-            const src = m.url.startsWith("http") ? m.url : `http://localhost:5000${m.url}`;
+            const src = m.url.startsWith("http")
+                ? m.url
+                : `http://localhost:5000${m.url}`;
             return (
                 <img
                     key={i}
@@ -96,7 +138,7 @@ export function GamePage() {
             );
         });
 
-    // Prepare reviews for carousel
+    // Prepare reviews
     const reviewItems: ReactElement[] = (game.reviews ?? []).map((r, i) => {
         return (
             <div className="review-box w-100 h-100" key={i}>
@@ -125,7 +167,8 @@ export function GamePage() {
         .filter((t): t is TagLabel => t !== null);
 
     const ratingValue = game.rating ?? 0;
-    const reviewCount = game.reviewCount ?? (game.reviews ? game.reviews.length : 0);
+    const reviewCount =
+        game.reviewCount ?? (game.reviews ? game.reviews.length : 0);
 
     return (
         <div className="container my-5">
@@ -159,7 +202,9 @@ export function GamePage() {
 
                     <p className="game-description">{game.description}</p>
 
-                    <button className="btn btn-primary game-fav-btn">Add to favourites</button>
+                    <button className="btn btn-primary game-fav-btn">
+                        Add to favourites
+                    </button>
 
                     <h3 className="mt-4 mb-2">Accessibility</h3>
                     <p className="game-accessibility">{game.accessibility}</p>
@@ -173,12 +218,24 @@ export function GamePage() {
             <h2 className="mb-2">Customer Reviews</h2>
             <div className="reviews-header-row">
                 <p className="text-muted mb-4">This is what the customers have to say.</p>
-                <button type="button" className="btn btn-primary game-fav-btn reviews-add-btn">
+
+                <button
+                    type="button"
+                    className="btn btn-primary game-fav-btn reviews-add-btn"
+                    onClick={() => setReviewModalOpen(true)}
+                >
                     Add a Review
                 </button>
             </div>
 
             <Carousel id="reviewCarousel" items={reviewItems} visibleCount={3} step={1} />
+
+            {/* Review model */}
+            <ReviewModel
+                open={reviewModalOpen}
+                onClose={() => setReviewModalOpen(false)}
+                onSubmit={handleReviewSubmit}
+            />
         </div>
     );
 }

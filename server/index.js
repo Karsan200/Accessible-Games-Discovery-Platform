@@ -6,6 +6,7 @@ import { expressjwt } from "express-jwt";
 import { connectDB } from "./models/dbSetup.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import gamesRouter from "./routes/gameRoutes.js";
+import  reviewRoute  from "./routes/reviewRoute.js";
 
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
@@ -28,6 +29,7 @@ app.use(cookieParser());
 
 app.use("/images", express.static("public/gameImages"));
 app.use("/api/games", gamesRouter);
+app.use("/api/reviews", reviewRoute);
 
 // Connect to MongoDB
 await connectDB();
@@ -42,7 +44,8 @@ app.use(
         path: [
             "/auth/login", "/auth/register", "/auth/refresh", // Authentication paths
             "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", // Public home page paths
-            "/games", "/games/:id" // Public game list and details
+            "/games", "/games/:id", // Public game list and details,
+            "api/reviews"
         ]
     })
 );

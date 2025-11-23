@@ -1,0 +1,116 @@
+.rm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+}
+
+.rm-modal {
+    background: #fff;
+    width: 100%;
+    max-width: 640px;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    box-sizing: border-box;
+}
+
+.rm-close {
+    position: absolute;
+    top: -25px;
+    right: -35px;
+    background: transparent;
+    border: none;
+    font-size: 2.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #d6d6d6;
+}
+
+.rm-title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+}
+
+.rm-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.rm-stars {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+}
+
+.rm-star {
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: #d6d6d6;
+    padding: 0.15rem 0.35rem;
+    border-radius: 6px;
+    transition: color 120ms ease, transform 120ms ease;
+}
+
+/*Make stars green when selected*/
+.rm-star.filled {
+    color: #337A5B;
+    transform: translateY(-2px);
+}
+
+.rm-label {
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+}
+
+.rm-textarea {
+    width: 100%;
+    border: 1px solid #337A5B;
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-size: 0.95rem;
+    resize: vertical;
+    min-height: 84px;
+    box-sizing: border-box;
+    transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    outline: none;
+]}
+
+.rm-textarea:focus,
+.rm-textarea:focus-visible {
+    border: 2px solid #337A5B;
+}
+
+.rm-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.25rem;
+}
+
+.rm-actions .btn.btn-secondary {
+    background: #ffffff !important;
+    color: #333 !important;
+    border: 1px solid rgba(0,0,0,0.12) !important;
+    box-shadow: none !important;
+}
+
+.rm-actions .btn.btn-secondary:hover {
+    background: #f5f5f5 !important;
+}
+
+/* small screens */
+@media (max-width: 520px) {
+    .rm-modal {
+        padding: 0.9rem;
+        max-width: 92%;
+    }
+    .rm-star { font-size: 1.4rem; }
+}

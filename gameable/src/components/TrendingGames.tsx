@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { GameCard } from "./GameCard";
+import { useNavigate } from "react-router-dom";
 
 interface Game {
     id: string;
@@ -16,6 +17,8 @@ interface TrendingGamesProps {
 }
 
 export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
+    const navigate = useNavigate();
+
     return (
         <section role="region" aria-label="Trending games" className="my-5 overflow-hidden">
             <Container>
@@ -36,11 +39,7 @@ export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
                     Trending Games
                 </h2>
 
-                <Row
-                    className="g-3 g-md-4 justify-content-center"
-                    role="list"
-                    aria-label="Trending game list"
-                >
+                <Row className="g-3 g-md-4 justify-content-center" role="list" aria-label="Trending game list">
                     {games.map((game) => (
                         <Col
                             key={game.id}
@@ -57,6 +56,7 @@ export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
                                 description={game.description}
                                 tagline={game.tagline}
                                 tags={game.tags}
+                                onClick={() => navigate(`/games/${game.id}`)}
                             />
                         </Col>
                     ))}

@@ -1,0 +1,90 @@
+/* spacing/size variables for tag pills */
+:root {
+    --tag-gap: 0.625rem;
+    --tag-padding-y: 0.1rem;
+    --tag-descender-extra: 0.10rem;
+    --tag-padding-x: 0.6rem;
+    --tag-radius: 0;
+}
+
+/* horizontal list of accessibility tags */
+.accessibility-tags {
+    display: flex;
+    gap: var(--tag-gap);
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+}
+
+/* individual tag pill styling */
+.accessibility-tag {
+    display: inline-block;
+    vertical-align: middle;
+    padding-top: var(--tag-padding-y);
+    padding-bottom: calc(var(--tag-padding-y) + var(--tag-descender-extra));
+    padding-left: var(--tag-padding-x);
+    padding-right: var(--tag-padding-x);
+    border-radius: var(--tag-radius);
+    color: #1B1B1B;
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    text-align: center;
+    white-space: nowrap;
+    box-sizing: border-box;
+    box-shadow: none;
+    flex-shrink: 0;
+}
+
+/* text wrapper inside a tag */
+.accessibility-tag__text {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.35;
+}
+
+/* color variants for known accessibility types */
+.accessibility-tag--vision {
+    background: #FFB7B7; /* red/pink for Visual */
+}
+
+.accessibility-tag--hearing {
+    background: #ACF2A8; /* green for Audio */
+}
+
+.accessibility-tag--cognitive {
+    background: #BCF2FA; /* blue for Cognitive */
+}
+
+/* Motor (yellow) */
+.accessibility-tag--motor {
+    background: #FFD966; /* yellow for Motor */
+}
+
+/* fallback color when no known modifier class is present */
+.accessibility-tag:not([class*="accessibility-tag--"]) {
+    background: #edc9ff;
+}
+
+/* increase vertical padding and slightly reduce font for tight layouts */
+@media (max-width: 520px) {
+    :root {
+        --tag-padding-y: 0.28rem;
+        --tag-padding-x: 0.5rem;
+        --tag-radius: 0;
+        --tag-descender-extra: 0.08rem;
+    }
+    .accessibility-tag {
+        font-size: 0.78rem;
+        line-height: 1.25;
+        padding-top: var(--tag-padding-y);
+        padding-bottom: calc(var(--tag-padding-y) + var(--tag-descender-extra));
+    }
+    .accessibility-tag__text {
+        line-height: 1.25;
+    }
+}

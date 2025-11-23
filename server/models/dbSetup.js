@@ -1,5 +1,5 @@
 // server/models/dbSetup.js
-import mongoose from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
 // Connect to MongoDB
 export async function connectDB() {
@@ -32,12 +32,16 @@ const sessionSchema = new mongoose.Schema({
 // Games collection
 const gameSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    body: String, // Description of the game
-    release_date: Date,
-    publisher_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    genre_id: { type: mongoose.Schema.Types.ObjectId, ref: "Genre" },
-    last_update: Date,
-    age_rating: Number,
+    tagline: { type: String },
+    description: { type: String },
+    details: { type: String },
+    accessibility: { type: String },
+    release_date: { type: Date },
+    publisher_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    genre_ids: [{ type: Schema.Types.ObjectId, ref: "Genre" }],
+    last_update: { type: Date },
+    age_rating: { type: Number },
+
 });
 
 // Game Media collection

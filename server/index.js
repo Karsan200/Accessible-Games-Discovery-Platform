@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { expressjwt } from "express-jwt";
 import { connectDB } from "./models/dbSetup.js";
 import homeRoutes from "./routes/homeRoutes.js";
+import gamesRouter from "./routes/gameRoutes.js";
 
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
@@ -25,6 +26,9 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+app.use("/images", express.static("public/gameImages"));
+app.use("/api/games", gamesRouter);
+
 // Connect to MongoDB
 await connectDB();
 
@@ -36,8 +40,9 @@ app.use(
     }).unless({
         // Paths exempt from JWT authentication
         path: [
-            "/auth/login", "/auth/register", "/auth/refresh", "/auth/logout", // Authentication paths
-            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers" // Public home page paths
+            "/auth/login", "/auth/register", "/auth/refresh", // Authentication paths
+            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", // Public home page paths
+            "/games", "/games/:id" // Public game list and details
         ]
     })
 );

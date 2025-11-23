@@ -1,5 +1,6 @@
 import React from "react";
 import { Card } from "react-bootstrap";
+import "./WishlistGameCard.css";
 
 interface WishlistGameCardProps {
     image: string;
@@ -8,56 +9,28 @@ interface WishlistGameCardProps {
 }
 
 export const WishlistGameCard: React.FC<WishlistGameCardProps> = ({
-                                                      image,
-                                                      name,
-                                                      description,
-                                                  }) => {
+                                                                      image,
+                                                                      name,
+                                                                      description,
+                                                                  }) => {
     const cardId = `gamecard-${name.replace(/\s+/g, "-").toLowerCase()}`;
 
     return (
         <Card
             tabIndex={0}
-            style={{
-                cursor: "pointer",
-                minWidth: "100%",
-                maxWidth: "500px",
-            }}
+            className="wishlist-game-card"
         >
-            {/* Image Wrapper */}
-            <div
-                style={{
-                    width: "100%",
-                    height: "150px",
-                    overflow: "hidden",
-                }}
-            >
-                <img
-                    src={image}
-                    alt={`${name} game cover`}
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                    }}
-                />
+            {/* Image */}
+            <div className="wishlist-card-image">
+                <img src={image} alt={`${name} game cover`} />
             </div>
 
-            <Card.Body>
-                {/* Title */}
-                <Card.Title
-                    id={`${cardId}-title`}
-                    className="fw-bold text-center"
-                    tabIndex={0}
-                >
+            {/* Text */}
+            <Card.Body className="wishlist-card-body">
+                <Card.Title id={`${cardId}-title`} tabIndex={0}>
                     {name}
                 </Card.Title>
-
-                {/* Description */}
-                <Card.Text
-                    id={`${cardId}-desc`}
-                    className="flex-grow-1 text-center text-wrap"
-                    tabIndex={0}
-                >
+                <Card.Text id={`${cardId}-desc`} tabIndex={0}>
                     {description}
                 </Card.Text>
             </Card.Body>

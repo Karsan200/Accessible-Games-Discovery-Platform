@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import type { ReactElement } from "react";
-import { useParams } from "react-router-dom";
+import {type unstable_RSCStaticRouterProps, useParams} from "react-router-dom";
 import { GameBreadcrumbs } from "../game/GameBreadcrumbs";
+import { Authentication } from "../../data/Authentication.ts";
+import { getUserIdFromToken } from "../../data/TokenUtility.ts"
 import { GameTags } from "../game/GameTags";
 import { GameStars } from "../game/GameStars";
 import { Carousel } from "../game/Carousel";
@@ -61,6 +63,7 @@ export function GamePage() {
     const { id } = useParams<{ id: string }>();
     const [game, setGame] = useState<Game | null>(null);
     const [loading, setLoading] = useState(true);
+    const [accessToken, setAccessToken] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchGame() {
@@ -77,6 +80,58 @@ export function GamePage() {
 
         if (id) fetchGame();
     }, [id]);
+
+    // Refresh token
+    useEffect(() => {
+        async function initAuth() {
+            const token = await Authentication.refreshToken();
+            setAccessToken(token);
+        }
+        void initAuth();
+    }, []);
+
+    async function addToWishlist(gameId: string) {
+        if (!gameId) return;
+
+        try {
+            // Get access token (refresh if needed)
+            const token = accessToken || (await Authentication.refreshToken());
+            if (!token) {
+                alert("You must be logged in to add items to your wishlist.");
+                return;
+            }
+
+            const userId = getUserIdFromToken(token);
+            if (!userId) {
+                alert("Invalid user session.");
+                return;
+            }
+
+            // Call wishlist API with auth header
+            const res = await fetch('http://localhost:5000/wishlist/add', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ userId, gameId })
+            });
+
+            if (!res.ok) {
+                const text = await res.text();
+                console.error("Failed to add to wishlist:", res.status, text);
+                alert("Failed to add to wishlist. Check console.");
+                return;
+            }
+
+            const data = await res.json();
+            console.log("Added to wishlist:", data);
+            alert("Game added to wishlist!");
+        } catch (err) {
+            console.error(err);
+            alert("Could not add to wishlist.");
+        }
+    }
 
     if (loading) return <p>Loading...</p>;
     if (!game) return <p>Game not found.</p>;
@@ -159,7 +214,7 @@ export function GamePage() {
 
                     <p className="game-description">{game.description}</p>
 
-                    <button className="btn btn-primary game-fav-btn">Add to favourites</button>
+                    <button className="btn btn-primary game-fav-btn" onClick={() => addToWishlist(game._id)}>Add to Wishlist</button>
 
                     <h3 className="mt-4 mb-2">Accessibility</h3>
                     <p className="game-accessibility">{game.accessibility}</p>

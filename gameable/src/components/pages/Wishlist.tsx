@@ -61,21 +61,21 @@ export function Wishlist() {
 
     // Soft delete
     function softRemove(id: string) {
-        fetch(`http://localhost:5000/api/wishlist/${id}`, { method: "DELETE" })
+        fetch(`http://localhost:5000/wishlist/${id}`, { method: "DELETE" })
             .then(() => loadWishlist())
             .catch(console.error);
     }
 
     // Hard delete
     function hardRemove(id: string) {
-        fetch(`http://localhost:5000/api/wishlist/${id}?hard=true`, { method: "DELETE" })
+        fetch(`http://localhost:5000/wishlist/${id}?hard=true`, { method: "DELETE" })
             .then(() => loadWishlist())
             .catch(console.error);
     }
 
     // Restore last removed
     function restoreLast() {
-        fetch(`http://localhost:5000/api/wishlist/restore-last/${userId}`, {
+        fetch(`http://localhost:5000/wishlist/restore-last/${userId}`, {
             method: "PUT",
         })
             .then((res) => res.json())
@@ -85,7 +85,7 @@ export function Wishlist() {
 
     // Update weight
     function updateWeight(id: string, weight: number) {
-        fetch(`http://localhost:5000/api/wishlist/${id}/weight`, {
+        fetch(`http://localhost:5000/wishlist/${id}/weight`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ weight }),

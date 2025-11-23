@@ -1,5 +1,6 @@
 import React from "react";
 import { TopSellerCard } from "./TopSellerCard";
+import { useNavigate } from "react-router-dom";
 
 interface Game {
     id: string;
@@ -16,6 +17,12 @@ interface TopSellersSectionProps {
 }
 
 export const TopSellersSection: React.FC<TopSellersSectionProps> = ({ games }) => {
+    const navigate = useNavigate();
+
+    const handleViewGame = (gameId: string) => {
+        navigate(`/games/${gameId}`);
+    };
+
     return (
         <section className="container my-5" aria-labelledby="top-sellers-heading">
             <h2
@@ -45,7 +52,7 @@ export const TopSellersSection: React.FC<TopSellersSectionProps> = ({ games }) =
                         tagline={game.tagline}
                         tags={game.tags}
                         rating={game.rating}
-                        onViewGame={() => console.log(`View Game: ${game.title}`)}
+                        onViewGame={() => handleViewGame(game.id)}
                     />
                 ))}
             </div>

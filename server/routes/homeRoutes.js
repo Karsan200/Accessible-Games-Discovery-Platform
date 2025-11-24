@@ -181,24 +181,52 @@ router.get("/top-sellers", async (req, res) => {
 });
 
 
+let heroCache = {
+    timestamp: 0,  // last cache update time
+    games: []      // cached hero games
+};
+
+const HERO_CACHE_DURATION = 12 * 60 * 60 * 1000; // 12 hours in ms
+
 router.get("/hero", async (req, res) => {
     try {
-        const games = await Game.find({}, "title tagline description").limit(3).lean();
-        const ids = games.map((g) => g._id);
+        const now = Date.now();
 
-        // Load images + tags the same way trending/top-sellers does
+        // Use cached hero games if within 12 hours
+        if (heroCache.games.length && (now - heroCache.timestamp < HERO_CACHE_DURATION)) {
+            return res.json(heroCache.games);
+        }
+
+        // Fetch all games
+        const games = await Game.find({}, "title tagline description").lean();
+
+        if (!games.length) {
+            return res.json([]);
+        }
+
+        // Shuffle and pick 3
+        const shuffledGames = games.sort(() => Math.random() - 0.5).slice(0, 3);
+        const ids = shuffledGames.map((g) => g._id);
+
+        // Load images + tags
         const [images, tagsMap] = await Promise.all([
             loadImagesForGames(ids),
             loadTagsForGames(ids),
         ]);
 
-        const slides = games.map((g) => ({
+        const slides = shuffledGames.map((g) => ({
             id: g._id,
             image: images[String(g._id)] || "",
             title: g.title || g.tagline || "",
             description: g.description || "",
-            tags: tagsMap[String(g._id)] || [],  // ← ADD THIS
+            tags: tagsMap[String(g._id)] || [],
         }));
+
+        // Update cache
+        heroCache = {
+            timestamp: now,
+            games: slides
+        };
 
         res.json(slides);
     } catch (err) {

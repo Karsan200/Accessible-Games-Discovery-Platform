@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { GameCard } from "./GameCard";
+import { useNavigate } from "react-router-dom";
 
 interface Game {
     id: string;
@@ -16,18 +17,43 @@ interface TrendingGamesProps {
 }
 
 export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
+    const navigate = useNavigate();
+
     return (
         <section role="region" aria-label="Trending games" className="my-5 overflow-hidden">
             <Container>
-                <h2 className="fw-bold mb-4 text-center fs-4 fs-md-2" tabIndex={-1}>
+                <h2
+                    style={{
+                        fontFamily: 'Poppins, sans-serif',
+                        fontStyle: 'normal',
+                        fontWeight: 600,
+                        fontSize: '48px',
+                        lineHeight: '120%',
+                        textAlign: 'center',
+                        color: '#000000',
+                        marginTop: '64px',
+                        marginBottom: '16px', // slightly reduced for spacing before subheading
+                    }}
+                    tabIndex={-1}
+                >
                     Trending Games
                 </h2>
 
-                <Row
-                    className="g-3 g-md-4 justify-content-center"
-                    role="list"
-                    aria-label="Trending game list"
+                <p
+                    style={{
+                        fontFamily: 'Poppins, sans-serif',
+                        fontWeight: 400,
+                        fontSize: '18px',
+                        lineHeight: '150%',
+                        color: '#000000',
+                        textAlign: 'center',
+                        marginBottom: '48px',
+                    }}
                 >
+                    Discover the most popular games right now — see what players are loving today.
+                </p>
+
+                <Row className="g-3 g-md-4 justify-content-center" role="list" aria-label="Trending game list">
                     {games.map((game) => (
                         <Col
                             key={game.id}
@@ -44,6 +70,7 @@ export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
                                 description={game.description}
                                 tagline={game.tagline}
                                 tags={game.tags}
+                                onClick={() => navigate(`/games/${game.id}`)}
                             />
                         </Col>
                     ))}

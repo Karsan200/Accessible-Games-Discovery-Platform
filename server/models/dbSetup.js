@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
 const sessionSchema = new mongoose.Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     token: { type: String, required: true },
-    created_at: { type: Date, default: Date.now, expires: '6h' }, // Session expires in 6 hours
+    created_at: { type: Date, default: Date.now, expires: '6h' }, // The Session expires in 6 hours
 });
 
 // Games collection
@@ -68,6 +68,19 @@ const wishlistSchema = new mongoose.Schema({
     game_id: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
     status: String,
     created_at: { type: Date, default: Date.now },
+    removed_at: {type: Date, default: null }, // For soft delete, Active items removed_at = null, Deleted items removed_at = Date
+    weight: { type: Number, default: 0 },
+});
+
+// Incrementing weight per user
+wishlistSchema.pre("save", async function (next) {
+    if (this.weight == null || this.weight === 0) {
+        const count = await mongoose.model("Wishlist").countDocuments({
+            user_id: this.user_id
+        });
+        this.weight = count + 1;
+    }
+    next();
 });
 
 // Reviews collection

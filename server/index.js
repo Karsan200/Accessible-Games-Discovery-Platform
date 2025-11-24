@@ -10,6 +10,8 @@ import gamesRouter from "./routes/gameRoutes.js";
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
 
+import wishlistRoutes from "./routes/wishlistRoutes.js";
+
 dotenv.config();
 const app = express();
 
@@ -20,11 +22,14 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: true,
     credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());
+app.listen(5000, () => {
+    console.log("API running on http://localhost:5000");
+});
 
 app.use("/images", express.static("public/gameImages"));
 app.use("/api/games", gamesRouter);
@@ -68,5 +73,6 @@ const PORT = process.env.PORT || 5000;
 // Routers
 app.use("/api/home", homeRoutes);
 app.use("/auth", authenticationRoutes);
+app.use("/wishlist", wishlistRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

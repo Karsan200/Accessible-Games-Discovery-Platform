@@ -1,12 +1,25 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./FeaturesSection.css";
 
 export const FeaturesSection: React.FC = () => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate("/games");
+    };
+
     return (
-        <section className="features-container">
+        <section
+            className="features-container"
+            role="region"
+            aria-labelledby="accessibility-feature-heading"
+        >
             {/* Section Title */}
             <div className="section-title">
-                <h2 className="heading">Search By Accessibility</h2>
+                <h2 id="accessibility-feature-heading" className="heading">
+                    Search By Accessibility
+                </h2>
                 <p className="subtext">
                     Find games by accessibility features - Find titles that fit how you play
                 </p>
@@ -14,37 +27,39 @@ export const FeaturesSection: React.FC = () => {
 
             {/* Content */}
             <div className="features-content">
+
                 {/* Visual */}
-                <div className="feature-card visual">
+                <button className="feature-card visual" onClick={handleClick}>
                     <div className="feature-icon">
                         <i className="bi bi-eye"></i>
                     </div>
                     <div className="feature-text">VISUAL</div>
-                </div>
+                </button>
 
                 {/* Audio */}
-                <div className="feature-card audio">
+                <button className="feature-card audio" onClick={handleClick}>
                     <div className="feature-icon">
                         <i className="bi bi-volume-up"></i>
                     </div>
                     <div className="feature-text">AUDIO</div>
-                </div>
+                </button>
 
                 {/* Motor */}
-                <div className="feature-card motor">
+                <button className="feature-card motor" onClick={handleClick}>
                     <div className="feature-icon">
                         <i className="bi bi-hand-index"></i>
                     </div>
                     <div className="feature-text">MOTOR</div>
-                </div>
+                </button>
 
                 {/* Cognitive */}
-                <div className="feature-card cognitive">
+                <button className="feature-card cognitive" onClick={handleClick}>
                     <div className="feature-icon">
                         <i className="bi bi-infinity"></i>
                     </div>
                     <div className="feature-text">COGNITIVE</div>
-                </div>
+                </button>
+
             </div>
         </section>
     );

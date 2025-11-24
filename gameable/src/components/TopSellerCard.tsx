@@ -19,14 +19,16 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                                                                 rating,
                                                                 onViewGame,
                                                             }) => {
+
     const starRating = Math.round(rating);
+    const formattedRating = rating.toFixed(1); // <-- 1 decimal place
 
     return (
         <Card
             className="mb-3 shadow-sm"
             style={{ cursor: "pointer", padding: "16px" }}
             tabIndex={0}
-            aria-label={`${title}, rated ${rating} out of 10, tags: ${tags.join(", ")}, tagline: ${tagline || ""}`}
+            aria-label={`${title}, rated ${formattedRating} out of 10, tags: ${tags.join(", ")}, tagline: ${tagline || ""}`}
             role="group"
             onKeyDown={(e) => {
                 if (e.key === "Enter" && onViewGame) onViewGame();
@@ -71,7 +73,7 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                     <div
                         className="mb-2"
                         style={{ fontSize: "1.2rem", lineHeight: 1 }}
-                        aria-label={`Rating: ${rating} out of 10`}
+                        aria-label={`Rating: ${formattedRating} out of 10`}
                         role="img"
                     >
                         {Array.from({ length: 5 }).map((_, i) => (

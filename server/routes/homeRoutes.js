@@ -14,6 +14,21 @@ async function loadImagesForGames(gameIds) {
     return map;
 }
 
+async function loadImagesForGamesCoverPreferred(gameIds) {
+    const media = await GameMedia.find({
+        game_id: { $in: gameIds },
+        type: { $in: ["icon", "cover"] }
+    }).lean();
+
+    const map = {};
+    media.forEach((m) => {
+        const key = String(m.game_id);
+        // prefer cover, fall back to icon; first seen wins otherwise
+        if (!map[key] || m.type === "cover") map[key] = m.url;
+    });
+    return map;
+}
+
 async function loadTagsForGames(gameIds) {
     const tags = await Tag.find({ game_id: { $in: gameIds } }).lean();
 
@@ -210,7 +225,7 @@ router.get("/hero", async (req, res) => {
 
         // Load images + tags
         const [images, tagsMap] = await Promise.all([
-            loadImagesForGames(ids),
+            loadImagesForGamesCoverPreferred(ids),
             loadTagsForGames(ids),
         ]);
 

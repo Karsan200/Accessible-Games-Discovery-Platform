@@ -32,12 +32,26 @@ export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
                         textAlign: 'center',
                         color: '#000000',
                         marginTop: '64px',
-                        marginBottom: '48px',
+                        marginBottom: '16px', // slightly reduced for spacing before subheading
                     }}
                     tabIndex={-1}
                 >
                     Trending Games
                 </h2>
+
+                <p
+                    style={{
+                        fontFamily: 'Poppins, sans-serif',
+                        fontWeight: 400,
+                        fontSize: '18px',
+                        lineHeight: '150%',
+                        color: '#000000',
+                        textAlign: 'center',
+                        marginBottom: '48px',
+                    }}
+                >
+                    Discover the most popular games right now — see what players are loving today.
+                </p>
 
                 <Row className="g-3 g-md-4 justify-content-center" role="list" aria-label="Trending game list">
                     {games.map((game) => (

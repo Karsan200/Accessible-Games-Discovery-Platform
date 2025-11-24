@@ -36,12 +36,26 @@ export const TopSellersSection: React.FC<TopSellersSectionProps> = ({ games }) =
                     textAlign: 'center',
                     color: '#000000',
                     marginTop: '128px',
-                    marginBottom: '48px',
+                    marginBottom: '16px',
                 }}
                 tabIndex={-1}
             >
                 Highest Rated
             </h2>
+
+            <p
+                style={{
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 400,
+                    fontSize: '18px',
+                    lineHeight: '150%',
+                    color: '#000000',
+                    textAlign: 'center',
+                    marginBottom: '48px',
+                }}
+            >
+                Explore the top-rated games loved by players — find out what everyone's talking about
+            </p>
 
             <div className="d-flex flex-column gap-3">
                 {games.map((game) => (

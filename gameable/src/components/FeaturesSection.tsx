@@ -6,9 +6,9 @@ export const FeaturesSection: React.FC = () => {
         <section className="features-container">
             {/* Section Title */}
             <div className="section-title">
-                <h2 className="heading">Game Development Focus</h2>
+                <h2 className="heading">Search By Accessibility</h2>
                 <p className="subtext">
-                    Explore the different skills each game targets in players
+                    Find games by accessibility features - Find titles that fit how you play
                 </p>
             </div>
 

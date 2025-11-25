@@ -2,6 +2,7 @@ import './App.css'
 import Navbar from './components/navbarAndFooter/navbar.tsx'
 import NavbarLoggedOut from "./components/navbarAndFooter/navbarLoggedOut.tsx";
 import UserNotLoggedIn from './components/navbarAndFooter/errorPages/userNotLoggedIn';
+import FloatingVoiceControl from './components/voiceNavigation/VoiceNavigationOverlay.tsx'
 import AboutUs from "./components/navbarAndFooter/footerPages/aboutUs.tsx";
 import ContactUs from "./components/navbarAndFooter/footerPages/contactUs.tsx";
 import AccessibilityStatement from "./components/navbarAndFooter/footerPages/acessibilityStatement.tsx";
@@ -48,6 +49,7 @@ function AppContent() {
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/voice-nav" element={<FloatingVoiceNavigation/> } />
                 </Routes>
+                <FloatingVoiceControl />
             </main>
 
             <Footer />

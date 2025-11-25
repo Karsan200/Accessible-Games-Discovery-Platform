@@ -20,7 +20,6 @@ export default function FloatingVoiceNavigation() {
         command: ['*stop record*', '*stop listening*', '*stop mic*', '*stop mike*', '*end listening*', '*end record*', '*end mic*', '*end mike*'],
             callback: () => {
             SpeechRecognition.stopListening();
-            console.log("stopped")
             }
         },
         {
@@ -42,7 +41,7 @@ export default function FloatingVoiceNavigation() {
                 try {
                     resetTranscript()
                     clickNavButton(".wishlist")
-                } catch {
+                } catch (err) {
                     resetTranscript();
                     navigate("/wishlist")
                     console.log("failed using backup")
@@ -55,7 +54,7 @@ export default function FloatingVoiceNavigation() {
                 try {
                     resetTranscript()
                     clickNavButton(".profile")
-                } catch {
+                } catch (err) {
                     resetTranscript();
                     navigate("/profile")
                     console.log("failed using backup")
@@ -68,7 +67,7 @@ export default function FloatingVoiceNavigation() {
                 try {
                     resetTranscript()
                     clickNavButton(".settings")
-                } catch {
+                } catch (err) {
                     resetTranscript();
                     navigate("/settings")
                     console.log("failed using backup")
@@ -125,10 +124,35 @@ export default function FloatingVoiceNavigation() {
             }
         },
         {
+            command: ['*login*', '*log in*'],
+            callback: () => {
+                try {
+                    resetTranscript()
+                    clickNavButton(".login-btn")
+                } catch (err) {
+                    resetTranscript();
+                    navigate("/login")
+                    console.log("failed using backup")
+                }
+            }
+        },
+        {
+            command: ['*logout*', '*log out*'],
+            callback: () => {
+                try {
+                    resetTranscript()
+                    clickNavButton(".logout-btn")
+                } catch (err) {
+                    resetTranscript();
+                    navigate("/logout")
+                    console.log("failed using backup")
+                }
+            }
+        },
+        {
             command: '*start*',
             callback: () => {
                 SpeechRecognition.startListening({ continuous: true });
-                console.log("started")
             }
         }
         ]

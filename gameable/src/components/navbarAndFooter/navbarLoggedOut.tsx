@@ -7,7 +7,7 @@ export default function NavbarLoggedOut() {
             <nav className="nav">
                 <div className="nav-header">
                     <NavLink to="/" className="title">Game Able</NavLink>
-                    <button className="auth-section auth-button" aria-label="Login"
+                    <button className="auth-section auth-button login-btn" aria-label="Login"
                             onClick={() => window.location.href = "/login"}>
                     <span className="auth-text">Login</span>
                     <span className="mask-icon-login"/>

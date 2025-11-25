@@ -13,7 +13,25 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Full game by id: media, tags, reviews with user info, genres and rating
+/* Media fetch only */
+router.get("/:id/media", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { type } = req.query;
+
+        const query = { game_id: id };
+        if (type) query.type = type;
+
+        const media = await GameMedia.find(query).lean();
+
+        res.json(media);
+    } catch (err) {
+        console.error("Media fetch error:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Full game by id
 router.get("/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -23,7 +41,9 @@ router.get("/:id", async (req, res) => {
         const [media, tags, reviewsRaw, genres] = await Promise.all([
             GameMedia.find({ game_id: id }).lean(),
             Tag.find({ game_id: id }).lean(),
-            Review.find({ game_id: id }).populate({ path: "user_id", select: "username profilePicture" }).lean(),
+            Review.find({ game_id: id })
+                .populate({ path: "user_id", select: "username profilePicture" })
+                .lean(),
             Genre.find({ _id: { $in: (game.genre_ids || []) } }).lean(),
         ]);
 
@@ -33,13 +53,20 @@ router.get("/:id", async (req, res) => {
             body: r.body,
             flagged: r.flagged,
             createdAt: r.createdAt,
-            // include reviewer _id so frontend can detect the author
-            user: r.user_id ? { _id: r.user_id._id, username: r.user_id.username, profilePicture: r.user_id.profilePicture } : null,
+            user: r.user_id
+                ? {
+                    _id: r.user_id._id,
+                    username: r.user_id.username,
+                    profilePicture: r.user_id.profilePicture,
+                }
+                : null,
         }));
 
         const reviewCount = reviews.length;
         const rating =
-            reviewCount > 0 ? reviews.reduce((s, r) => s + (r.rating || 0), 0) / reviewCount : 0;
+            reviewCount > 0
+                ? reviews.reduce((s, r) => s + (r.rating || 0), 0) / reviewCount
+                : 0;
 
         res.json({
             ...game,

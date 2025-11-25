@@ -1,6 +1,30 @@
 import { useState } from "react";
-import type { CSSProperties } from "react";
+import type { CSSProperties, FormEvent } from "react";
 import "./ReviewModel.css";
+
+function hasControlChars(s: string) {
+    for (let i = 0; i < s.length; i++) {
+        const code = s.charCodeAt(i);
+        if (code <= 0x1f || code === 0x7f) return true;
+    }
+    return false;
+}
+
+/* Adding Validation to prevent injection script */
+function isValidReviewBody(body: string) {
+    const maxLen = 1000;
+    if (body === null || body === undefined) return false;
+    const trimmed = body.trim();
+
+    if (trimmed.length > maxLen) return false;
+    if (trimmed.length === 0) return true; // allow empty review text
+
+    // For non-empty text apply stricter checks
+    if (/[<>]/.test(trimmed)) return false;
+    if (/script/i.test(trimmed)) return false;
+    if (hasControlChars(trimmed)) return false;
+    return true;
+}
 
 type Props = {
     open: boolean;
@@ -15,10 +39,21 @@ export default function ReviewModel({ open, onClose, onSubmit }: Props) {
 
     if (!open) return null;
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        if (rating <= 0) return; // require at least 1 star
-        onSubmit(rating, body.trim());
+        if (rating <= 0) {
+            alert("Please select at least 1 star.");
+            return;
+        }
+
+        const trimmed = body.trim();
+        if (!isValidReviewBody(trimmed)) {
+            alert("Review invalid: please avoid special characters and keep it under 1000 characters.");
+            return;
+        }
+
+        // send rating
+        onSubmit(rating, trimmed);
         setRating(0);
         setBody("");
         onClose();
@@ -56,14 +91,14 @@ export default function ReviewModel({ open, onClose, onSubmit }: Props) {
                         })}
                     </div>
 
-                    <label className="rm-label" htmlFor="reviewBody">Your review</label>
+                    <label className="rm-label" htmlFor="reviewBody">Your review (optional)</label>
                     <textarea
                         id="reviewBody"
                         className="rm-textarea"
                         rows={6}
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
-                        placeholder="Write about your experience..."
+                        placeholder="Write about your experience (optional)..."
                     />
 
                     <div className="rm-actions">

@@ -177,7 +177,7 @@ export function GamePage() {
                     errBody = await res.text();
                 }
                 console.error("Failed to submit review:", res.status, errBody);
-                alert("Failed to submit review. Check console.");
+                alert("Failed to submit review. Please make sure you are logged in.");
                 return;
             }
 

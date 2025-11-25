@@ -17,6 +17,7 @@ import {GamePage} from "./components/pages/GamePage.tsx";
 import { Register } from "./components/pages/Register.tsx";
 import { Login } from "./components/pages/Login.tsx";
 import { Home } from "./components/pages/Home.tsx";
+import { Wishlist } from "./components/pages/Wishlist.tsx";
 
 function AppContent() {
     const { accessToken } = useAuth();
@@ -37,13 +38,13 @@ function AppContent() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/games" element={<Games />} />
                     <Route path="/games/:id" element={<GamePage />} />
-                    <Route path="/wishlist" element={<h1>Wishlist</h1>} />
                     <Route path="/profile" element={<h1>Profile</h1>} />
                     <Route path="/errorPages/userNotLoggedIn" element={<UserNotLoggedIn />}/>
                     <Route path="/settings" element={<h1>Settings</h1>} />
                     <Route path="/footerPages/aboutUs" element={<AboutUs />} />
                     <Route path="/footerPages/contactUs" element={<ContactUs />} />
                     <Route path="/footerPages/accessibilityStatement" element={<AccessibilityStatement />}/>
+                    <Route path="/wishlist" element={<Wishlist />} />
                 </Routes>
             </main>
 

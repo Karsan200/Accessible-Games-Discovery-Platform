@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import type { ReactElement } from "react";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import { GameBreadcrumbs } from "../game/GameBreadcrumbs";
+import { Authentication } from "../../data/Authentication.ts";
+import { getUserIdFromToken } from "../../data/TokenUtility.ts"
 import { GameTags } from "../game/GameTags";
 import { GameStars } from "../game/GameStars";
 import { Carousel } from "../game/Carousel";
@@ -45,6 +47,7 @@ type Game = {
     reviewCount?: number;
 };
 
+// Local TagLabel type (matches GameTags)
 type TagLabel = "Visual" | "Audio" | "Motor" | "Cognitive";
 
 const toTagLabel = (s?: string | null): TagLabel | null => {
@@ -62,6 +65,7 @@ export function GamePage() {
     const [game, setGame] = useState<Game | null>(null);
     const [loading, setLoading] = useState(true);
     const [reviewModalOpen, setReviewModalOpen] = useState(false);
+    const [accessToken, setAccessToken] = useState<string | null>(null);
 
     // TEMP STATIC USER UNTIL LOGIN SYSTEM WORKS
     const STATIC_PIXEL_PANDA_ID = "692217df37811630b3eeb25a";
@@ -82,6 +86,59 @@ export function GamePage() {
 
         if (id) fetchGame();
     }, [id]);
+
+    // Refresh token
+    useEffect(() => {
+        async function initAuth() {
+            const token = await Authentication.refreshToken();
+            setAccessToken(token);
+        }
+        void initAuth();
+    }, []);
+
+    async function addToWishlist(gameId: string) {
+        if (!gameId) return;
+
+        try {
+            // Get access token (refresh if needed)
+            const token = accessToken || (await Authentication.refreshToken());
+            if (!token) {
+                alert("You must be logged in to add items to your wishlist.");
+                return;
+            }
+
+            const userId = getUserIdFromToken(token);
+            if (!userId) {
+                alert("Invalid user session.");
+                return;
+            }
+
+            // Call wishlist API with auth header
+            const res = await fetch('http://localhost:5000/wishlist/add', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ userId, gameId })
+            });
+
+            if (!res.ok) {
+                const text = await res.text();
+                console.error("Failed to add to wishlist:", res.status, text);
+                alert("Failed to add to wishlist. Check console.");
+                return;
+            }
+
+            const data = await res.json();
+            // console.log("Added to wishlist:", data);
+            const message = data + " added to wishlist!"
+            alert(message);
+        } catch (err) {
+            console.error(err);
+            alert("Could not add to wishlist.");
+        }
+    }
 
     // Submit review
     const handleReviewSubmit = async (rating: number, body: string) => {
@@ -121,13 +178,11 @@ export function GamePage() {
     if (loading) return <p>Loading...</p>;
     if (!game) return <p>Game not found.</p>;
 
-    // Prepare images for carousel
+    // Prepare images for carousel (only screenshots and covers, skip items without url)
     const imageItems: ReactElement[] = (game.media ?? [])
         .filter((m) => !!m.url && (m.type === "screenshot" || m.type === "cover"))
         .map((m, i) => {
-            const src = m.url.startsWith("http")
-                ? m.url
-                : `http://localhost:5000${m.url}`;
+            const src = m.url.startsWith("http") ? m.url : `http://localhost:5000${m.url}`;
             return (
                 <img
                     key={i}
@@ -138,7 +193,7 @@ export function GamePage() {
             );
         });
 
-    // Prepare reviews
+    // Prepare reviews for carousel
     const reviewItems: ReactElement[] = (game.reviews ?? []).map((r, i) => {
         return (
             <div className="review-box w-100 h-100" key={i}>
@@ -167,8 +222,7 @@ export function GamePage() {
         .filter((t): t is TagLabel => t !== null);
 
     const ratingValue = game.rating ?? 0;
-    const reviewCount =
-        game.reviewCount ?? (game.reviews ? game.reviews.length : 0);
+    const reviewCount = game.reviewCount ?? (game.reviews ? game.reviews.length : 0);
 
     return (
         <div className="container my-5">
@@ -202,9 +256,7 @@ export function GamePage() {
 
                     <p className="game-description">{game.description}</p>
 
-                    <button className="btn btn-primary game-fav-btn">
-                        Add to favourites
-                    </button>
+                    <button className="btn btn-primary game-fav-btn" onClick={() => addToWishlist(game._id)}>Add to Wishlist</button>
 
                     <h3 className="mt-4 mb-2">Accessibility</h3>
                     <p className="game-accessibility">{game.accessibility}</p>

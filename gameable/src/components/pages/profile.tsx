@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import "./Profile.css";
+
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -7,10 +9,12 @@ export default function Profile() {
         <div>
             <h1>Profile Page</h1>
 
-            <div style={{ marginTop: 16 }}>
+            <div className="profile-actions" style={{ maxWidth: 960, margin: "0 auto", padding: "0 16px" }}>
+                {/* Full-width button visually matching review boxes */}
                 <button
-                    className="btn btn-primary"
+                    className="manage-reviews-btn"
                     onClick={() => navigate("/my-reviews")}
+                    aria-label="Manage my reviews"
                 >
                     Manage my reviews
                 </button>
@@ -18,5 +22,3 @@ export default function Profile() {
         </div>
     );
 }
-
-

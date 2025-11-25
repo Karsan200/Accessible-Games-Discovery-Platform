@@ -61,14 +61,11 @@ const toTagLabel = (s?: string | null): TagLabel | null => {
 };
 
 export function GamePage() {
-    const { id } = useParams<{ id: string }>();
+    const {id} = useParams<{ id: string }>();
     const [game, setGame] = useState<Game | null>(null);
     const [loading, setLoading] = useState(true);
     const [reviewModalOpen, setReviewModalOpen] = useState(false);
     const [accessToken, setAccessToken] = useState<string | null>(null);
-
-    // TEMP STATIC USER UNTIL LOGIN SYSTEM WORKS
-    const STATIC_PIXEL_PANDA_ID = "692217df37811630b3eeb25a";
 
     // Fetch game
     useEffect(() => {
@@ -93,6 +90,7 @@ export function GamePage() {
             const token = await Authentication.refreshToken();
             setAccessToken(token);
         }
+
         void initAuth();
     }, []);
 
@@ -120,7 +118,7 @@ export function GamePage() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ userId, gameId })
+                body: JSON.stringify({userId, gameId})
             });
 
             if (!res.ok) {
@@ -141,153 +139,176 @@ export function GamePage() {
     }
 
     // Submit review
-    const handleReviewSubmit = async (rating: number, body: string) => {
+    async function handleReviewSubmit(rating: number, body: string) {
         if (!game?._id) return;
 
-        const newReview = {
-            user_id: STATIC_PIXEL_PANDA_ID,
-            rating,
-            body,
-        };
-
         try {
+            // Get access token (refresh if needed)
+            const token = accessToken || (await Authentication.refreshToken());
+            if (!token) {
+                alert("You must be logged in to add a review.");
+                return;
+            }
+
+            const userId = getUserIdFromToken(token);
+            if (!userId) {
+                alert("Invalid user session.");
+                return;
+            }
+
+            // Backend expects `user_id`  and `rating`
+            const newReview = { user_id: userId, rating: Number(rating), body: body || "" };
+
             const res = await fetch(`http://localhost:5000/api/reviews/${game._id}`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(newReview),
             });
 
             if (!res.ok) {
-                console.error("Failed to submit review");
+                let errBody: string;
+                try {
+                    const json = await res.json();
+                    errBody = JSON.stringify(json);
+                } catch {
+                    errBody = await res.text();
+                }
+                console.error("Failed to submit review:", res.status, errBody);
+                alert("Failed to submit review. Check console.");
                 return;
             }
 
             // Refresh updated game data
-            const updated = await fetch(
-                `http://localhost:5000/api/games/${game._id}`
-            ).then((r) => r.json());
-
+            const updatedRes = await fetch(`http://localhost:5000/api/games/${game._id}`);
+            const updated = await updatedRes.json();
             setGame(updated);
             setReviewModalOpen(false);
-
         } catch (err) {
             console.error("Review submit error:", err);
+            alert("Could not submit review.");
         }
-    };
+    }
+
+
 
     if (loading) return <p>Loading...</p>;
-    if (!game) return <p>Game not found.</p>;
+        if (!game) return <p>Game not found.</p>;
 
-    // Prepare images for carousel (only screenshots and covers, skip items without url)
-    const imageItems: ReactElement[] = (game.media ?? [])
-        .filter((m) => !!m.url && (m.type === "screenshot" || m.type === "cover"))
-        .map((m, i) => {
-            const src = m.url.startsWith("http") ? m.url : `http://localhost:5000${m.url}`;
+        // Prepare images for carousel (only screenshots and covers, skip items without url)
+        const imageItems: ReactElement[] = (game.media ?? [])
+            .filter((m) => !!m.url && (m.type === "screenshot" || m.type === "cover"))
+            .map((m, i) => {
+                const src = m.url.startsWith("http") ? m.url : `http://localhost:5000${m.url}`;
+                return (
+                    <img
+                        key={i}
+                        src={src}
+                        className="d-block w-100 rounded"
+                        alt={m.description ?? `Game screenshot ${i + 1}`}
+                    />
+                );
+            });
+
+        // Prepare reviews for carousel
+        const reviewItems: ReactElement[] = (game.reviews ?? []).map((r, i) => {
             return (
-                <img
-                    key={i}
-                    src={src}
-                    className="d-block w-100 rounded"
-                    alt={m.description ?? `Game screenshot ${i + 1}`}
-                />
+                <div className="review-box w-100 h-100" key={i}>
+                    <h4 className="mb-1">
+                        <GameStars rating={r.rating ?? 0}/>
+                    </h4>
+                    <p className="mb-2">{r.body}</p>
+                    <div className="review-meta">
+                        <img
+                            src={
+                                r.user?.profilePicture
+                                    ? `http://localhost:5000${r.user.profilePicture}`
+                                    : DEFAULT_PROFILE_IMG
+                            }
+                            alt={r.user?.username ?? "Anonymous"}
+                            className="review-avatar"
+                        />
+                        <strong>{r.user?.username ?? "Anonymous"}</strong>
+                    </div>
+                </div>
             );
         });
 
-    // Prepare reviews for carousel
-    const reviewItems: ReactElement[] = (game.reviews ?? []).map((r, i) => {
+        const tags: TagLabel[] = (game.tags ?? [])
+            .map((t) => toTagLabel(t.name))
+            .filter((t): t is TagLabel => t !== null);
+
+        const ratingValue = game.rating ?? 0;
+        const reviewCount = game.reviewCount ?? (game.reviews ? game.reviews.length : 0);
+
         return (
-            <div className="review-box w-100 h-100" key={i}>
-                <h4 className="mb-1">
-                    <GameStars rating={r.rating ?? 0} />
-                </h4>
-                <p className="mb-2">{r.body}</p>
-                <div className="review-meta">
-                    <img
-                        src={
-                            r.user?.profilePicture
-                                ? `http://localhost:5000${r.user.profilePicture}`
-                                : DEFAULT_PROFILE_IMG
-                        }
-                        alt={r.user?.username ?? "Anonymous"}
-                        className="review-avatar"
-                    />
-                    <strong>{r.user?.username ?? "Anonymous"}</strong>
+            <div className="container my-5">
+                <div className="game-page-flex">
+                    <div className="game-images-col">
+                        <Carousel id="gameImages" items={imageItems} visibleCount={1} step={1}/>
+
+                        <div className="game-details-left mt-3">
+                            <h3 className="mb-2">Details</h3>
+                            <p className="game-details">{game.details}</p>
+                        </div>
+                    </div>
+
+                    <div className="game-info-col">
+                        <div className="game-breadcrumbs">
+                            <GameBreadcrumbs gameTitle={game.title}/>
+                        </div>
+
+                        <h1 className="game-title">{game.title}</h1>
+
+                        <div className="game-tags-wrapper">
+                            <GameTags tags={tags}/>
+                        </div>
+
+                        <div className="game-rating-row">
+                            <GameStars rating={ratingValue}/>
+                            <span className="ms-2">({ratingValue.toFixed(1)} stars)</span>
+                            <span className="mx-2">•</span>
+                            <span>{reviewCount} reviews</span>
+                        </div>
+
+                        <p className="game-description">{game.description}</p>
+
+                        <button className="btn btn-primary game-fav-btn" onClick={() => addToWishlist(game._id)}>Add to
+                            Wishlist
+                        </button>
+
+                        <h3 className="mt-4 mb-2">Accessibility</h3>
+                        <p className="game-accessibility">{game.accessibility}</p>
+
+                        <hr className="mt-4 mb-4"/>
+                    </div>
                 </div>
+
+                <hr className="my-5 full-width-hr"/>
+
+                <h2 className="mb-2">Customer Reviews</h2>
+                <div className="reviews-header-row">
+                    <p className="text-muted mb-4">This is what the customers have to say.</p>
+
+                    <button
+                        type="button"
+                        className="btn btn-primary game-fav-btn reviews-add-btn"
+                        onClick={() => setReviewModalOpen(true)}
+                    >
+                        Add a Review
+                    </button>
+                </div>
+
+                <Carousel id="reviewCarousel" items={reviewItems} visibleCount={3} step={1}/>
+
+                {/* Review model */}
+                <ReviewModel
+                    open={reviewModalOpen}
+                    onClose={() => setReviewModalOpen(false)}
+                    onSubmit={handleReviewSubmit}
+                />
             </div>
         );
-    });
-
-    const tags: TagLabel[] = (game.tags ?? [])
-        .map((t) => toTagLabel(t.name))
-        .filter((t): t is TagLabel => t !== null);
-
-    const ratingValue = game.rating ?? 0;
-    const reviewCount = game.reviewCount ?? (game.reviews ? game.reviews.length : 0);
-
-    return (
-        <div className="container my-5">
-            <div className="game-page-flex">
-                <div className="game-images-col">
-                    <Carousel id="gameImages" items={imageItems} visibleCount={1} step={1} />
-
-                    <div className="game-details-left mt-3">
-                        <h3 className="mb-2">Details</h3>
-                        <p className="game-details">{game.details}</p>
-                    </div>
-                </div>
-
-                <div className="game-info-col">
-                    <div className="game-breadcrumbs">
-                        <GameBreadcrumbs gameTitle={game.title} />
-                    </div>
-
-                    <h1 className="game-title">{game.title}</h1>
-
-                    <div className="game-tags-wrapper">
-                        <GameTags tags={tags} />
-                    </div>
-
-                    <div className="game-rating-row">
-                        <GameStars rating={ratingValue} />
-                        <span className="ms-2">({ratingValue.toFixed(1)} stars)</span>
-                        <span className="mx-2">•</span>
-                        <span>{reviewCount} reviews</span>
-                    </div>
-
-                    <p className="game-description">{game.description}</p>
-
-                    <button className="btn btn-primary game-fav-btn" onClick={() => addToWishlist(game._id)}>Add to Wishlist</button>
-
-                    <h3 className="mt-4 mb-2">Accessibility</h3>
-                    <p className="game-accessibility">{game.accessibility}</p>
-
-                    <hr className="mt-4 mb-4" />
-                </div>
-            </div>
-
-            <hr className="my-5 full-width-hr" />
-
-            <h2 className="mb-2">Customer Reviews</h2>
-            <div className="reviews-header-row">
-                <p className="text-muted mb-4">This is what the customers have to say.</p>
-
-                <button
-                    type="button"
-                    className="btn btn-primary game-fav-btn reviews-add-btn"
-                    onClick={() => setReviewModalOpen(true)}
-                >
-                    Add a Review
-                </button>
-            </div>
-
-            <Carousel id="reviewCarousel" items={reviewItems} visibleCount={3} step={1} />
-
-            {/* Review model */}
-            <ReviewModel
-                open={reviewModalOpen}
-                onClose={() => setReviewModalOpen(false)}
-                onSubmit={handleReviewSubmit}
-            />
-        </div>
-    );
-}
+    }

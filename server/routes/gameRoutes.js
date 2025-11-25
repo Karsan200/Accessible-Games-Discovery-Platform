@@ -33,7 +33,8 @@ router.get("/:id", async (req, res) => {
             body: r.body,
             flagged: r.flagged,
             createdAt: r.createdAt,
-            user: r.user_id ? { username: r.user_id.username, profilePicture: r.user_id.profilePicture } : null,
+            // include reviewer _id so frontend can detect the author
+            user: r.user_id ? { _id: r.user_id._id, username: r.user_id.username, profilePicture: r.user_id.profilePicture } : null,
         }));
 
         const reviewCount = reviews.length;

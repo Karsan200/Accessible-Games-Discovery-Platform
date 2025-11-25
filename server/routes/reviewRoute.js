@@ -1,4 +1,3 @@
-// File: `server/routes/reviewRoute.js`
 import express from "express";
 import { Review, Game } from "../models/dbSetup.js";
 
@@ -22,6 +21,12 @@ router.post("/:gameId", async (req, res) => {
 
         if (!rating || !user_id) {
             return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        // Prevent duplicate reviews by the same user for the same game
+        const existing = await Review.findOne({ game_id: gameId, user_id });
+        if (existing) {
+            return res.status(400).json({ error: "User has already reviewed this game" });
         }
 
         const cleanBody = (body || "").toString().trim();

@@ -91,7 +91,7 @@ export default function ReviewModel({ open, onClose, onSubmit }: Props) {
                         })}
                     </div>
 
-                    <label className="rm-label" htmlFor="reviewBody">Your review (optional)</label>
+                    <label className="rm-label" htmlFor="reviewBody">Your Review</label>
                     <textarea
                         id="reviewBody"
                         className="rm-textarea"

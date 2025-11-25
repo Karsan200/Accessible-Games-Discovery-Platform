@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { expressjwt } from "express-jwt";
 import { connectDB } from "./models/dbSetup.js";
 import homeRoutes from "./routes/homeRoutes.js";
+import searchRoutes from "./routes/searchRoutes.js";
 
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
@@ -37,7 +38,7 @@ app.use(
         // Paths exempt from JWT authentication
         path: [
             "/auth/login", "/auth/register", "/auth/refresh", "/auth/logout", // Authentication paths
-            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers" // Public home page paths
+            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", { url: "/api/search", methods: ["GET"] }, // Public home page paths
         ]
     })
 );
@@ -63,5 +64,6 @@ const PORT = process.env.PORT || 5000;
 // Routers
 app.use("/api/home", homeRoutes);
 app.use("/auth", authenticationRoutes);
+app.use("/api/search", searchRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

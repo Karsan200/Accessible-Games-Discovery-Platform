@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ReactElement } from "react";
-import {type unstable_RSCStaticRouterProps, useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { GameBreadcrumbs } from "../game/GameBreadcrumbs";
 import { Authentication } from "../../data/Authentication.ts";
 import { getUserIdFromToken } from "../../data/TokenUtility.ts"

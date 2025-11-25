@@ -18,6 +18,7 @@ import { Register } from "./components/pages/Register.tsx";
 import { Login } from "./components/pages/Login.tsx";
 import { Home } from "./components/pages/Home.tsx";
 import { Wishlist } from "./components/pages/Wishlist.tsx";
+import FloatingVoiceNavigation from "./components/voiceNavigation/VoiceNavigationOverlay.tsx";
 
 function AppContent() {
     const { accessToken } = useAuth();
@@ -45,6 +46,7 @@ function AppContent() {
                     <Route path="/footerPages/contactUs" element={<ContactUs />} />
                     <Route path="/footerPages/accessibilityStatement" element={<AccessibilityStatement />}/>
                     <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/voice-nav" element={<FloatingVoiceNavigation/> } />
                 </Routes>
             </main>
 

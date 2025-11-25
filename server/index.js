@@ -47,7 +47,7 @@ app.use(
         path: [
             "/auth/login", "/auth/register", "/auth/refresh", // Authentication paths
             "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", // Public home page paths
-            "/games", "/games/:id" // Public game list and details
+            "/games", "/games/:id", "/voice-nav"// Public game list and details
         ]
     })
 );

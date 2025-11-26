@@ -19,6 +19,7 @@ import { Register } from "./components/pages/Register.tsx";
 import { Login } from "./components/pages/Login.tsx";
 import { Home } from "./components/pages/Home.tsx";
 import { Wishlist } from "./components/pages/Wishlist.tsx";
+import { SearchResults } from "./components/pages/SearchResults.tsx"
 import FloatingVoiceNavigation from "./components/voiceNavigation/VoiceNavigationOverlay.tsx";
 
 // <-- Added imports
@@ -42,6 +43,7 @@ function AppContent() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/search" element={<SearchResults />} />
                     <Route path="/games" element={<Games />} />
                     <Route path="/games/:id" element={<GamePage />} />
                     <Route path="/profile" element={<Profile />} />

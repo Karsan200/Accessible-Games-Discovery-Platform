@@ -13,57 +13,58 @@ function isVisible(el: HTMLElement) {
     );
 }
 
+// Function for checking multiple matches of text
+function checkClickMultipleMatches(
+    elements: HTMLElement[],
+    matchText?: string,
+    index = 0
+): boolean {
+    const visibleElements = elements.filter(isVisible);
+    const matchedElements = matchText
+        ? visibleElements.filter(
+            el => (el.innerText || "").trim().toLowerCase() === matchText.trim().toLowerCase()
+        )
+        : visibleElements;
+
+    if (matchedElements.length === 0) return false;
+
+    // Order elements by appearance in DOM (optional)
+    matchedElements.forEach((el, i) => {
+        el.dataset.voiceIndex = String(i + 1); // optional: label matches as 1,2,3...
+    });
+
+    const targetIndex = index >= matchedElements.length ? matchedElements.length - 1 : index;
+    matchedElements[targetIndex].click();
+    console.log(
+        `Clicked element "${matchedElements[targetIndex].innerText}" at position ${targetIndex + 1}`
+    );
+    return true;
+}
+
 // Clicks something based on the element
-function clickBySelector(selector: string): boolean {
-    const element = document.querySelector(selector) as HTMLElement | null;
-    if (element && isVisible(element)) {
-        element.click();
-        return true;
-    }
-    return false;
+function clickBySelector(selector: string, index = 0): boolean {
+    const elements = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
+    return checkClickMultipleMatches(elements, undefined, index);
 }
 
 // Clicks something based on the text
-function clickByText(text: string): boolean {
+function clickByText(text: string, index = 0): boolean {
     const elements = Array.from(document.querySelectorAll("*")) as HTMLElement[];
-
-    for (const el of elements) {
-        if (!isVisible(el)) continue;
-        if (!el.innerText) continue;
-
-        if (el.innerText.trim().toLowerCase() === text.trim().toLowerCase()) {
-            el.click();
-            return true;
-        }
-    }
-    return false;
+    return checkClickMultipleMatches(elements, text, index);
 }
 
 // Clicks the buttons based on the text inside them
-function clickButtonByText(text: string) {
-    // Normalize BOTH spoken text and button text
+function clickButtonByText(text: string, index = 0): boolean {
     const normalize = (str: string) =>
-        str
-            .toLowerCase()
-            .trim()
-            .replace(/[-_]/g, " ")
-            .replace(/[^\w\s]/g, "");
+        str.toLowerCase().trim().replace(/[-_]/g, " ").replace(/[^\w\s]/g, "");
 
     const target = normalize(text);
+    const buttons = Array.from(document.querySelectorAll("button, a, [role='button']")) as HTMLElement[];
 
-    const buttons = Array.from(document.querySelectorAll("button, a, [role='button']"));
+    // Filter buttons whose text has the target
+    const matchedButtons = buttons.filter(btn => normalize(btn.textContent || "").includes(target));
 
-    for (const btn of buttons) {
-        const btnText = normalize(btn.textContent || "");
-
-        if (btnText.includes(target)) {
-            (btn as HTMLElement).click();
-            return true;
-        }
-    }
-
-    console.warn("No clickable element found for:", target);
-    return false;
+    return checkClickMultipleMatches(matchedButtons, undefined, index);
 }
 
 // Sanitises the spoken word
@@ -73,6 +74,23 @@ function safeClassFromSpeech(text: string): string {
         .replace(/[^a-z0-9\s-]/g, "")
         .replace(/\s+/g, "-")
         .trim();
+}
+
+// Gets target text and optional index from voice input
+function parseVoiceCommand(input: string): { text: string; index: number } {
+    let normalized = input.trim().toLowerCase();
+
+    normalized = normalized.replace(/[.,!?]+$/, "");
+
+    // Match a number at the end
+    const match = normalized.match(/(.+?)\s+(\d+)$/);
+    if (match) {
+        const text = match[1].trim();
+        const index = parseInt(match[2], 10) - 1;
+        return { text, index };
+    }
+
+    return { text: normalized, index: 0 };
 }
 
 export default function FloatingVoiceNavigation() {
@@ -304,21 +322,25 @@ export default function FloatingVoiceNavigation() {
         {
             command: ["open *", "click *", "select *"],
             callback: (item: string) => {
-                const className = safeClassFromSpeech(item);
+                const { text, index } = parseVoiceCommand(item);
+                const className = safeClassFromSpeech(text);
+                console.log("Voice text:", text);
+                console.log("Index:", index);
+                console.log("Class selector:", className);
                 resetTranscript();
 
                 // Try clicking a button/text first
-                if (clickByText(className)) {
+                if (clickByText(text, index)) {
                     return;
                 }
 
                 // Try clicking by class name
-                if (clickBySelector("." + className.toLowerCase().replace(/\s+/g, ""))) {
+                if (clickBySelector("." + className, index)) {
                     return;
                 }
 
                 // Try clicking by button text
-                if (clickButtonByText(className)) {
+                if (clickButtonByText(text, index)) {
                     return;
                 }
 

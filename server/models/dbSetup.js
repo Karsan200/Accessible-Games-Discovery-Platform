@@ -1,5 +1,5 @@
 // server/models/dbSetup.js
-import mongoose from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
 // Connect to MongoDB
 export async function connectDB() {
@@ -26,18 +26,22 @@ const userSchema = new mongoose.Schema({
 const sessionSchema = new mongoose.Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     token: { type: String, required: true },
-    created_at: { type: Date, default: Date.now, expires: '6h' }, // Session expires in 6 hours
+    created_at: { type: Date, default: Date.now, expires: '6h' }, // The Session expires in 6 hours
 });
 
 // Games collection
 const gameSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    body: String, // Description of the game
-    release_date: Date,
-    publisher_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    genre_id: { type: mongoose.Schema.Types.ObjectId, ref: "Genre" },
-    last_update: Date,
-    age_rating: Number,
+    tagline: { type: String },
+    description: { type: String },
+    details: { type: String },
+    accessibility: { type: String },
+    release_date: { type: Date },
+    publisher_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    genre_ids: [{ type: Schema.Types.ObjectId, ref: "Genre" }],
+    last_update: { type: Date },
+    age_rating: { type: Number },
+
 });
 
 // Game Media collection
@@ -64,6 +68,19 @@ const wishlistSchema = new mongoose.Schema({
     game_id: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
     status: String,
     created_at: { type: Date, default: Date.now },
+    removed_at: {type: Date, default: null }, // For soft delete, Active items removed_at = null, Deleted items removed_at = Date
+    weight: { type: Number, default: 0 },
+});
+
+// Incrementing weight per user
+wishlistSchema.pre("save", async function (next) {
+    if (this.weight == null || this.weight === 0) {
+        const count = await mongoose.model("Wishlist").countDocuments({
+            user_id: this.user_id
+        });
+        this.weight = count + 1;
+    }
+    next();
 });
 
 // Reviews collection
@@ -73,6 +90,7 @@ const reviewSchema = new mongoose.Schema({
     rating: { type: Number, required: true, min: 0, max: 10 },
     body: String, // Review Text
     flagged: { type: Boolean, default: false },
+    created_at: { type: Date, default: Date.now },
 });
 
 // Accessibility Group collection

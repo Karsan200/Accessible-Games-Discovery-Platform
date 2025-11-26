@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { HeroHeader } from "../HeroHeader.tsx";
 import { TrendingGames } from "../TrendingGames.tsx";
 import { TopSellersSection } from "../TopSellersSection.tsx";
+import { FeaturesSection } from "../FeaturesSection.tsx";
 import { settings } from "../../AppSettings.ts";
 
 // Define the tag type
@@ -28,6 +29,8 @@ interface HeroSlide {
     id: string;
     image: string;
     title: string;
+    description: string;
+    tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
 }
 
 export const Home: React.FC = () => {
@@ -60,6 +63,7 @@ export const Home: React.FC = () => {
         <div>
             <HeroHeader slides={heroSlides} />
             <TrendingGames games={trendingGames} />
+            <FeaturesSection />
             <TopSellersSection games={topSellers} />
         </div>
     );

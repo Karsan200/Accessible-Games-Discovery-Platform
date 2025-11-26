@@ -9,7 +9,7 @@ interface ButtonProps {
 export const BlackButton: React.FC<ButtonProps> = ({ text, onClick }) => {
     return (
         <Button
-            variant="dark"
+            variant="primary"
             className="px-4 py-2 rounded-pill"
             onClick={onClick}
         >

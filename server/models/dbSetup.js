@@ -90,6 +90,7 @@ const reviewSchema = new mongoose.Schema({
     rating: { type: Number, required: true, min: 0, max: 10 },
     body: String, // Review Text
     flagged: { type: Boolean, default: false },
+    created_at: { type: Date, default: Date.now },
 });
 
 // Accessibility Group collection

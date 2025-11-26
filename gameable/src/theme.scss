@@ -5,6 +5,7 @@ $body-bg: #F2F0EF;
 
 // Import Bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
+@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 
 // Dark Mode Overwrites
 @media (prefers-color-scheme: dark) {

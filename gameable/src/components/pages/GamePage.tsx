@@ -7,6 +7,7 @@ import { getUserIdFromToken } from "../../data/TokenUtility.ts"
 import { GameTags } from "../game/GameTags";
 import { GameStars } from "../game/GameStars";
 import { Carousel } from "../game/Carousel";
+import ReviewModel from "../../models/forms/ReviewModel";
 import "./GamePage.css";
 
 const DEFAULT_PROFILE_IMG = "http://localhost:5000/images/profilepicTemp.png";
@@ -46,7 +47,6 @@ type Game = {
     reviewCount?: number;
 };
 
-// Local TagLabel type (matches GameTags)
 type TagLabel = "Visual" | "Audio" | "Motor" | "Cognitive";
 
 const toTagLabel = (s?: string | null): TagLabel | null => {
@@ -63,8 +63,10 @@ export function GamePage() {
     const { id } = useParams<{ id: string }>();
     const [game, setGame] = useState<Game | null>(null);
     const [loading, setLoading] = useState(true);
+    const [reviewModalOpen, setReviewModalOpen] = useState(false);
     const [accessToken, setAccessToken] = useState<string | null>(null);
 
+    // Fetch game
     useEffect(() => {
         async function fetchGame() {
             try {
@@ -87,6 +89,7 @@ export function GamePage() {
             const token = await Authentication.refreshToken();
             setAccessToken(token);
         }
+
         void initAuth();
     }, []);
 
@@ -94,7 +97,6 @@ export function GamePage() {
         if (!gameId) return;
 
         try {
-            // Get access token (refresh if needed)
             const token = accessToken || (await Authentication.refreshToken());
             if (!token) {
                 alert("You must be logged in to add items to your wishlist.");
@@ -107,7 +109,6 @@ export function GamePage() {
                 return;
             }
 
-            // Call wishlist API with auth header
             const res = await fetch('http://localhost:5000/wishlist/add', {
                 method: "POST",
                 headers: {
@@ -125,8 +126,7 @@ export function GamePage() {
             }
 
             const data = await res.json();
-            // console.log("Added to wishlist:", data);
-            const message = data + " added to wishlist!"
+            const message = data + " added to wishlist!";
             alert(message);
         } catch (err) {
             console.error(err);
@@ -134,10 +134,96 @@ export function GamePage() {
         }
     }
 
+    // Open review modal only if user hasn't already reviewed
+    async function handleOpenReview() {
+        if (!game?._id) return;
+
+        try {
+            const token = accessToken || (await Authentication.refreshToken());
+            if (!token) {
+                alert("You must be logged in to add a review.");
+                return;
+            }
+
+            const userId = getUserIdFromToken(token);
+            if (!userId) {
+                alert("Invalid user session.");
+                return;
+            }
+
+            const hasReviewed = (game.reviews ?? []).some((r) => r.user?._id === userId);
+            if (hasReviewed) {
+                alert("You have already submitted a review for this game.");
+                return;
+            }
+
+            setReviewModalOpen(true);
+        } catch (err) {
+            console.error("Could not open review dialog:", err);
+            alert("Could not open review dialog.");
+        }
+    }
+
+    // compute disabled state when token is available
+    const currentUserId = accessToken ? getUserIdFromToken(accessToken) : null;
+    const userAlreadyReviewed = currentUserId ? (game?.reviews ?? []).some(r => r.user?._id === currentUserId) : false;
+    const isLoggedIn = !!currentUserId;
+
+    // Submit review
+    async function handleReviewSubmit(rating: number, body: string) {
+        if (!game?._id) return;
+
+        try {
+            const token = accessToken || (await Authentication.refreshToken());
+            if (!token) {
+                alert("You must be logged in to add a review.");
+                return;
+            }
+
+            const userId = getUserIdFromToken(token);
+            if (!userId) {
+                alert("Invalid user session.");
+                return;
+            }
+
+            const newReview = { user_id: userId, rating: Number(rating), body: body || "" };
+
+            const res = await fetch(`http://localhost:5000/api/reviews/${game._id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(newReview),
+            });
+
+            if (!res.ok) {
+                let errBody: string;
+                try {
+                    const json = await res.json();
+                    errBody = JSON.stringify(json);
+                } catch {
+                    errBody = await res.text();
+                }
+                console.error("Failed to submit review:", res.status, errBody);
+                alert("Failed to submit review. Please make sure you are logged in.");
+                return;
+            }
+
+            // Refresh updated game data
+            const updatedRes = await fetch(`http://localhost:5000/api/games/${game._id}`);
+            const updated = await updatedRes.json();
+            setGame(updated);
+            setReviewModalOpen(false);
+        } catch (err) {
+            console.error("Review submit error:", err);
+            alert("Could not submit review.");
+        }
+    }
+
     if (loading) return <p>Loading...</p>;
     if (!game) return <p>Game not found.</p>;
 
-    // Prepare images for carousel (only screenshots and covers, skip items without url)
     const imageItems: ReactElement[] = (game.media ?? [])
         .filter((m) => !!m.url && (m.type === "screenshot" || m.type === "cover"))
         .map((m, i) => {
@@ -152,7 +238,6 @@ export function GamePage() {
             );
         });
 
-    // Prepare reviews for carousel
     const reviewItems: ReactElement[] = (game.reviews ?? []).map((r, i) => {
         return (
             <div className="review-box w-100 h-100" key={i}>
@@ -215,7 +300,9 @@ export function GamePage() {
 
                     <p className="game-description">{game.description}</p>
 
-                    <button className="btn btn-primary game-fav-btn" onClick={() => addToWishlist(game._id)}>Add to Wishlist</button>
+                    <button className="btn btn-primary game-fav-btn" onClick={() => addToWishlist(game._id)}>Add to
+                        Wishlist
+                    </button>
 
                     <h3 className="mt-4 mb-2">Accessibility</h3>
                     <p className="game-accessibility">{game.accessibility}</p>
@@ -229,12 +316,26 @@ export function GamePage() {
             <h2 className="mb-2">Customer Reviews</h2>
             <div className="reviews-header-row">
                 <p className="text-muted mb-4">This is what the customers have to say.</p>
-                <button type="button" className="btn btn-primary game-fav-btn reviews-add-btn">
-                    Add a Review
+
+                <button
+                    type="button"
+                    className="btn btn-primary game-fav-btn reviews-add-btn"
+                    onClick={handleOpenReview}
+                    disabled={!isLoggedIn || userAlreadyReviewed}
+                    title={!isLoggedIn ? "Log in to add a review" : userAlreadyReviewed ? "You have already reviewed" : "Add a review"}
+                    aria-disabled={!isLoggedIn || userAlreadyReviewed}
+                >
+                    {!isLoggedIn ? "Log in to review" : userAlreadyReviewed ? "Review submitted" : "Add a Review"}
                 </button>
             </div>
 
             <Carousel id="reviewCarousel" items={reviewItems} visibleCount={3} step={1} />
+
+            <ReviewModel
+                open={reviewModalOpen}
+                onClose={() => setReviewModalOpen(false)}
+                onSubmit={handleReviewSubmit}
+            />
         </div>
     );
 }

@@ -1,7 +1,12 @@
 import './navbar.css'
-import { NavLink } from 'react-router-dom';
+import {NavLink, useNavigate} from 'react-router-dom';
+import {SearchHandler} from "../../data/SearchHandler.ts";
+import {useRef} from "react";
 
 export default function NavbarLoggedOut() {
+    const navigate = useNavigate();
+    const searchRef = useRef<HTMLInputElement | null>(null);
+    const handleSearch = SearchHandler(searchRef, navigate);
     return (
         <>
             <nav className="nav">
@@ -13,8 +18,9 @@ export default function NavbarLoggedOut() {
                     <span className="mask-icon-login"/>
                 </button>
             </div>
-            <form className="search-container">
+            <form className="search-container " onSubmit={handleSearch}>
                 <input
+                    ref={searchRef}
                     type="text"
                     name="search"
                     placeholder="Search games..."

@@ -73,11 +73,11 @@ export function Wishlist() {
     }
 
     // Hard delete
-    function hardRemove(id: string) {
-        fetch(`http://localhost:5000/wishlist/${id}?hard=true`, { method: "DELETE", headers: authHeaders() })
-            .then(() => loadWishlist())
-            .catch(console.error);
-    }
+    // function hardRemove(id: string) {
+    //     fetch(`http://localhost:5000/wishlist/${id}?hard=true`, { method: "DELETE", headers: authHeaders() })
+    //         .then(() => loadWishlist())
+    //         .catch(console.error);
+    // }
 
     // Restore last removed
     function restoreLast() {

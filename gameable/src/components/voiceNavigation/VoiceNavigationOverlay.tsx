@@ -92,7 +92,7 @@ export default function FloatingVoiceNavigation() {
 
     const commands = [
         {
-        command: ['*stop record*', '*stop listening*', '*stop mic*', '*stop mike*', '*end listening*', '*end record*', '*end mic*', '*end mike*',],
+        command: ['*click stop*', '*stop record*', '*stop listening*', '*stop mic*', '*stop mike*', '*end listening*', '*end record*', '*end mic*', '*end mike*',],
             callback: () => {
             SpeechRecognition.stopListening();
             }
@@ -104,7 +104,7 @@ export default function FloatingVoiceNavigation() {
             }
         },
         {
-            command: ['*open home*', '*navigate home*', '*go to home*'],
+            command: ['*click home*', '*open home*', '*navigate home*', '*go to home*'],
             callback: () => {
                 try {
                     resetTranscript();
@@ -117,7 +117,7 @@ export default function FloatingVoiceNavigation() {
             }
         },
         {
-            command: ['*open wishlist*', '*navigate wishlist*', '*go to wishlist*', '*open wish list*', '*navigate wish list*', '*go to wish list*'],
+            command: ['*click wishlist*', '*click wish list*', '*open wishlist*', '*navigate wishlist*', '*go to wishlist*', '*open wish list*', '*navigate wish list*', '*go to wish list*'],
             callback: () => {
                 try {
                     resetTranscript()
@@ -130,7 +130,7 @@ export default function FloatingVoiceNavigation() {
             }
         },
         {
-            command: ['*open profile*', '*navigate profile*', '*go to profile*', '*open pro file*', '*navigate pro file*', '*go to pro file*'],
+            command: ['*click profile*', '*open profile*', '*navigate profile*', '*go to profile*', '*open pro file*', '*navigate pro file*', '*go to pro file*'],
             callback: () => {
                 try {
                     resetTranscript()
@@ -143,7 +143,7 @@ export default function FloatingVoiceNavigation() {
             }
         },
         {
-            command: ['*open setting*', '*navigate setting*', '*go to setting*', '*open to setting*', '*navigate to setting*'],
+            command: ['*click settings*', '*open setting*', '*navigate setting*', '*go to setting*', '*open to setting*', '*navigate to setting*'],
             callback: () => {
                 try {
                     resetTranscript()
@@ -156,7 +156,7 @@ export default function FloatingVoiceNavigation() {
             }
         },
         {
-            command: ['*open about us*', '*navigate about us*', '*go to about us*', '*open to about us*', '*navigate to about us*'],
+            command: ['*click about us*', '*open about us*', '*navigate about us*', '*go to about us*', '*open to about us*', '*navigate to about us*'],
             callback: () => {
                 try {
                     resetTranscript()
@@ -170,6 +170,8 @@ export default function FloatingVoiceNavigation() {
         },
         {
             command: [
+                '*click accessibility statement*',
+                '*click access ability statement*',
                 '*open accessibility statement*',
                 '*navigate accessibility statement*',
                 '*go to accessibility statement*',
@@ -192,7 +194,7 @@ export default function FloatingVoiceNavigation() {
             }
         },
         {
-            command: ['*open contact us*', '*navigate contact us*', '*go to contact us*', '*open to contact us*', '*navigate to contact us*'],
+            command: ['*click contact us*', '*open contact us*', '*navigate contact us*', '*go to contact us*', '*open to contact us*', '*navigate to contact us*'],
             callback: () => {
                 try {
                     resetTranscript()
@@ -205,7 +207,7 @@ export default function FloatingVoiceNavigation() {
             }
         },
         {
-            command: ['*login*', '*log in*'],
+            command: ['*click login*', '*click log in*', '*login*', '*log in*'],
             callback: () => {
                 try {
                     resetTranscript()
@@ -218,7 +220,7 @@ export default function FloatingVoiceNavigation() {
             }
         },
         {
-            command: ['*logout*', '*log out*'],
+            command: ['*click logout*', '*click log out*', '*logout*', '*log out*'],
             callback: () => {
                 try {
                     resetTranscript()

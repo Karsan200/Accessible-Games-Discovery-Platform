@@ -125,6 +125,31 @@ function parseVoiceCommand(input: string): { text: string; index: number } {
     return { text: normalized, index: 0 };
 }
 
+// Allows for react input fields to actually update with inputted text
+function reactInput(element: HTMLTextAreaElement, newText: string) {
+    const setter = Object.getOwnPropertyDescriptor(
+        Object.getPrototypeOf(element),
+        "value"
+    )?.set;
+
+    if (!setter) return;
+
+    // Clear first
+    setter.call(element, "");
+
+    // Trigger React input event so it picks up the change
+    element.dispatchEvent(new Event("input", { bubbles: true }));
+
+    // Set the new text
+    setter.call(element, newText);
+
+    // Trigger React input event again
+    element.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+let activeTextarea: HTMLTextAreaElement | null = null;
+let fieldWordCount = 0;
+
 export default function FloatingVoiceNavigation() {
 
     const navigate = useNavigate()
@@ -377,6 +402,62 @@ export default function FloatingVoiceNavigation() {
                 }
 
                 console.warn("No clickable element found for:", className);
+            }
+        },
+        {
+            command: ["write in *", "type in *"],
+            callback: (spoken: string) => {
+                const { text, index } = parseVoiceCommand(spoken);
+
+                // Find visible textareas
+                const textareas = Array.from(document.querySelectorAll("textarea")) as HTMLTextAreaElement[];
+                const visibleTextareas = textareas.filter(isVisible);
+
+                if (!visibleTextareas.length) {
+                    console.warn("No visible textareas found");
+                    return;
+                }
+
+                const targetIndex = Math.min(index, visibleTextareas.length - 1);
+                activeTextarea = visibleTextareas[targetIndex];
+
+                reactInput(activeTextarea, "");
+                activeTextarea.focus();
+
+                // Counts words after type in
+                fieldWordCount = spoken.trim().split(/\s+/).length;
+
+                //console.log(`Recording for textarea ${targetIndex + 1}`);
+            }
+        },
+        {
+            command: ["*paste*"],
+            callback: () => {
+                //console.log(activeTextarea)
+                if (!activeTextarea) {
+                    console.warn("No textarea active for writing");
+                    return;
+                }
+
+                const text = transcript
+                    .replace(/write in/gi, "")
+                    .replace(/type in/gi, "")
+                    .replace(/paste/gi, "")
+                    .trim();
+
+                const words = text.trim().split(/\s+/);
+                const textToPaste = words.slice(fieldWordCount).join(" ");
+
+                //console.log(fieldWordCount)
+                //console.log(words)
+                //console.log(textToPaste)
+
+                reactInput(activeTextarea, activeTextarea.value + textToPaste + " ");
+
+                //console.log("Pasted:", text);
+
+                resetTranscript();
+                activeTextarea = null;
             }
         }
         ]

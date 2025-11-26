@@ -1,5 +1,6 @@
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
 
 
 // Check the thing that is going to be clicked is on screen
@@ -126,7 +127,7 @@ function parseVoiceCommand(input: string): { text: string; index: number } {
 }
 
 // Allows for react input fields to actually update with inputted text
-function reactInput(element: HTMLTextAreaElement, newText: string) {
+function reactInput(element: HTMLInputElement | HTMLTextAreaElement, newText: string) {
     const setter = Object.getOwnPropertyDescriptor(
         Object.getPrototypeOf(element),
         "value"
@@ -147,10 +148,11 @@ function reactInput(element: HTMLTextAreaElement, newText: string) {
     element.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
-let activeTextarea: HTMLTextAreaElement | null = null;
+let activeTextarea: HTMLInputElement | HTMLTextAreaElement | null = null;
 let fieldWordCount = 0;
 
 export default function FloatingVoiceNavigation() {
+    const [active] = useState(true);
 
     const navigate = useNavigate()
 
@@ -410,7 +412,7 @@ export default function FloatingVoiceNavigation() {
                 const { text, index } = parseVoiceCommand(spoken);
 
                 // Find visible textareas
-                const textareas = Array.from(document.querySelectorAll("textarea")) as HTMLTextAreaElement[];
+                const textareas = Array.from(document.querySelectorAll("textarea, input")) as (HTMLTextAreaElement | HTMLInputElement)[];
                 const visibleTextareas = textareas.filter(isVisible);
 
                 if (!visibleTextareas.length) {
@@ -468,6 +470,14 @@ export default function FloatingVoiceNavigation() {
         resetTranscript,
         browserSupportsSpeechRecognition
     } = useSpeechRecognition({ commands });
+
+    useEffect(() => {
+        if (browserSupportsSpeechRecognition && active) {
+            SpeechRecognition.startListening({ continuous: true });
+        } else {
+            SpeechRecognition.stopListening();
+        }
+    }, [active, browserSupportsSpeechRecognition]);
 
     if(!browserSupportsSpeechRecognition) {
         return <p>Browser Support Speech Recognition</p>

@@ -58,7 +58,6 @@ function clickButtonByText(text: string) {
 
         if (btnText.includes(target)) {
             (btn as HTMLElement).click();
-            console.log("Clicked:", btnText);
             return true;
         }
     }
@@ -95,6 +94,7 @@ export default function FloatingVoiceNavigation() {
         command: ['*click stop*', '*stop record*', '*stop listening*', '*stop mic*', '*stop mike*', '*end listening*', '*end record*', '*end mic*', '*end mike*',],
             callback: () => {
             SpeechRecognition.stopListening();
+                resetTranscript();
             }
         },
         {
@@ -106,49 +106,48 @@ export default function FloatingVoiceNavigation() {
         {
             command: ['*scroll down*', '*move down*', '*go down*', '*page down*'],
             callback: () => {
-                console.log("Scrolling Down")
                 window.scrollBy({ top: 300, left: 0, behavior: 'smooth' });
+                resetTranscript();
             }
         },
         {
             command: ['*scroll up*', '*move up*', '*go up*', '*page up*'],
             callback: () => {
-                console.log("Scrolling Up")
                 window.scrollBy({ top: -300, left: 0, behavior: 'smooth' });
+                resetTranscript();
             }
         },
         {
             command: ['*scroll down more*', '*move down more*', '*go down more*', '*page down more*'],
             callback: () => {
-                console.log("Scrolling Down More")
                 window.scrollBy({ top: 600, left: 0, behavior: 'smooth' });
+                resetTranscript();
             }
         },
         {
             command: ['*scroll up more*', '*move up more*', '*go up more*', '*page up more*'],
             callback: () => {
-                console.log("Scrolling Up More")
                 window.scrollBy({ top: -600, left: 0, behavior: 'smooth' });
+                resetTranscript();
             }
         },
         {
             command: ['*scroll down less*', '*move down less*', '*go down less*', '*page down less*'],
             callback: () => {
-                console.log("Scrolling Down Less")
                 window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
+                resetTranscript();
             }
         },
         {
             command: ['*scroll up less*', '*move up less*', '*go up less*', '*page up less*'],
             callback: () => {
-                console.log("Scrolling Up Less")
                 window.scrollBy({ top: -100, left: 0, behavior: 'smooth' });
+                resetTranscript();
             }
         },
         {
             command: ['*scroll to bottom*', '*move to bottom*', '*go down to bottom*', '*go to bottom*', '*page to bottom*'],
             callback: () => {
-                console.log("Scrolling Down To Bottom")
                 window.scrollTo({
                     top: Math.max(
                         document.body.scrollHeight,
@@ -157,13 +156,14 @@ export default function FloatingVoiceNavigation() {
                     left: 0,
                     behavior: 'smooth'
                 });
+                resetTranscript();
             }
         },
         {
             command: ['*scroll to top*', '*move to top*', '*go up to top*', '*go to top*', '*page to top*'],
             callback: () => {
-                console.log("Scrolling Up To Top")
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                resetTranscript();
             }
         },
         {
@@ -188,7 +188,7 @@ export default function FloatingVoiceNavigation() {
                 } catch (err) {
                     resetTranscript();
                     navigate("/wishlist")
-                    console.log("failed using backup")
+                    console.warn("failed using backup")
                 }
             }
         },
@@ -201,7 +201,7 @@ export default function FloatingVoiceNavigation() {
                 } catch (err) {
                     resetTranscript();
                     navigate("/profile")
-                    console.log("failed using backup")
+                    console.warn("failed using backup")
                 }
             }
         },
@@ -214,7 +214,7 @@ export default function FloatingVoiceNavigation() {
                 } catch (err) {
                     resetTranscript();
                     navigate("/settings")
-                    console.log("failed using backup")
+                    console.warn("failed using backup")
                 }
             }
         },
@@ -227,7 +227,7 @@ export default function FloatingVoiceNavigation() {
                 } catch (err) {
                     resetTranscript();
                     navigate("/footerPages/aboutUs")
-                    console.log("failed using backup")
+                    console.warn("failed using backup")
                 }
             }
         },
@@ -252,7 +252,7 @@ export default function FloatingVoiceNavigation() {
                 } catch (err) {
                     resetTranscript();
                     navigate("/footerPages/accessibilityStatement")
-                    console.log("failed using backup")
+                    console.warn("failed using backup")
                 }
             }
         },
@@ -265,7 +265,7 @@ export default function FloatingVoiceNavigation() {
                 } catch (err) {
                     resetTranscript();
                     navigate("/footerPages/contactUs")
-                    console.log("failed using backup")
+                    console.warn("failed using backup")
                 }
             }
         },
@@ -278,7 +278,7 @@ export default function FloatingVoiceNavigation() {
                 } catch (err) {
                     resetTranscript();
                     navigate("/login")
-                    console.log("failed using backup")
+                    console.warn("failed using backup")
                 }
             }
         },
@@ -291,7 +291,7 @@ export default function FloatingVoiceNavigation() {
                 } catch (err) {
                     resetTranscript();
                     navigate("/logout")
-                    console.log("failed using backup")
+                    console.warn("failed using backup")
                 }
             }
         },
@@ -309,23 +309,20 @@ export default function FloatingVoiceNavigation() {
 
                 // Try clicking a button/text first
                 if (clickByText(className)) {
-                    console.log("Clicked by text:", className);
                     return;
                 }
 
                 // Try clicking by class name
                 if (clickBySelector("." + className.toLowerCase().replace(/\s+/g, ""))) {
-                    console.log("Clicked by selector:", className);
                     return;
                 }
 
                 // Try clicking by button text
                 if (clickButtonByText(className)) {
-                    console.log("Clicked by button text:", className);
                     return;
                 }
 
-                console.log("No clickable element found for:", className);
+                console.warn("No clickable element found for:", className);
             }
         }
         ]

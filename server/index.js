@@ -78,6 +78,7 @@ const PORT = process.env.PORT || 5000;
 app.use("/api/home", homeRoutes);
 app.use("/auth", authenticationRoutes);
 app.use("/wishlist", wishlistRoutes);
+app.use("/api/reviews", reviewRoute);
 app.use("/api/search", searchRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

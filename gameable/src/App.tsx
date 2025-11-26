@@ -20,6 +20,10 @@ import { Home } from "./components/pages/Home.tsx";
 import { Wishlist } from "./components/pages/Wishlist.tsx";
 import { SearchResults } from "./components/pages/SearchResults.tsx"
 
+// <-- Added imports
+import Profile from "./components/pages/profile.tsx";
+import MyReviews from "./components/pages/MyReviews.tsx";
+
 function AppContent() {
     const { accessToken } = useAuth();
     const isLoggedIn = accessToken !== null;
@@ -40,7 +44,8 @@ function AppContent() {
                     <Route path="/search" element={<SearchResults />} />
                     <Route path="/games" element={<Games />} />
                     <Route path="/games/:id" element={<GamePage />} />
-                    <Route path="/profile" element={<h1>Profile</h1>} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/my-reviews" element={<MyReviews />} />
                     <Route path="/errorPages/userNotLoggedIn" element={<UserNotLoggedIn />}/>
                     <Route path="/settings" element={<h1>Settings</h1>} />
                     <Route path="/footerPages/aboutUs" element={<AboutUs />} />

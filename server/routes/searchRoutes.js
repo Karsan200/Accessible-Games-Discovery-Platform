@@ -37,21 +37,15 @@ router.get("/", async (req, res) => {
         const raw = req.query.q;
         const q = validateQuery(raw);
         if (!q) {
-            console.log("[search] invalid or empty query -> 400");
             return res.status(400).json({ error: "Invalid query" });
         }
         // Regex for upper and lower case search
         const regex = new RegExp(escapeRegex(q), "i");
         try {
             const totalGames = await Game.countDocuments();
-            console.log("[search] total Game documents:", totalGames);
-            const sample = await Game.find({}).limit(5).select("title body").lean();
-            console.log(
-                "[search] sample docs (up to 5):",
-                sample.map((d) => ({ id: d._id?.toString(), title: d.title }))
-            );
+            const sample = await Game.find({}).limit(20).select("title body").lean();
         } catch (err) {
-            console.warn("[search] diagnostics failed:", err?.message || err);
+            console.warn("[search] failure reason:", err?.message || err);
         }
 
         // Checking title and body for matches to the search query
@@ -81,8 +75,6 @@ router.get("/", async (req, res) => {
                 };
             })
         );
-
-        console.log("[search] returning formatted results count:", formatted.length);
         return res.json(formatted);
     } catch (err) {
         console.error("[search] Search error:", err);

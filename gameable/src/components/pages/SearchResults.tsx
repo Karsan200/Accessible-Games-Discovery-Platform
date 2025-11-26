@@ -1,7 +1,8 @@
 import React, { useEffect, useState} from "react";
-import {useSearchParams} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import {GameCard} from "../GameCard.tsx";
 import {settings} from "../../AppSettings.ts";
+import {Col, Container, Row} from "react-bootstrap";
 
 export type TagType = "Visual" | "Audio" | "Motor" | "Cognitive";
 
@@ -27,6 +28,7 @@ export const SearchResults: React.FC = () => {
     const [results, setResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     // Hook to fetch search results when the query changes
     useEffect(() => {
@@ -139,21 +141,40 @@ export const SearchResults: React.FC = () => {
     if (results.length === 0) return <div>No results found for &quot;{query}&quot;.</div>;
 
     return (
-        <div className="search-results">
-            <h1>Search results for "{query}"</h1>
-            <div className="d-flex flex-wrap gap-3">
-                {results.map((r) => (
-                    <GameCard
-                        key={r.id}
-                        image={r.image}
-                        name={r.title}
-                        description={r.description ?? ""}
-                        tags={r.tags}
-                        onClick={() => { window.location.href = `/games/${r.id}`; }}
-                    />
-                ))}
-            </div>
-        </div>
-    );
-}
-export default SearchResults;
+        <section role="region" aria-label={`Search results for ${query}`} className="my-5">
+            <Container>
+                <h1 style={{ textAlign: "center", marginBottom: "16px" }}>
+                    Search results for "{query}"
+                </h1>
+                <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                    <p style={{ margin: 0 }}>
+                        Showing {results.length} result{results.length !== 1 ? "s" : ""}.
+                    </p>
+                </div>
+
+                <Row className="g-3 g-md-4 justify-content-center" role="list" aria-label="Search result list">
+                    {results.map((r) => (
+                        <Col
+                            key={r.id}
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
+                            role="listitem"
+                            className="d-flex justify-content-center"
+                        >
+                            <GameCard
+                                image={r.image}
+                                name={r.title}
+                                description={r.description ?? ""}
+                                tags={r.tags}
+                                onClick={() => navigate(`/games/${r.id}`)}
+                            />
+                        </Col>
+                    ))}
+                </Row>
+            </Container>
+        </section>
+        );
+    };
+    export default SearchResults;

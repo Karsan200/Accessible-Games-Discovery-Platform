@@ -24,10 +24,35 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// PUT update user by ID
+// PUT update user by ID with unique username and email check
 router.put("/:id", async (req, res) => {
     try {
-        const updated = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { username, email, date_of_birth, setting1, setting2 } = req.body;
+
+        // Check if username is taken by another user
+        if (username) {
+            const existingUser = await User.findOne({ username, _id: { $ne: req.params.id } });
+            if (existingUser) {
+                return res.status(400).json({ error: "Username already taken." });
+            }
+        }
+
+        // Check if email is taken by another user (optional if email must be unique)
+        if (email) {
+            const existingEmail = await User.findOne({ email, _id: { $ne: req.params.id } });
+            if (existingEmail) {
+                return res.status(400).json({ error: "Email already in use." });
+            }
+        }
+
+        const updated = await User.findByIdAndUpdate(
+            req.params.id,
+            { username, email, date_of_birth, setting1, setting2 },
+            { new: true }
+        );
+
+        if (!updated) return res.status(404).json({ error: "User not found." });
+
         res.json(updated);
     } catch (err) {
         res.status(500).json({ error: err.message });

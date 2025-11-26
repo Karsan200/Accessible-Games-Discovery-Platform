@@ -27,6 +27,7 @@ export default function Dashboard() {
         profilePictureFile: undefined,
     });
     const [preview, setPreview] = useState<string | null>(null);
+    const [errors, setErrors] = useState<{ email?: string; username?: string }>({});
 
     const fetchUserData = async () => {
         setLoading(true);
@@ -79,10 +80,24 @@ export default function Dashboard() {
                 ...prev,
                 [name]: type === "checkbox" ? checked : value,
             }));
+            setErrors(prev => ({ ...prev, [name]: "" })); // clear error on change
         }
     };
 
+    const validateEmail = (email: string) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
+
     const handleSubmit = async () => {
+        setErrors({});
+
+        // Email validation
+        if (!validateEmail(formData.email)) {
+            setErrors({ email: "Please enter a valid email address." });
+            return;
+        }
+
         try {
             const token = await Authentication.refreshToken();
             if (!token) return alert("You must be logged in.");
@@ -109,7 +124,7 @@ export default function Dashboard() {
                 }
             }
 
-            // Update other user data
+            // Update user data
             const res = await fetch(`${settings.apiBaseUrl}/user/${userId}`, {
                 method: "PUT",
                 headers: {
@@ -127,6 +142,13 @@ export default function Dashboard() {
 
             if (!res.ok) {
                 const err = await res.json();
+                if (err?.error === "Username already taken.") {
+                    setErrors({ username: err.error });
+                    return;
+                } else if (err?.error === "Email already in use.") {
+                    setErrors({ email: err.error });
+                    return;
+                }
                 return alert(err?.error || "Failed to update user data.");
             }
 
@@ -150,7 +172,7 @@ export default function Dashboard() {
                 <div>
                     {preview && (
                         <img
-                            src={`${preview}?t=${Date.now()}`} // cache busting
+                            src={`${preview}?t=${Date.now()}`}
                             alt="Profile"
                             className="rounded-circle mb-3"
                             width={150}
@@ -200,10 +222,13 @@ export default function Dashboard() {
                             type="text"
                             id="username"
                             name="username"
-                            className="form-control"
+                            className={`form-control ${errors.username ? "is-invalid" : ""}`}
                             value={formData.username}
                             onChange={handleChange}
                         />
+                        {errors.username && (
+                            <div className="invalid-feedback">{errors.username}</div>
+                        )}
                     </div>
 
                     <div className="mb-3">
@@ -212,10 +237,13 @@ export default function Dashboard() {
                             type="email"
                             id="email"
                             name="email"
-                            className="form-control"
+                            className={`form-control ${errors.email ? "is-invalid" : ""}`}
                             value={formData.email}
                             onChange={handleChange}
                         />
+                        {errors.email && (
+                            <div className="invalid-feedback">{errors.email}</div>
+                        )}
                     </div>
 
                     <div className="mb-3">

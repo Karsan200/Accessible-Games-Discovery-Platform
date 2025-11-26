@@ -1,4 +1,3 @@
-// Dashboard.tsx
 import { useEffect, useState } from "react";
 import { getUserIdFromToken } from "../../data/TokenUtility";
 import { Authentication } from "../../data/Authentication";
@@ -10,6 +9,8 @@ type UserData = {
     date_of_birth?: string;
     setting1: boolean;
     setting2: boolean;
+    profilePicture?: string; // URL
+    profilePictureFile?: File; // selected file
 };
 
 export default function Dashboard() {
@@ -22,17 +23,16 @@ export default function Dashboard() {
         date_of_birth: "",
         setting1: false,
         setting2: false,
+        profilePicture: "",
+        profilePictureFile: undefined,
     });
+    const [preview, setPreview] = useState<string | null>(null);
 
-    // Fetch current user data
     const fetchUserData = async () => {
         setLoading(true);
         try {
             const token = await Authentication.refreshToken();
-            if (!token) {
-                alert("You must be logged in to access this page.");
-                return;
-            }
+            if (!token) return alert("You must be logged in.");
 
             const userId = getUserIdFromToken(token);
             if (!userId) return alert("Invalid session.");
@@ -41,10 +41,7 @@ export default function Dashboard() {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            if (!res.ok) {
-                alert("Failed to load user data.");
-                return;
-            }
+            if (!res.ok) return alert("Failed to load user data.");
 
             const data = await res.json();
             setUserData(data);
@@ -56,7 +53,10 @@ export default function Dashboard() {
                     : "",
                 setting1: data.setting1,
                 setting2: data.setting2,
+                profilePicture: data.profilePicture || "",
+                profilePictureFile: undefined,
             });
+            setPreview(data.profilePicture ? `${settings.apiBaseUrl}${data.profilePicture}` : null);
         } catch (err) {
             console.error(err);
             alert("Error fetching user data.");
@@ -69,16 +69,19 @@ export default function Dashboard() {
         void fetchUserData();
     }, []);
 
-    // Handle input change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
+        const { name, value, type, checked, files } = e.target;
+        if (type === "file" && files && files[0]) {
+            setFormData(prev => ({ ...prev, profilePictureFile: files[0] }));
+            setPreview(URL.createObjectURL(files[0])); // live preview
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: type === "checkbox" ? checked : value,
+            }));
+        }
     };
 
-    // Submit updated user data
     const handleSubmit = async () => {
         try {
             const token = await Authentication.refreshToken();
@@ -86,13 +89,40 @@ export default function Dashboard() {
             const userId = getUserIdFromToken(token);
             if (!userId) return alert("Invalid session.");
 
+            // Upload profile picture
+            if (formData.profilePictureFile) {
+                const uploadData = new FormData();
+                uploadData.append("profilePicture", formData.profilePictureFile);
+
+                const uploadRes = await fetch(
+                    `${settings.apiBaseUrl}/user/${userId}/profile-picture`,
+                    {
+                        method: "POST",
+                        headers: { Authorization: `Bearer ${token}` },
+                        body: uploadData,
+                    }
+                );
+
+                if (!uploadRes.ok) {
+                    const err = await uploadRes.json();
+                    return alert(err?.error || "Failed to upload profile picture.");
+                }
+            }
+
+            // Update other user data
             const res = await fetch(`${settings.apiBaseUrl}/user/${userId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    username: formData.username,
+                    email: formData.email,
+                    date_of_birth: formData.date_of_birth,
+                    setting1: formData.setting1,
+                    setting2: formData.setting2,
+                }),
             });
 
             if (!res.ok) {
@@ -118,6 +148,15 @@ export default function Dashboard() {
 
             {!editing ? (
                 <div>
+                    {preview && (
+                        <img
+                            src={`${preview}?t=${Date.now()}`} // cache busting
+                            alt="Profile"
+                            className="rounded-circle mb-3"
+                            width={150}
+                            height={150}
+                        />
+                    )}
                     <p><strong>Username:</strong> {userData.username}</p>
                     <p><strong>Email:</strong> {userData.email}</p>
                     <p>
@@ -129,15 +168,32 @@ export default function Dashboard() {
                     <p><strong>Setting 1:</strong> {userData.setting1 ? "Enabled" : "Disabled"}</p>
                     <p><strong>Setting 2:</strong> {userData.setting2 ? "Enabled" : "Disabled"}</p>
 
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => setEditing(true)}
-                    >
+                    <button className="btn btn-primary" onClick={() => setEditing(true)}>
                         Edit Profile
                     </button>
                 </div>
             ) : (
                 <div>
+                    <div className="mb-3">
+                        <label htmlFor="profilePicture" className="form-label">Profile Picture</label>
+                        <input
+                            type="file"
+                            id="profilePicture"
+                            accept="image/*"
+                            className="form-control"
+                            onChange={handleChange}
+                        />
+                        {preview && (
+                            <img
+                                src={preview}
+                                alt="Preview"
+                                className="rounded-circle mt-2"
+                                width={100}
+                                height={100}
+                            />
+                        )}
+                    </div>
+
                     <div className="mb-3">
                         <label htmlFor="username" className="form-label">Username</label>
                         <input
@@ -183,9 +239,7 @@ export default function Dashboard() {
                             checked={formData.setting1}
                             onChange={handleChange}
                         />
-                        <label htmlFor="setting1" className="form-check-label">
-                            Enable Setting 1
-                        </label>
+                        <label htmlFor="setting1" className="form-check-label">Enable Setting 1</label>
                     </div>
 
                     <div className="form-check mb-3">
@@ -197,9 +251,7 @@ export default function Dashboard() {
                             checked={formData.setting2}
                             onChange={handleChange}
                         />
-                        <label htmlFor="setting2" className="form-check-label">
-                            Enable Setting 2
-                        </label>
+                        <label htmlFor="setting2" className="form-check-label">Enable Setting 2</label>
                     </div>
 
                     <button className="btn btn-success me-2" onClick={handleSubmit}>

@@ -35,6 +35,7 @@ app.listen(5000, () => {
 });
 
 app.use("/images", express.static("public/gameImages"));
+app.use("/uploads", express.static("uploads"));
 app.use("/api/games", gamesRouter);
 app.use("/api/reviews", reviewRoute);
 
@@ -52,7 +53,8 @@ app.use(
             "/auth/login", "/auth/register", "/auth/refresh", // Authentication paths
             "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", // Public home page paths
             "/games", "/games/:id", // Public game list and details,
-            "api/reviews"
+            "api/reviews",
+            /^\/uploads\/.*/,
         ]
     })
 );

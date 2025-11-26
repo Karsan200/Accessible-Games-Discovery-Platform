@@ -7,6 +7,8 @@ import { connectDB } from "./models/dbSetup.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import gamesRouter from "./routes/gameRoutes.js";
 import  reviewRoute  from "./routes/reviewRoute.js";
+import userRoutes from "./routes/userRoutes.js";
+
 
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
@@ -78,5 +80,6 @@ app.use("/api/home", homeRoutes);
 app.use("/auth", authenticationRoutes);
 app.use("/wishlist", wishlistRoutes);
 app.use("/api/reviews", reviewRoute);
+app.use("/user", userRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

@@ -18,10 +18,9 @@ import { Register } from "./components/pages/Register.tsx";
 import { Login } from "./components/pages/Login.tsx";
 import { Home } from "./components/pages/Home.tsx";
 import { Wishlist } from "./components/pages/Wishlist.tsx";
-
-// <-- Added imports
 import Profile from "./components/pages/profile.tsx";
 import MyReviews from "./components/pages/MyReviews.tsx";
+import Dashboard from "./components/pages/Dashboard.tsx";
 
 function AppContent() {
     const { accessToken } = useAuth();
@@ -50,6 +49,7 @@ function AppContent() {
                     <Route path="/footerPages/contactUs" element={<ContactUs />} />
                     <Route path="/footerPages/accessibilityStatement" element={<AccessibilityStatement />}/>
                     <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                 </Routes>
             </main>
 

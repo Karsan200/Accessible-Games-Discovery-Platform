@@ -1,0 +1,33 @@
+.manage-reviews-btn {
+    width: 100%;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid #337A5B;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+.manage-reviews-btn:focus, hover{
+    width: 100%;
+    gap: 1rem;
+    background: #337A5B;
+    border: 1px solid #337A5B;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+
+@media (max-width: 576px) {
+    .manage-reviews-btn {
+        text-align: center;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+
+.manage-reviews-btn:focus,
+.manage-reviews-btn:hover {
+    background: #e9e7e6;
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}

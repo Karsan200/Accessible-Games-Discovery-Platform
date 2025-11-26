@@ -4,6 +4,14 @@ body, #root {
     color: #1B1B1B;
 }
 
+/*get rid of navbar padding*/
+.main > .game-page {
+    margin-top: -5rem !important;
+    padding-top: 0 !important;
+    position: relative;
+    top: 0;
+}
+
 /* Two-column layout container (images left, info right) */
 .game-page-flex {
     display: flex;

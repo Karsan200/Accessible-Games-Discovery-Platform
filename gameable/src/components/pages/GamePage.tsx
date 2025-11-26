@@ -281,7 +281,7 @@ export function GamePage() {
     const reviewCount = game.reviewCount ?? (game.reviews ? game.reviews.length : 0);
 
     return (
-        <div className="container my-5">
+        <div className="container my-5 game-page">
             <div className="game-page-flex">
                 <div className="game-images-col">
                     <Carousel id="gameImages" items={mediaItems} visibleCount={1} step={1} />

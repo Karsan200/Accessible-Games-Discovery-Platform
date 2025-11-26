@@ -1,6 +1,53 @@
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import {useNavigate} from "react-router-dom";
 
+
+// Check the thing that is going to be clicked is on screen
+function isVisible(el: HTMLElement) {
+    const rect = el.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+
+// Clicks something based on the element
+function clickBySelector(selector: string): boolean {
+    const element = document.querySelector(selector) as HTMLElement | null;
+    if (element && isVisible(element)) {
+        element.click();
+        return true;
+    }
+    return false;
+}
+
+// Clicks something based on the text
+function clickByText(text: string): boolean {
+    const elements = Array.from(document.querySelectorAll("*")) as HTMLElement[];
+
+    for (const el of elements) {
+        if (!isVisible(el)) continue;
+        if (!el.innerText) continue;
+
+        if (el.innerText.trim().toLowerCase() === text.trim().toLowerCase()) {
+            el.click();
+            return true;
+        }
+    }
+    return false;
+}
+
+// Sanitises the spoken word
+function safeClassFromSpeech(text: string): string {
+    return text
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .trim();
+}
+
 export default function FloatingVoiceNavigation() {
 
     const navigate = useNavigate()
@@ -159,6 +206,27 @@ export default function FloatingVoiceNavigation() {
             command: '*start*',
             callback: () => {
                 SpeechRecognition.startListening({ continuous: true });
+            }
+        },
+        {
+            command: ["open *", "click *", "select *"],
+            callback: (item: string) => {
+                const className = safeClassFromSpeech(item);
+                resetTranscript();
+
+                // Try clicking a button/text first
+                if (clickByText(className)) {
+                    console.log("Clicked by text:", className);
+                    return;
+                }
+
+                // Try clicking by class name
+                if (clickBySelector("." + className.toLowerCase().replace(/\s+/g, ""))) {
+                    console.log("Clicked by selector:", className);
+                    return;
+                }
+
+                console.log("No clickable element found for:", className);
             }
         }
         ]

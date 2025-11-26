@@ -26,18 +26,27 @@ function checkClickMultipleMatches(
         )
         : visibleElements;
 
-    if (matchedElements.length === 0) return false;
+    //console.log("All elements passed in:", elements.length);
+    //console.log("Visible elements:", visibleElements.length);
+    //console.log("All matched elements:", matchedElements.length);
+    //console.log("MatchText", matchText)
+    //console.log("Matched elements:", matchedElements)
 
-    // Order elements by appearance in DOM (optional)
-    matchedElements.forEach((el, i) => {
-        el.dataset.voiceIndex = String(i + 1); // optional: label matches as 1,2,3...
+    // Remove all but the clickable elements
+    const clickableElements = matchedElements.filter(el =>
+        el.tagName === "BUTTON" || el.tagName === "A" || el.getAttribute("role") === "button"
+    );
+
+    if (clickableElements.length === 0) return false;
+
+    clickableElements.forEach((el, i) => {
+        el.dataset.voiceIndex = String(i + 1);
     });
 
-    const targetIndex = index >= matchedElements.length ? matchedElements.length - 1 : index;
-    matchedElements[targetIndex].click();
-    console.log(
-        `Clicked element "${matchedElements[targetIndex].innerText}" at position ${targetIndex + 1}`
-    );
+    const targetIndex = index >= clickableElements.length ? clickableElements.length - 1 : index;
+    clickableElements[targetIndex].click();
+    //console.log(`Clicked element "${clickableElements[targetIndex].innerText}" at visible position ${targetIndex + 1}`);
+
     return true;
 }
 
@@ -82,11 +91,34 @@ function parseVoiceCommand(input: string): { text: string; index: number } {
 
     normalized = normalized.replace(/[.,!?]+$/, "");
 
+    // Map Spoken "numbers" to integers
+    const numberMap: Record<string, number> = {
+        "won": 1, "one": 1,
+        "too": 2, "to": 2, "two": 2,
+        "three": 3,
+        "for": 4, "fore": 4, "four": 4,
+        "five": 5,
+        "sex": 6, "six": 6,
+        "seven": 7,
+        "ate": 8, "eight": 8,
+        "nein": 9, "nine": 9,
+        "tin": 10, "ten": 10,
+    };
+
     // Match a number at the end
-    const match = normalized.match(/(.+?)\s+(\d+)$/);
+    let match = normalized.match(/(.+?)\s+(\d+)$/);
     if (match) {
         const text = match[1].trim();
         const index = parseInt(match[2], 10) - 1;
+        return { text, index };
+    }
+
+    // Match a written form of the number at the end
+    match = normalized.match(/(.+?)\s+(\w+)$/);
+    if (match) {
+        const text = match[1].trim();
+        const spokenNum =  match[2].toLowerCase();
+        const index = numberMap[spokenNum] ? numberMap[spokenNum] - 1 : 0;
         return { text, index };
     }
 
@@ -324,9 +356,9 @@ export default function FloatingVoiceNavigation() {
             callback: (item: string) => {
                 const { text, index } = parseVoiceCommand(item);
                 const className = safeClassFromSpeech(text);
-                console.log("Voice text:", text);
-                console.log("Index:", index);
-                console.log("Class selector:", className);
+                //console.log("Voice text:", text);
+                //console.log("Index:", index);
+                //console.log("Class selector:", className);
                 resetTranscript();
 
                 // Try clicking a button/text first

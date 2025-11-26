@@ -39,6 +39,34 @@ function clickByText(text: string): boolean {
     return false;
 }
 
+// Clicks the buttons based on the text inside them
+function clickButtonByText(text: string) {
+    // Normalize BOTH spoken text and button text
+    const normalize = (str: string) =>
+        str
+            .toLowerCase()
+            .trim()
+            .replace(/[-_]/g, " ")
+            .replace(/[^\w\s]/g, "");
+
+    const target = normalize(text);
+
+    const buttons = Array.from(document.querySelectorAll("button, a, [role='button']"));
+
+    for (const btn of buttons) {
+        const btnText = normalize(btn.textContent || "");
+
+        if (btnText.includes(target)) {
+            (btn as HTMLElement).click();
+            console.log("Clicked:", btnText);
+            return true;
+        }
+    }
+
+    console.warn("No clickable element found for:", target);
+    return false;
+}
+
 // Sanitises the spoken word
 function safeClassFromSpeech(text: string): string {
     return text
@@ -223,6 +251,12 @@ export default function FloatingVoiceNavigation() {
                 // Try clicking by class name
                 if (clickBySelector("." + className.toLowerCase().replace(/\s+/g, ""))) {
                     console.log("Clicked by selector:", className);
+                    return;
+                }
+
+                // Try clicking by button text
+                if (clickButtonByText(className)) {
+                    console.log("Clicked by button text:", className);
                     return;
                 }
 

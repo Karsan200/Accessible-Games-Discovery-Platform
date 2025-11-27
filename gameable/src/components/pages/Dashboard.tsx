@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getUserIdFromToken } from "../../data/TokenUtility";
 import { Authentication } from "../../data/Authentication";
 import { settings } from "../../AppSettings";
@@ -9,8 +10,8 @@ type UserData = {
     date_of_birth?: string;
     setting1: boolean;
     setting2: boolean;
-    profilePicture?: string; // URL
-    profilePictureFile?: File; // selected file
+    profilePicture?: string;
+    profilePictureFile?: File;
 };
 
 export default function Dashboard() {
@@ -28,6 +29,8 @@ export default function Dashboard() {
     });
     const [preview, setPreview] = useState<string | null>(null);
     const [errors, setErrors] = useState<{ email?: string; username?: string }>({});
+
+    const navigate = useNavigate();
 
     const fetchUserData = async () => {
         setLoading(true);
@@ -74,24 +77,20 @@ export default function Dashboard() {
         const { name, value, type, checked, files } = e.target;
         if (type === "file" && files && files[0]) {
             setFormData(prev => ({ ...prev, profilePictureFile: files[0] }));
-            setPreview(URL.createObjectURL(files[0])); // live preview
+            setPreview(URL.createObjectURL(files[0]));
         } else {
             setFormData(prev => ({
                 ...prev,
                 [name]: type === "checkbox" ? checked : value,
             }));
-            setErrors(prev => ({ ...prev, [name]: "" })); // clear error on change
+            setErrors(prev => ({ ...prev, [name]: "" }));
         }
     };
 
-    const validateEmail = (email: string) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    };
+    const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     const handleSubmit = async () => {
         setErrors({});
-
         if (!validateEmail(formData.email)) {
             setErrors({ email: "Please enter a valid email address." });
             return;
@@ -208,9 +207,23 @@ export default function Dashboard() {
                         </table>
                     </div>
 
-                    <button className="btn btn-primary mt-3" onClick={() => setEditing(true)}>
-                        Edit Profile
-                    </button>
+                    {/* Buttons - View Mode */}
+                    <div className="d-flex flex-column align-items-center gap-2 mt-3">
+                        <button
+                            className="btn btn-outline-success"
+                            style={{ width: "50%" }}
+                            onClick={() => navigate("/my-reviews")}
+                        >
+                            Edit Reviews
+                        </button>
+                        <button
+                            className="btn btn-primary"
+                            style={{ width: "50%" }}
+                            onClick={() => setEditing(true)}
+                        >
+                            Edit Profile
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <div>
@@ -353,12 +366,26 @@ export default function Dashboard() {
                         </table>
                     </div>
 
-                    <button className="btn btn-success me-2" onClick={handleSubmit}>
-                        Save Changes
-                    </button>
-                    <button className="btn btn-secondary" onClick={() => setEditing(false)}>
-                        Cancel
-                    </button>
+                    {/* Buttons - Edit Mode */}
+                    <div className="d-flex flex-column align-items-center gap-2 mt-3">
+                        <button
+                            className="btn btn-outline-success"
+                            style={{ width: "50%" }}
+                            onClick={() => navigate("/my-reviews")}
+                        >
+                            Edit Reviews
+                        </button>
+                        <button className="btn btn-success" style={{ width: "50%" }} onClick={handleSubmit}>
+                            Save Changes
+                        </button>
+                        <button
+                            className="btn btn-secondary"
+                            style={{ width: "50%" }}
+                            onClick={() => setEditing(false)}
+                        >
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

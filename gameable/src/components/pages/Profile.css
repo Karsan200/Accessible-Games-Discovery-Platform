@@ -31,3 +31,63 @@
     outline: none;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
+/* Same base styling as GamePage review-box */
+.review-box {
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    padding: 1rem;
+    background: #F2F0EF;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+    text-align: left;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    box-sizing: border-box;
+}
+
+/* Add margin for spacing between carousel items */
+.profile-review-box {
+    margin: 0 0.5rem; /* horizontal spacing between boxes */
+}
+
+/* Make carousel items fill container */
+.carousel-item-flex > .review-box {
+    height: 100%;
+}
+
+/* Review heading and text */
+.review-box h4 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.review-box p {
+    margin: 0;
+}
+
+.review-meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Ensure carousel arrows don't overlap cards */
+#profileReviews .control-btn {
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#profileReviews .control-left {
+    left: -20px; /* move left arrow outside cards */
+}
+
+#profileReviews .control-right {
+    right: -20px; /* move right arrow outside cards */
+}
+
+

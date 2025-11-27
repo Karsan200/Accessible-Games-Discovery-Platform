@@ -24,6 +24,7 @@ router.get("/username/:username", async (req, res) => {
 
         // Only return public info
         const publicUser = {
+            _id: user._id,
             username: user.username,
             profilePicture: user.profilePicture,
         };

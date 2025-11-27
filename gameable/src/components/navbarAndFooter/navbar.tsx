@@ -2,10 +2,14 @@ import './navbar.css'
 import {NavLink, useNavigate} from 'react-router-dom';
 import {useAuth} from "../../data/AuthContext.tsx";
 import {settings} from "../../AppSettings.ts";
+import {useEffect, useState} from "react";
+import { getUserIdFromToken } from "../../data/TokenUtility";
+import { ApiDataHelper } from "../../data/ApiDataHelper";
 
 export default function Navbar() {
-    const { setAccessToken } = useAuth();
+    const { accessToken, setAccessToken } = useAuth();
     const navigate = useNavigate();
+    const [username, setUsername] = useState<string | null>(null);
 
     async function handleLogout() {
         try {
@@ -21,12 +25,32 @@ export default function Navbar() {
         }
     }
 
+    useEffect(() => {
+        if (!accessToken) return;
+
+        const userId = getUserIdFromToken(accessToken);
+        if (!userId) return;
+
+        async function fetchUsername() {
+            try {
+                const res = await ApiDataHelper(`/user/${userId}`, { method: "GET", headers: {} }, { accessToken, setAccessToken });
+                if (!res.ok) return;
+                const data = await res.json();
+                setUsername(data.username);
+            } catch (err) {
+                console.error("Failed to fetch username:", err);
+            }
+        }
+
+        void fetchUsername();
+    }, [accessToken, setAccessToken]);
+
     return (
         <nav className="nav">
             <div className="nav-header">
                 <NavLink to="/" className="title">Game Able</NavLink>
                 <button className="auth-section auth-button" aria-label="Logout" onClick={handleLogout}>
-                    <span className="user-greeting">Hello, User</span>
+                    <span className="user-greeting">Hello{username ? `, ${username}` : ', User'}</span>
                     <span className="mask-icon-logout"/>
                 </button>
             </div>
@@ -42,8 +66,15 @@ export default function Navbar() {
             <ul>
                 <li><NavLink to="/" className="home">Home</NavLink></li>
                 <li><NavLink to="/wishlist" className="wishlist">Wishlist</NavLink></li>
-                <li><NavLink to="/profile" className="profile">Profile</NavLink></li>
-                <li><NavLink to="/settings" className="settings">Settings</NavLink></li>
+                <li>
+                    <NavLink
+                        to={username ? `/profile/${username}` : "/profile"}
+                        className="profile"
+                    >
+                        Profile
+                    </NavLink>
+                </li>
+                <li><NavLink to="/dashboard" className="settings">Dashboard</NavLink></li>
             </ul>
         </nav>
     )

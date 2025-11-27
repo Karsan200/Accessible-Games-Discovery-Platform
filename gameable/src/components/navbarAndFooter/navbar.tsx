@@ -29,7 +29,7 @@ export default function Navbar() {
         <nav className="nav">
             <div className="nav-header">
                 <NavLink to="/" className="title">Game Able</NavLink>
-                <button className="auth-section auth-button" aria-label="Logout" onClick={handleLogout}>
+                <button className="auth-section auth-button logout-btn" aria-label="Logout" onClick={handleLogout}>
                     <span className="user-greeting">Hello, User</span>
                     <span className="mask-icon-logout"/>
                 </button>
@@ -42,7 +42,9 @@ export default function Navbar() {
                     placeholder="Search games..."
                     className="search-bar"
                 />
-                <button type="submit" className="search-btn mask-icon-search" aria-label="Search"/>
+                <button type="submit" className="search-btn mask-icon-search" aria-label="Search">
+                    <span style={{ display: "none" }}>Search</span>
+                </button>
             </form>
             <ul>
                 <li><NavLink to="/" className="home">Home</NavLink></li>

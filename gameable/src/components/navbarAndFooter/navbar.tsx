@@ -42,7 +42,9 @@ export default function Navbar() {
                     placeholder="Search games..."
                     className="search-bar"
                 />
-                <button type="submit" className="search-btn mask-icon-search" aria-label="Search"/>
+                <button type="submit" className="search-btn mask-icon-search" aria-label="Search">
+                    <span style={{ display: "none" }}>Search</span>
+                </button>
             </form>
             <ul>
                 <li><NavLink to="/" className="home">Home</NavLink></li>

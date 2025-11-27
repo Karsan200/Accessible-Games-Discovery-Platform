@@ -257,6 +257,17 @@ export default function FloatingVoiceNavigation() {
             }
         },
         {
+            command: ['*click search*', '*enter search*', '*go search*'],
+            callback: () => {
+                const searchBtn = document.querySelector(".search-btn") as HTMLElement;
+                if (searchBtn) {
+                    searchBtn.click();
+                } else {
+                    console.warn("Search button not found");
+                }
+            }
+        },
+        {
             command: ['*click wishlist*', '*click wish list*', '*open wishlist*', '*navigate wishlist*', '*go to wishlist*', '*open wish list*', '*navigate wish list*', '*go to wish list*'],
             callback: () => {
                 try {
@@ -445,6 +456,7 @@ export default function FloatingVoiceNavigation() {
                     .replace(/write in/gi, "")
                     .replace(/type in/gi, "")
                     .replace(/paste/gi, "")
+                    .replace(/\./gi, "")
                     .trim();
 
                 const words = text.trim().split(/\s+/);

@@ -13,6 +13,28 @@ router.use(cors());
 // Serve static files for profile pictures
 router.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
+// GET public profile by username
+router.get("/username/:username", async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username }).lean();
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Only return public info
+        const publicUser = {
+            username: user.username,
+            profilePicture: user.profilePicture,
+        };
+
+        res.json(publicUser);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 // GET user by ID
 router.get("/:id", async (req, res) => {
     try {

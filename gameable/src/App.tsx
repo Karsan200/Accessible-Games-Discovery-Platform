@@ -42,6 +42,7 @@ function AppContent() {
                     <Route path="/games" element={<Games />} />
                     <Route path="/games/:id" element={<GamePage />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/my-reviews" element={<MyReviews />} />
                     <Route path="/errorPages/userNotLoggedIn" element={<UserNotLoggedIn />}/>
                     <Route path="/settings" element={<h1>Settings</h1>} />

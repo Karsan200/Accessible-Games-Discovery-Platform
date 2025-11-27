@@ -9,7 +9,11 @@ export class Authentication {
         // request new access token from backend
         const response = await fetch(settings.apiBaseUrl + '/auth/refresh', {
             method: 'GET',
-            credentials: 'include'
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include' as RequestCredentials,
         })
 
         // User is not authenticated

@@ -2,11 +2,17 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser"; // Add this import
 import dotenv from "dotenv";
-import {expressjwt} from "express-jwt";
+import { expressjwt } from "express-jwt";
 import { connectDB } from "./models/dbSetup.js";
+import homeRoutes from "./routes/homeRoutes.js";
+import gamesRouter from "./routes/gameRoutes.js";
+import  reviewRoute  from "./routes/reviewRoute.js";
+import searchRoutes from "./routes/searchRoutes.js";
 
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
+
+import wishlistRoutes from "./routes/wishlistRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -18,11 +24,18 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: true,
     credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());
+app.listen(5000, () => {
+    console.log("API running on http://localhost:5000");
+});
+
+app.use("/images", express.static("public/gameImages"));
+app.use("/api/games", gamesRouter);
+app.use("/api/reviews", reviewRoute);
 
 // Connect to MongoDB
 await connectDB();
@@ -35,7 +48,10 @@ app.use(
     }).unless({
         // Paths exempt from JWT authentication
         path: [
-            "/auth/login", "/auth/register", "/auth/refresh" // Authentication paths
+            "/auth/login", "/auth/register", "/auth/refresh",  "/auth/logout", // Authentication paths
+            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", { url: "/api/search", methods: ["GET"] }, // Public home page paths
+            "/games", "/games/:id", // Public game list and details,
+            "api/reviews", "/voice-nav"
         ]
     })
 );
@@ -59,6 +75,10 @@ app.use(async (req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 // Routers
+app.use("/api/home", homeRoutes);
 app.use("/auth", authenticationRoutes);
+app.use("/wishlist", wishlistRoutes);
+app.use("/api/reviews", reviewRoute);
+app.use("/api/search", searchRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

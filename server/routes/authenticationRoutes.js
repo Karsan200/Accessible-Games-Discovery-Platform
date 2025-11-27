@@ -20,4 +20,10 @@ router.get("/refresh", async (req, res) => {
     return await _authenticationController.refreshToken(req, res)
 })
 
+// Logout
+router.post("/logout", async (req, res) => {
+    res.clearCookie('token');
+    res.status(200).json({ message: "Log out successful" });
+});
+
 export default router;

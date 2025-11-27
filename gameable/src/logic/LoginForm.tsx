@@ -41,8 +41,10 @@ export async function LoginForm(body: LoginFormModel) {
         const data = await fetch(settings.apiBaseUrl + '/auth/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
+            credentials: 'include' as RequestCredentials,
             body: JSON.stringify({
                 email: body.inputs.email.value,
                 password: body.inputs.password.value
@@ -54,8 +56,6 @@ export async function LoginForm(body: LoginFormModel) {
             const token = body.authContext
 
             const response = await data.json()
-
-            console.log(response.accessToken)
 
             // Store access token in memory
             token.setAccessToken(response.accessToken)

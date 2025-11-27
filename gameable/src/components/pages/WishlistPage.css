@@ -1,0 +1,42 @@
+/* Header: Undo button on same line, right-aligned */
+.wishlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.wishlist-header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* space between subtitle and undo button */
+}
+
+.wishlist-subtitle {
+    margin: 0;
+    font-size: 1rem;
+    color: #ccc;
+}
+
+/* Wishlist Items */
+.wishlist-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Actions buttons aligned with card */
+.wishlist-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-left: auto; /* pushes buttons to the right of the card */
+}
+
+.wishlist-actions button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.9rem;
+}
+
+

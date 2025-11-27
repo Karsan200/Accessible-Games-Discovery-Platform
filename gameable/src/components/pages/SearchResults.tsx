@@ -3,6 +3,7 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import {GameCard} from "../GameCard.tsx";
 import {settings} from "../../AppSettings.ts";
 import {Col, Container, Row} from "react-bootstrap";
+import FilterBar from "../FilterBar.tsx";
 
 export type TagType = "Visual" | "Audio" | "Motor" | "Cognitive";
 
@@ -24,7 +25,11 @@ export const SearchResults: React.FC = () => {
     // Reading the search query from the URL parameters
     const [searchParams] = useSearchParams();
     const query = searchParams.get("q") ?? "";
-    // Const's for search results, loading status, and error message
+    const genreRaw = searchParams.get("genre") ?? "";
+    const accessibilityRaw = searchParams.get("accessibility") ?? ""; // keep raw string for stable deps
+    const accessibilityParam = accessibilityRaw ? accessibilityRaw.split(",").filter(Boolean) : [];
+    const sortParam = searchParams.get("sort") ?? "relevance";
+
     const [results, setResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -59,13 +64,20 @@ export const SearchResults: React.FC = () => {
             setLoading(true);
             setError(null);
 
-            const url = `${settings.apiBaseUrl}/api/search?q=${encodeURIComponent(
-                query
-            )}`;
+            // compute accessibility list here from the stable raw string
+            const accessList = accessibilityRaw ? accessibilityRaw.split(",").filter(Boolean) : [];
+
+            const qs = new URLSearchParams();
+            qs.set("q", query);
+            if (genreRaw) qs.set("genre", genreRaw);
+            if (accessList.length) qs.set("accessibility", accessList.join(","));
+            qs.set("sort", sortParam);
+
+            const url = `${settings.apiBaseUrl}/api/search?${qs.toString()}`;
 
             const makeRequest = (token?: string) => {
                 const headers: Record<string, string> = { Accept: "application/json" };
-                if (token) headers["Authorisation"] = `Bearer ${token}`;
+                if (token) headers["Authorization"] = `Bearer ${token}`;
                 return fetch(url, {
                     signal: controller.signal,
                     headers,
@@ -93,15 +105,14 @@ export const SearchResults: React.FC = () => {
                 if (res.status === 404) {
                     const body = await res.text().catch(() => "");
                     setError(
-                        `Search not found (404). ${body || "Ensure backend is running and `settings.apiBaseUrl` is correct."}`
+                        `Search not found (404). ${body || "Ensure backend is running and \\`settings.apiBaseUrl\\` is correct."}`
                     );
-                    console.log("404 response body:", body);
                     return;
                 }
 
                 // If response is not ok, set error message
                 if (!res.ok) {
-                    const body = await res.text();
+                    const body = await res.text().catch(() => "");
                     setError(`Search failed: ${res.status} ${body}`);
                     return;
                 }
@@ -129,7 +140,7 @@ export const SearchResults: React.FC = () => {
 
         void fetchResults();
         return () => controller.abort();
-    }, [query]);
+    }, [query, genreRaw, accessibilityRaw, sortParam]);
 
     // Prompting the user to enter a search query
     if (!query) return <div>Please enter a search query.</div>;
@@ -140,12 +151,55 @@ export const SearchResults: React.FC = () => {
     // Checking if there are no results, or it is null and returning a message
     if (results.length === 0) return <div>No results found for &quot;{query}&quot;.</div>;
 
+    function buildSearchUrl(params: {
+        q: string;
+        genre?: string | null;
+        accessibility?: string[];
+        sort?: string;
+    }) {
+        const u = new URLSearchParams();
+        if (params.q) u.set("q", params.q);
+        if (params.genre) {
+            u.set("genre", params.genre);
+        }
+        if (params.accessibility?.length) u.set("accessibility", params.accessibility.join(","));
+        if (params.sort) u.set("sort", params.sort);
+        return `/search?${u.toString()}`;
+    }
+
+    function handleApplyFilters(filters: {
+        genre?: string[];
+        accessibility?: string[];
+        sort?: string;
+    }) {
+        const genreCsv = filters.genre && filters.genre.length ? filters.genre.join(",") : null;
+        const target = buildSearchUrl({
+            q: query,
+            genre: genreCsv ?? null,
+            accessibility: filters.accessibility ?? [],
+            sort: filters.sort ?? "relevance",
+        });
+        navigate(target);
+    }
+
     return (
         <section role="region" aria-label={`Search results for ${query}`} className="my-5">
             <Container>
                 <h1 style={{ textAlign: "center", marginBottom: "16px" }}>
                     Search results for "{query}"
                 </h1>
+
+                <div className="filter-panel" style={{ marginBottom: 24 }}>
+                    <FilterBar
+                        onApply={handleApplyFilters}
+                        initial={{
+                            genre: genreRaw ? genreRaw.split(",").filter(Boolean) : [],
+                            accessibility: accessibilityParam,
+                            sort: sortParam,
+                        }}
+                    />
+                </div>
+
                 <div style={{ textAlign: "center", marginBottom: "24px" }}>
                     <p style={{ margin: 0 }}>
                         Showing {results.length} result{results.length !== 1 ? "s" : ""}.

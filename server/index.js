@@ -51,7 +51,7 @@ app.use(
             "/auth/login", "/auth/register", "/auth/refresh",  "/auth/logout", // Authentication paths
             "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", { url: "/api/search", methods: ["GET"] }, // Public home page paths
             "/games", "/games/:id", // Public game list and details,
-            "api/reviews"
+            "api/reviews", "/voice-nav"
         ]
     })
 );

@@ -7,6 +7,7 @@ import { connectDB } from "./models/dbSetup.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import gamesRouter from "./routes/gameRoutes.js";
 import  reviewRoute  from "./routes/reviewRoute.js";
+import searchRoutes from "./routes/searchRoutes.js";
 
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
@@ -47,10 +48,10 @@ app.use(
     }).unless({
         // Paths exempt from JWT authentication
         path: [
-            "/auth/login", "/auth/register", "/auth/refresh", // Authentication paths
-            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", // Public home page paths
+            "/auth/login", "/auth/register", "/auth/refresh",  "/auth/logout", // Authentication paths
+            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", { url: "/api/search", methods: ["GET"] }, // Public home page paths
             "/games", "/games/:id", // Public game list and details,
-            "api/reviews"
+            "api/reviews", "/voice-nav"
         ]
     })
 );
@@ -78,5 +79,6 @@ app.use("/api/home", homeRoutes);
 app.use("/auth", authenticationRoutes);
 app.use("/wishlist", wishlistRoutes);
 app.use("/api/reviews", reviewRoute);
+app.use("/api/search", searchRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

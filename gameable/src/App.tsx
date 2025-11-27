@@ -2,6 +2,7 @@ import './App.css'
 import Navbar from './components/navbarAndFooter/navbar.tsx'
 import NavbarLoggedOut from "./components/navbarAndFooter/navbarLoggedOut.tsx";
 import UserNotLoggedIn from './components/navbarAndFooter/errorPages/userNotLoggedIn';
+import FloatingVoiceControl from './components/voiceNavigation/VoiceNavigationOverlay.tsx'
 import AboutUs from "./components/navbarAndFooter/footerPages/aboutUs.tsx";
 import ContactUs from "./components/navbarAndFooter/footerPages/contactUs.tsx";
 import AccessibilityStatement from "./components/navbarAndFooter/footerPages/acessibilityStatement.tsx";
@@ -18,6 +19,8 @@ import { Register } from "./components/pages/Register.tsx";
 import { Login } from "./components/pages/Login.tsx";
 import { Home } from "./components/pages/Home.tsx";
 import { Wishlist } from "./components/pages/Wishlist.tsx";
+import { SearchResults } from "./components/pages/SearchResults.tsx"
+import FloatingVoiceNavigation from "./components/voiceNavigation/VoiceNavigationOverlay.tsx";
 
 // <-- Added imports
 import Profile from "./components/pages/profile.tsx";
@@ -40,6 +43,7 @@ function AppContent() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/search" element={<SearchResults />} />
                     <Route path="/games" element={<Games />} />
                     <Route path="/games/:id" element={<GamePage />} />
                     <Route path="/profile" element={<Profile />} />
@@ -50,7 +54,9 @@ function AppContent() {
                     <Route path="/footerPages/contactUs" element={<ContactUs />} />
                     <Route path="/footerPages/accessibilityStatement" element={<AccessibilityStatement />}/>
                     <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/voice-nav" element={<FloatingVoiceNavigation/> } />
                 </Routes>
+                <FloatingVoiceControl />
             </main>
 
             <Footer />

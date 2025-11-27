@@ -92,7 +92,6 @@ export default function Dashboard() {
     const handleSubmit = async () => {
         setErrors({});
 
-        // Email validation
         if (!validateEmail(formData.email)) {
             setErrors({ email: "Please enter a valid email address." });
             return;
@@ -104,7 +103,6 @@ export default function Dashboard() {
             const userId = getUserIdFromToken(token);
             if (!userId) return alert("Invalid session.");
 
-            // Upload profile picture
             if (formData.profilePictureFile) {
                 const uploadData = new FormData();
                 uploadData.append("profilePicture", formData.profilePictureFile);
@@ -124,7 +122,6 @@ export default function Dashboard() {
                 }
             }
 
-            // Update user data
             const res = await fetch(`${settings.apiBaseUrl}/user/${userId}`, {
                 method: "PUT",
                 headers: {
@@ -166,120 +163,194 @@ export default function Dashboard() {
 
     return (
         <div className="container my-4">
-            <h2>User Dashboard</h2>
+            <h2 className="mb-4">User Dashboard</h2>
 
             {!editing ? (
                 <div>
                     {preview && (
                         <img
                             src={`${preview}?t=${Date.now()}`}
-                            alt="Profile"
-                            className="rounded-circle mb-3"
+                            alt="Profile picture"
+                            className="rounded-circle mb-3 img-fluid"
                             width={150}
                             height={150}
                         />
                     )}
-                    <p><strong>Username:</strong> {userData.username}</p>
-                    <p><strong>Email:</strong> {userData.email}</p>
-                    <p>
-                        <strong>Date of Birth:</strong>{" "}
-                        {userData.date_of_birth
-                            ? new Date(userData.date_of_birth).toLocaleDateString()
-                            : "Not set"}
-                    </p>
-                    <p><strong>Setting 1:</strong> {userData.setting1 ? "Enabled" : "Disabled"}</p>
-                    <p><strong>Setting 2:</strong> {userData.setting2 ? "Enabled" : "Disabled"}</p>
 
-                    <button className="btn btn-primary" onClick={() => setEditing(true)}>
+                    <div className="table-responsive">
+                        <table className="table table-bordered align-middle">
+                            <tbody>
+                            <tr>
+                                <th scope="row">Username</th>
+                                <td>{userData.username}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Email</th>
+                                <td>{userData.email}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Date of Birth</th>
+                                <td>
+                                    {userData.date_of_birth
+                                        ? new Date(userData.date_of_birth).toLocaleDateString()
+                                        : "Not set"}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Setting 1</th>
+                                <td>{userData.setting1 ? "Enabled" : "Disabled"}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Setting 2</th>
+                                <td>{userData.setting2 ? "Enabled" : "Disabled"}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button className="btn btn-primary mt-3" onClick={() => setEditing(true)}>
                         Edit Profile
                     </button>
                 </div>
             ) : (
                 <div>
-                    <div className="mb-3">
-                        <label htmlFor="profilePicture" className="form-label">Profile Picture</label>
-                        <input
-                            type="file"
-                            id="profilePicture"
-                            accept="image/*"
-                            className="form-control"
-                            onChange={handleChange}
-                        />
-                        {preview && (
-                            <img
-                                src={preview}
-                                alt="Preview"
-                                className="rounded-circle mt-2"
-                                width={100}
-                                height={100}
-                            />
-                        )}
-                    </div>
+                    <div className="table-responsive">
+                        <table className="table table-bordered align-middle">
+                            <tbody>
+                            <tr>
+                                <th scope="row">
+                                    <label htmlFor="profilePicture" className="form-label m-0">
+                                        Profile Picture
+                                    </label>
+                                </th>
+                                <td>
+                                    <input
+                                        type="file"
+                                        id="profilePicture"
+                                        accept="image/*"
+                                        className="form-control"
+                                        onChange={handleChange}
+                                        aria-label="Upload new profile picture"
+                                    />
+                                    {preview && (
+                                        <img
+                                            src={preview}
+                                            alt="Profile preview"
+                                            className="rounded-circle mt-2 img-fluid"
+                                            width={100}
+                                            height={100}
+                                        />
+                                    )}
+                                </td>
+                            </tr>
 
-                    <div className="mb-3">
-                        <label htmlFor="username" className="form-label">Username</label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            className={`form-control ${errors.username ? "is-invalid" : ""}`}
-                            value={formData.username}
-                            onChange={handleChange}
-                        />
-                        {errors.username && (
-                            <div className="invalid-feedback">{errors.username}</div>
-                        )}
-                    </div>
+                            <tr>
+                                <th scope="row">
+                                    <label htmlFor="username" className="form-label m-0">
+                                        Username
+                                    </label>
+                                </th>
+                                <td>
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        name="username"
+                                        className={`form-control ${errors.username ? "is-invalid" : ""}`}
+                                        value={formData.username}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.username && (
+                                        <div className="invalid-feedback">{errors.username}</div>
+                                    )}
+                                </td>
+                            </tr>
 
-                    <div className="mb-3">
-                        <label htmlFor="email" className="form-label">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            className={`form-control ${errors.email ? "is-invalid" : ""}`}
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                        {errors.email && (
-                            <div className="invalid-feedback">{errors.email}</div>
-                        )}
-                    </div>
+                            <tr>
+                                <th scope="row">
+                                    <label htmlFor="email" className="form-label m-0">
+                                        Email
+                                    </label>
+                                </th>
+                                <td>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        className={`form-control ${errors.email ? "is-invalid" : ""}`}
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.email && (
+                                        <div className="invalid-feedback">{errors.email}</div>
+                                    )}
+                                </td>
+                            </tr>
 
-                    <div className="mb-3">
-                        <label htmlFor="date_of_birth" className="form-label">Date of Birth</label>
-                        <input
-                            type="date"
-                            id="date_of_birth"
-                            name="date_of_birth"
-                            className="form-control"
-                            value={formData.date_of_birth}
-                            onChange={handleChange}
-                        />
-                    </div>
+                            <tr>
+                                <th scope="row">
+                                    <label htmlFor="date_of_birth" className="form-label m-0">
+                                        Date of Birth
+                                    </label>
+                                </th>
+                                <td>
+                                    <input
+                                        type="date"
+                                        id="date_of_birth"
+                                        name="date_of_birth"
+                                        className="form-control"
+                                        value={formData.date_of_birth}
+                                        onChange={handleChange}
+                                    />
+                                </td>
+                            </tr>
 
-                    <div className="form-check mb-2">
-                        <input
-                            type="checkbox"
-                            id="setting1"
-                            name="setting1"
-                            className="form-check-input"
-                            checked={formData.setting1}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="setting1" className="form-check-label">Enable Setting 1</label>
-                    </div>
+                            <tr>
+                                <th scope="row">
+                                    <label htmlFor="setting1" className="m-0">
+                                        Setting 1
+                                    </label>
+                                </th>
+                                <td>
+                                    <div className="form-check">
+                                        <input
+                                            type="checkbox"
+                                            id="setting1"
+                                            name="setting1"
+                                            className="form-check-input"
+                                            checked={formData.setting1}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="setting1" className="form-check-label">
+                                            Enable Setting 1
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
 
-                    <div className="form-check mb-3">
-                        <input
-                            type="checkbox"
-                            id="setting2"
-                            name="setting2"
-                            className="form-check-input"
-                            checked={formData.setting2}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="setting2" className="form-check-label">Enable Setting 2</label>
+                            <tr>
+                                <th scope="row">
+                                    <label htmlFor="setting2" className="m-0">
+                                        Setting 2
+                                    </label>
+                                </th>
+                                <td>
+                                    <div className="form-check">
+                                        <input
+                                            type="checkbox"
+                                            id="setting2"
+                                            name="setting2"
+                                            className="form-check-input"
+                                            checked={formData.setting2}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="setting2" className="form-check-label">
+                                            Enable Setting 2
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <button className="btn btn-success me-2" onClick={handleSubmit}>

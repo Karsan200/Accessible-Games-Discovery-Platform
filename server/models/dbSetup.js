@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
     profilePicture: String,
     role: String,
     date_of_birth: Date,
+    favorite_games: [{ type: mongoose.Schema.Types.ObjectId, ref: "Game" }],
     setting1: { type: Boolean, default: false },
     setting2: { type: Boolean, default: false }, // Editable settings add more where needed
 });

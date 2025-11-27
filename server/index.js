@@ -54,7 +54,7 @@ app.use(
             "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", // Public home page paths
             "/games", "/games/:id", // Public game list and details,
             "api/reviews",
-            /^\/uploads\/.*/, /^\/user\/username\/.*/
+            /^\/uploads\/.*/, /^\/user\/username\/.*/, /^\/user\/.*\/favorites$/
         ]
     })
 );

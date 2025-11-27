@@ -34,11 +34,11 @@ export default function Dashboard() {
     });
     const [preview, setPreview] = useState<string | null>(null);
     const [allGames, setAllGames] = useState<GameOption[]>([]);
-    const [favoriteGames, setFavoriteGames] = useState<string[]>([]); // store _id of selected favorites
+    const [favoriteGames, setFavoriteGames] = useState<string[]>([]);
+    const [gameSearch, setGameSearch] = useState<string>("");
 
     const navigate = useNavigate();
 
-    // Fetch user data
     const fetchUserData = async () => {
         setLoading(true);
         try {
@@ -47,7 +47,6 @@ export default function Dashboard() {
             const userId = getUserIdFromToken(token);
             if (!userId) return alert("Invalid session.");
 
-            // Get user info
             const res = await fetch(`${settings.apiBaseUrl}/user/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -57,9 +56,7 @@ export default function Dashboard() {
             setFormData({
                 username: data.username,
                 email: data.email,
-                date_of_birth: data.date_of_birth
-                    ? new Date(data.date_of_birth).toISOString().split("T")[0]
-                    : "",
+                date_of_birth: data.date_of_birth ? new Date(data.date_of_birth).toISOString().split("T")[0] : "",
                 setting1: data.setting1,
                 setting2: data.setting2,
                 profilePicture: data.profilePicture || "",
@@ -67,7 +64,6 @@ export default function Dashboard() {
             });
             setPreview(data.profilePicture ? `${settings.apiBaseUrl}${data.profilePicture}` : null);
 
-            // Fetch user's favorite games
             const favRes = await fetch(`${settings.apiBaseUrl}/user/${userId}/favorites`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -76,7 +72,6 @@ export default function Dashboard() {
                 setFavoriteGames(favData.favorite_games?.map(g => g._id) || []);
             }
 
-            // Fetch all games for selection
             const gamesRes = await fetch(`${settings.apiBaseUrl}/api/games`);
             if (gamesRes.ok) {
                 const gamesData: GameOption[] = await gamesRes.json();
@@ -94,35 +89,27 @@ export default function Dashboard() {
         void fetchUserData();
     }, []);
 
-    // Handle input changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked, files } = e.target;
         if (type === "file" && files && files[0]) {
             setFormData(prev => ({ ...prev, profilePictureFile: files[0] }));
             setPreview(URL.createObjectURL(files[0]));
         } else {
-            setFormData(prev => ({
-                ...prev,
-                [name]: type === "checkbox" ? checked : value,
-            }));
+            setFormData(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
         }
     };
 
-    // Handle favorite games selection
     const handleFavoriteToggle = (gameId: string) => {
         setFavoriteGames(prev => {
-            if (prev.includes(gameId)) {
-                return prev.filter(id => id !== gameId);
-            } else if (prev.length < 4) {
-                return [...prev, gameId];
-            } else {
+            if (prev.includes(gameId)) return prev.filter(id => id !== gameId);
+            else if (prev.length < 4) return [...prev, gameId];
+            else {
                 alert("You can select up to 4 favorite games.");
                 return prev;
             }
         });
     };
 
-    // Handle save
     const handleSubmit = async () => {
         try {
             const token = await Authentication.refreshToken();
@@ -130,11 +117,9 @@ export default function Dashboard() {
             const userId = getUserIdFromToken(token);
             if (!userId) return alert("Invalid session.");
 
-            // Upload profile picture if selected
             if (formData.profilePictureFile) {
                 const uploadData = new FormData();
                 uploadData.append("profilePicture", formData.profilePictureFile);
-
                 const uploadRes = await fetch(`${settings.apiBaseUrl}/user/${userId}/profile-picture`, {
                     method: "POST",
                     headers: { Authorization: `Bearer ${token}` },
@@ -146,7 +131,6 @@ export default function Dashboard() {
                 }
             }
 
-            // Update user info
             const res = await fetch(`${settings.apiBaseUrl}/user/${userId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -163,7 +147,6 @@ export default function Dashboard() {
                 return alert(err?.error || "Failed to update user data.");
             }
 
-            // Update favorite games
             const favRes = await fetch(`${settings.apiBaseUrl}/user/${userId}/favorites`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -186,6 +169,11 @@ export default function Dashboard() {
     if (loading) return <p>Loading...</p>;
     if (!userData) return <p>User not found.</p>;
 
+    // Filter games based on search
+    const filteredGames = allGames.filter(game =>
+        game.title.toLowerCase().includes(gameSearch.toLowerCase())
+    );
+
     return (
         <div className="container my-4">
             <h2 className="mb-4">User Dashboard</h2>
@@ -198,16 +186,22 @@ export default function Dashboard() {
                     <p><strong>Date of Birth:</strong> {userData.date_of_birth || "Not set"}</p>
                     <p><strong>Setting 1:</strong> {userData.setting1 ? "Enabled" : "Disabled"}</p>
                     <p><strong>Setting 2:</strong> {userData.setting2 ? "Enabled" : "Disabled"}</p>
+
                     {favoriteGames.length > 0 && (
                         <div>
                             <strong>Favorite Games:</strong>
-                            <ul>
+                            <div className="d-flex flex-wrap gap-2 mt-2 justify-content-center">
                                 {allGames
                                     .filter(g => favoriteGames.includes(g._id))
-                                    .map(g => <li key={g._id}>{g.title}</li>)}
-                            </ul>
+                                    .map(g => (
+                                        <div key={g._id} className="badge bg-primary p-2 rounded">
+                                            {g.title}
+                                        </div>
+                                    ))}
+                            </div>
                         </div>
                     )}
+
                     <div className="mt-3">
                         <button className="btn btn-primary me-2" onClick={() => setEditing(true)}>Edit Profile</button>
                         <button className="btn btn-outline-success" onClick={() => navigate("/my-reviews")}>Edit Reviews</button>
@@ -246,10 +240,18 @@ export default function Dashboard() {
                         <label className="form-check-label">Enable Setting 2</label>
                     </div>
 
+                    {/* Favorite Games Search */}
                     <div className="mb-3">
                         <label className="form-label">Favorite Games (up to 4)</label>
+                        <input
+                            type="text"
+                            className="form-control mb-2"
+                            placeholder="Search games..."
+                            value={gameSearch}
+                            onChange={(e) => setGameSearch(e.target.value)}
+                        />
                         <div className="d-flex flex-wrap gap-2">
-                            {allGames.map(game => (
+                            {filteredGames.map(game => (
                                 <button
                                     key={game._id}
                                     type="button"

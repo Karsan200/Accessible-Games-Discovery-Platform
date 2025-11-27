@@ -228,10 +228,12 @@ export function GamePage() {
             const src = m.url.startsWith("http") ? m.url : `http://localhost:5000${m.url}`;
 
             if (m.type === "trailer") {
+                //enable captions as default
+                const srcWithCaptions = src.includes("?") ? `${src}&cc_load_policy=1` : `${src}?cc_load_policy=1`;
                 return (
                     <iframe
                         key={i}
-                        src={src}
+                        src={srcWithCaptions}
                         title="Game Trailer"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen

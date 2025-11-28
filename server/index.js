@@ -8,6 +8,7 @@ import homeRoutes from "./routes/homeRoutes.js";
 import gamesRouter from "./routes/gameRoutes.js";
 import  reviewRoute  from "./routes/reviewRoute.js";
 import searchRoutes from "./routes/searchRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
@@ -71,6 +72,9 @@ app.use(async (req, res, next) => {
         next();
     }
 });
+
+app.use("/api/users", userRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 

@@ -25,6 +25,7 @@ import FloatingVoiceNavigation from "./components/voiceNavigation/VoiceNavigatio
 // <-- Added imports
 import Profile from "./components/pages/profile.tsx";
 import MyReviews from "./components/pages/MyReviews.tsx";
+import Settings from "./components/pages/settings.tsx";
 
 function AppContent() {
     const { accessToken } = useAuth();
@@ -49,7 +50,7 @@ function AppContent() {
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/my-reviews" element={<MyReviews />} />
                     <Route path="/errorPages/userNotLoggedIn" element={<UserNotLoggedIn />}/>
-                    <Route path="/settings" element={<h1>Settings</h1>} />
+                    <Route path="/settings" element={<Settings />} />
                     <Route path="/footerPages/aboutUs" element={<AboutUs />} />
                     <Route path="/footerPages/contactUs" element={<ContactUs />} />
                     <Route path="/footerPages/accessibilityStatement" element={<AccessibilityStatement />}/>

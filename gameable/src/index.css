@@ -1,3 +1,14 @@
+/*Adding dyslexic font*/
+@import url('https://cdn.jsdelivr.net/npm/open-dyslexic/font-face.min.css');
+
+body.dyslexic-font {
+  font-family: "OpenDyslexic", Arial, sans-serif;
+}
+
+body:not(.dyslexic-font) {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

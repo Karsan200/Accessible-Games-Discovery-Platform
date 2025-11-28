@@ -270,6 +270,7 @@ async function seedDatabase() {
 // === Game Media ===
         await GameMedia.insertMany([
             // Game 1
+            { game_id: games[0]._id, type: "trailer", url: "https://www.youtube.com/embed/MmB9b5njVbA", description: "minecraft trailer", },
             { game_id: games[0]._id, type: "icon", url: "https://images.icon-icons.com/3053/PNG/512/minecraft_macos_bigsur_icon_189943.png", description: "minecraft icon", },
             { game_id: games[0]._id, type: "cover", url: "https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_4/2x1_NSwitch_Minecraft_image1600w.jpg", description: "minecraft cover", },
             { game_id: games[0]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/E3ae4Jm7cLqmGEHg4In5rXdKrMAwDPPNb26coEAESZw4RjvkgS_bBJtRwFNGZrBMfw=w1052-h592-rw", description: "minecraft screenshot 1", },
@@ -282,6 +283,7 @@ async function seedDatabase() {
             { game_id: games[0]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/dqCRCJb1nRGv5XtuA2Ml4mTDYuGRaD68juil4wfFHsYWiV0kvjG1mgDpiZHTMWG0-WD1=w5120-h2880-rw", description: "minecraft screenshot 8", },
 
             // Game 2
+            { game_id: games[1]._id, type: "trailer", url: "https://www.youtube.com/embed/k90y6PIzIaE", description: "Geometry Dash trailer", },
             { game_id: games[1]._id, type: "icon", url: "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/c7/94/b0/c794b0e9-ea7b-310f-80fd-af369492cd83/AppIcon-1x_U007emarketing-0-11-0-85-220-0.png/512x512bb.jpg", description: "Geometry Dash icon", },
             { game_id: games[1]._id, type: "cover", url: "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/geometrydash23.png", description: "Geometry Dash cover", },
             { game_id: games[1]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/QPS_wlJHQgy3G6KgWAcjjoXKOWJURujcw0LK70mzqBOCtFxoz0LSscWgoy0IYH97Dg=w5120-h2880-rw", description: "Geometry Dash screenshot 1", },
@@ -292,6 +294,7 @@ async function seedDatabase() {
             { game_id: games[1]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/er0-hnwfHoAx8PsU4ARsONOogw45KnYP3oxayWdwQOXfo6le8XlGBATnInvXs5r78c8=w5120-h2880-rw", description: "Geometry Dash screenshot 6", },
 
             // Game 3
+            { game_id: games[2]._id, type: "trailer", url: "https://www.youtube.com/embed/TJryIc0Cwy4", description: "Clash Royale trailer", },
             { game_id: games[2]._id, type: "icon", url: "https://cdnb.artstation.com/p/assets/images/images/029/816/241/large/brice-laville-saint-martin-clash-royale-app-icon-2020.jpg?1598728017", description: "Clash Royale icon", },
             { game_id: games[2]._id, type: "cover", url: "https://supercell.com/images/8654bffbaa77efb91243d3706b739c25/og_clashroyale.d235f90b.jpg", description: "Clash Royale cover", },
             { game_id: games[2]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/UOJ0N42bDu2lUbZIx4n9UCnHtnY5IEyG1jOLXByCbbCvi6wammxVR4XC9endWA5rAA=w5120-h2880-rw", description: "Clash Royale screenshot 1", },
@@ -301,6 +304,7 @@ async function seedDatabase() {
             { game_id: games[2]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/KMU1IyCAbHzfNVzihvyedCDXDW3uIpKbaWNj2BPSxhrTyCnzWH88lRUIX2BnMyRD888=w5120-h2880-rw", description: "Clash Royale screenshot 5", },
 
             // Game 4
+            { game_id: games[3]._id, type: "trailer", url: "https://www.youtube.com/embed/tVcm6C8kp1k", description: "Good Pizza Great Pizza trailer", },
             { game_id: games[3]._id, type: "icon", url: "https://img.utdstc.com/icon/cb5/463/cb54633f43741ca40ea541b578f6a11df1cbc5d3d1ceaa97c210a63bd5fae73b:200", description: "Good Pizza Great Pizza icon", },
             { game_id: games[3]._id, type: "cover", url: "https://play-lh.googleusercontent.com/ZzYEP8XxMsWXDtx7IgyN1Znb8mBLlP2qmzZq1-sUmMCn_sSkq6w7qDfcAnykV7ATpykS=w5120-h2880-rw", description: "Good Pizza Great Pizza cover",  },
             { game_id: games[3]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/nql4gdcnUHpbLw1Ovdac2zO4cecusV7OAG2TYZs3S6y7CI0Fy77P1-4fZSptAc2w4S4=w5120-h2880-rw", description: "Good Pizza Great Pizza screenshot 1", },
@@ -310,6 +314,7 @@ async function seedDatabase() {
             { game_id: games[3]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/x_Eb3mtsnlZKTnnC-b_lQDz5u1twd7_pMge1seiCQ6w6MaqKO7NP_pugysn0pOpUYIxq=w5120-h2880-rw", description: "Good Pizza Great Pizza screenshot 5",  },
 
             //Game 5
+            { game_id: games[4]._id, type: "trailer", url: "https://www.youtube.com/embed/4hCpQAlfAZQ", description: "Township trailer", },
             { game_id: games[4]._id, type: "icon", url: "https://play-lh.googleusercontent.com/9KAPlokfzeEFb34Mwm7juoiC5-yjpf4JlRLguuAgn5fV7JcTECwJnu6guLxbaZBWDA", description: "Township icon",  },
             { game_id: games[4]._id, type: "cover", url: "https://miro.medium.com/1*DYUlPBBjbkU9eQXthL0lNw.jpeg", description: "Township cover", },
             { game_id: games[4]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/bW2mxlLK5L65zTPCkMVhObnJb3wkweTO3zTHpqJTf6ekPQYNM2OWrfDrhQI-jaH-ILv_=w5120-h2880-rw", description: "Township screenshot 1", },
@@ -328,6 +333,7 @@ async function seedDatabase() {
             { game_id: games[5]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/PtJaKTUkTgWaWks_KRiLdO8gs9pFzWCfLRtkY9F7G_0XGSlU_gOYfNjBHZ72siqI6nM=w5120-h2880-rw", description: "Flow Free screenshot 5", },
 
             //Game 7
+            { game_id: games[6]._id, type: "trailer", url: "https://www.youtube.com/embed/VUyP21iQ_-g", description: "Balatro trailer", },
             { game_id: games[6]._id, type: "icon", url: "https://play-lh.googleusercontent.com/RSPv_SMlA3Lun8VHaJD7xCBQg29eCJR9sNJtZNJGlybVs8byYVLz4WnohrbLScC9srg", description: "Balatro icon", },
             { game_id: games[6]._id, type: "cover", url: "https://assetsio.gnwcdn.com/balatro1080-(1).png?width=1600&height=900&fit=crop&quality=100&format=png&enable=upscale&auto=webp", description: "Balatro cover", },
             { game_id: games[6]._id, type: "screenshot", url: "https://play-lh.googleusercontent.com/E9VzNlpxotPon4WKhQNAEMom1BHceqFlsXe-f8qTE6G2vG-4FP2Qqq8rha2k9X9RxKx8=w5120-h2880-rw", description: "Balatro screenshot 1", },

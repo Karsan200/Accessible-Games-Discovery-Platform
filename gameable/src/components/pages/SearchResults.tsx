@@ -1,19 +1,24 @@
-import React, { useEffect, useState} from "react";
-import {useNavigate, useSearchParams} from "react-router-dom";
-import {GameCard} from "../GameCard.tsx";
-import {settings} from "../../AppSettings.ts";
-import {Col, Container, Row} from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { GameCard } from "../GameCard.tsx";
+import { settings } from "../../AppSettings.ts";
+import { Col, Container, Row } from "react-bootstrap";
 import FilterBar from "../FilterBar.tsx";
 
 export type TagType = "Visual" | "Audio" | "Motor" | "Cognitive";
 
 export interface SearchResult {
-    id: string;
-    image: string;
+    _id: string;
+    image?: string;
     title: string;
     description?: string;
     tags: TagType[];
+    tagline?: string;
+    genre_id?: string[];
+    avgRating?: number;
+    accessibilityMatchCount?: number;
 }
+
 /*
  * Reading the search query from the URL parameters
  * Fetching search results from the backend API
@@ -34,6 +39,12 @@ export const SearchResults: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+
+    // casting FilterBar to a typed component
+    const FilterBarTyped = FilterBar as unknown as React.ComponentType<{
+        onApply: (filters: { genre?: string[]; accessibility?: string[]; sort?: string }) => void;
+        initial?: { genre: string[]; accessibility: string[]; sort: string };
+    }>;
 
     // Hook to fetch search results when the query changes
     useEffect(() => {
@@ -73,7 +84,8 @@ export const SearchResults: React.FC = () => {
             if (accessList.length) qs.set("accessibility", accessList.join(","));
             qs.set("sort", sortParam);
 
-            const url = `${settings.apiBaseUrl}/api/search?${qs.toString()}`;
+            const baseUrl = settings.apiBaseUrl.replace(/\/$/, "");
+            const url = `${baseUrl}/api/search?${qs.toString()}`;
 
             const makeRequest = (token?: string) => {
                 const headers: Record<string, string> = { Accept: "application/json" };
@@ -127,7 +139,7 @@ export const SearchResults: React.FC = () => {
 
                 const data: SearchResult[] = await res.json();
                 setResults(data);
-            // Catching and handling errors
+                // Catching and handling errors
             } catch (e: unknown) {
                 const err = e as Error;
                 if (err.name !== "AbortError") {
@@ -190,7 +202,7 @@ export const SearchResults: React.FC = () => {
                 </h1>
 
                 <div className="filter-panel" style={{ marginBottom: 24 }}>
-                    <FilterBar
+                    <FilterBarTyped
                         onApply={handleApplyFilters}
                         initial={{
                             genre: genreRaw ? genreRaw.split(",").filter(Boolean) : [],
@@ -209,7 +221,7 @@ export const SearchResults: React.FC = () => {
                 <Row className="g-3 g-md-4 justify-content-center" role="list" aria-label="Search result list">
                     {results.map((r) => (
                         <Col
-                            key={r.id}
+                            key={r._id} // ✅ fixed key
                             xs={12}
                             sm={6}
                             md={4}
@@ -218,17 +230,17 @@ export const SearchResults: React.FC = () => {
                             className="d-flex justify-content-center"
                         >
                             <GameCard
-                                image={r.image}
+                                image={r.image ?? ""}
                                 name={r.title}
                                 description={r.description ?? ""}
                                 tags={r.tags}
-                                onClick={() => navigate(`/games/${r.id}`)}
+                                onClick={() => navigate(`/games/${r._id}`)}
                             />
                         </Col>
                     ))}
                 </Row>
             </Container>
         </section>
-        );
-    };
-    export default SearchResults;
+    );
+};
+export default SearchResults;

@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser"; // Add this import
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { expressjwt } from "express-jwt";
 import { connectDB } from "./models/dbSetup.js";
@@ -13,6 +13,7 @@ import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
 
 import wishlistRoutes from "./routes/wishlistRoutes.js";
+import filterRoutes from "./routes/filterRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -49,9 +50,11 @@ app.use(
         // Paths exempt from JWT authentication
         path: [
             "/auth/login", "/auth/register", "/auth/refresh",  "/auth/logout", // Authentication paths
-            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", { url: "/api/search", methods: ["GET"] }, // Public home page paths
-            "/games", "/games/:id", // Public game list and details,
-            "api/reviews"
+            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", // Public home page paths
+            "/games", "/games/:id", // Public game list and details
+            "/api/reviews",
+            { url: "/api/search", methods: ["GET"] },            // public search
+            { url: "/api/search/options", methods: ["GET"] },    // public options
         ]
     })
 );
@@ -79,6 +82,6 @@ app.use("/api/home", homeRoutes);
 app.use("/auth", authenticationRoutes);
 app.use("/wishlist", wishlistRoutes);
 app.use("/api/reviews", reviewRoute);
-app.use("/api/search", searchRoutes);
+app.use("/api/search", searchRoutes, filterRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

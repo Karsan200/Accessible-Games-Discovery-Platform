@@ -1,3 +1,4 @@
+/* Voice Nav Commands Intro*/
 .vn-overlay {
     position: fixed;
     inset: 0;
@@ -74,7 +75,7 @@
 .vn-actions {
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
+    margin: 1rem;
 }
 
 @media (max-width: 520px) {
@@ -82,4 +83,38 @@
         padding: 1rem;
         max-width: 92%;
     }
+}
+
+/* Voice Nav Overlay */
+.vn-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #337A5B;
+    background: rgba(255, 255, 255, 0.87);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.vn-box-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.vn-transcript {
+    margin-top: 8px;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    max-width: 200px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.vn-actions-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
 }

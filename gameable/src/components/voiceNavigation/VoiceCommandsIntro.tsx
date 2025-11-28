@@ -1,12 +1,14 @@
-import {Button, Card, Container, Table} from "react-bootstrap";
+import {Button, Card, Table} from "react-bootstrap";
 import {useState} from "react";
+import { useNavigate } from "react-router-dom";
 import "./VoiceNav.css"
 
 export default function VoiceCommandsIntro() {
     const [visable, setVisible] = useState(true)
-    console.log(visable)
+    const navigate = useNavigate();
+    //console.log(visable)
 
-    if (!visable) return (null);
+    if (!visable) return null;
 
     return (
         (
@@ -68,6 +70,14 @@ export default function VoiceCommandsIntro() {
                     <div className="vn-actions">
                         <Button onClick={() => setVisible(false)} variant="primary">
                             Continue
+                        </Button>
+                    </div>
+                    <div className="vn-actions">
+                        <Button onClick={() => {
+                            setVisible(false);
+                            navigate("/voice-commands")
+                        }} variant="primary">
+                            More Info
                         </Button>
                     </div>
                 </div>

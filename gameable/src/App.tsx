@@ -26,6 +26,7 @@ import FloatingVoiceNavigation from "./components/voiceNavigation/VoiceNavigatio
 import Profile from "./components/pages/profile.tsx";
 import MyReviews from "./components/pages/MyReviews.tsx";
 import VoiceCommandsPage from "./components/voiceNavigation/VoiceCommandsPage.tsx";
+import VoiceCommandsIntro from "./components/voiceNavigation/VoiceCommandsIntro.tsx";
 
 function AppContent() {
     const { accessToken } = useAuth();
@@ -59,6 +60,7 @@ function AppContent() {
                     <Route path="/voice-commands" element={<VoiceCommandsPage/> } />
                 </Routes>
                 <FloatingVoiceControl />
+                <VoiceCommandsIntro />
             </main>
 
             <Footer />

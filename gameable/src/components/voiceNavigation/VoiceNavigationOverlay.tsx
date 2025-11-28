@@ -523,7 +523,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         zIndex: 9999,
         padding: "12px",
         borderRadius: "10px",
-        border: "2px solid #007bff",
+        border: "2px solid #337a5b",
         background: "0 rgba(255, 255, 255, 0.87)",
         boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
     },

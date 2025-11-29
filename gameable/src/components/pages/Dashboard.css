@@ -4,13 +4,6 @@
     margin-bottom: 1rem;
 }
 
-/* Profile image display */
-.profile-img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-}
-
 /* Profile image preview in edit mode */
 .profile-preview-img {
     width: 100px;
@@ -39,4 +32,38 @@
     color: #842029;
     background-color: #f8d7da;
     border: 1px solid #f5c2c7;
+}
+
+/* Rounded placeholder for users without profile picture */
+.profile-placeholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #6c757d;
+    margin: 0 auto;
+}
+
+/* Card shadow and padding for main dashboard */
+.card.shadow-sm {
+    border-radius: 0.75rem;
+    background-color: #fff;
+}
+
+/* Profile image display */
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Favorite game badges */
+.favorite-games .badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
 }

@@ -194,30 +194,51 @@ export default function Dashboard() {
             <h2 className="mb-4">User Dashboard</h2>
 
             {!editing ? (
-                <div>
-                    {preview && <img src={preview} alt="Profile" className="profile-img mb-3" />}
-                    <p><strong>Username:</strong> {userData.username}</p>
-                    <p><strong>Email:</strong> {userData.email}</p>
-                    <p><strong>Date of Birth:</strong> {userData.date_of_birth ? new Date(userData.date_of_birth).toISOString().split("T")[0] : "Not set"}</p>
+                <div className="card shadow-sm p-4">
+                    <div className="row align-items-center">
+                        <div className="col-md-3 text-center">
+                            {preview ? (
+                                <img src={preview} alt="Profile" className="profile-img mb-3" />
+                            ) : (
+                                <div className="profile-placeholder mb-3">
+                                    {userData.username.charAt(0).toUpperCase()}
+                                </div>
+                            )}
+                        </div>
+                        <div className="col-md-9">
+                            <h4 className="mb-3">{userData.username}</h4>
+                            <p><strong>Email:</strong> {userData.email}</p>
+                            <p>
+                                <strong>Date of Birth:</strong>{" "}
+                                {userData.date_of_birth
+                                    ? new Date(userData.date_of_birth).toLocaleDateString()
+                                    : "Not set"}
+                            </p>
 
-                    {favoriteGames.length > 0 && (
-                        <div>
-                            <strong>Favorite Games:</strong>
-                            <div className="favorite-games mt-2">
-                                {allGames
-                                    .filter(g => favoriteGames.includes(g._id))
-                                    .map(g => (
-                                        <div key={g._id} className="badge bg-primary p-2 rounded">
-                                            {g.title}
-                                        </div>
-                                    ))}
+                            {favoriteGames.length > 0 && (
+                                <div className="mt-3">
+                                    <strong>Favorite Games:</strong>
+                                    <div className="favorite-games mt-2">
+                                        {allGames
+                                            .filter(g => favoriteGames.includes(g._id))
+                                            .map(g => (
+                                                <span key={g._id} className="badge bg-primary me-1 mb-1">
+                                        {g.title}
+                                    </span>
+                                            ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="mt-4">
+                                <button className="btn btn-primary me-2" onClick={() => setEditing(true)}>
+                                    Edit Profile
+                                </button>
+                                <button className="btn btn-outline-success" onClick={() => navigate("/my-reviews")}>
+                                    Edit Reviews
+                                </button>
                             </div>
                         </div>
-                    )}
-
-                    <div className="mt-3">
-                        <button className="btn btn-primary me-2" onClick={() => setEditing(true)}>Edit Profile</button>
-                        <button className="btn btn-outline-success" onClick={() => navigate("/my-reviews")}>Edit Reviews</button>
                     </div>
                 </div>
             ) : (

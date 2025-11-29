@@ -74,7 +74,7 @@ export default function Navbar() {
                         Profile
                     </NavLink>
                 </li>
-                <li><NavLink to="/dashboard" className="settings">Dashboard</NavLink></li>
+                <li><NavLink to="/settings" className="settings">Settings</NavLink></li>
             </ul>
         </nav>
     )

@@ -9,8 +9,6 @@ type UserData = {
     username: string;
     email: string;
     date_of_birth?: string;
-    setting1: boolean;
-    setting2: boolean;
     profilePicture?: string;
     profilePictureFile?: File;
 };
@@ -28,8 +26,6 @@ export default function Dashboard() {
         username: "",
         email: "",
         date_of_birth: "",
-        setting1: false,
-        setting2: false,
         profilePicture: "",
         profilePictureFile: undefined,
     });
@@ -65,13 +61,14 @@ export default function Dashboard() {
                 return;
             }
             const data: UserData = await res.json();
+
             setUserData(data);
             setFormData({
                 username: data.username,
                 email: data.email,
-                date_of_birth: data.date_of_birth ? new Date(data.date_of_birth).toISOString().split("T")[0] : "",
-                setting1: data.setting1,
-                setting2: data.setting2,
+                date_of_birth: data.date_of_birth
+                    ? new Date(data.date_of_birth).toISOString().split("T")[0]
+                    : "",
                 profilePicture: data.profilePicture || "",
                 profilePictureFile: undefined,
             });
@@ -103,12 +100,12 @@ export default function Dashboard() {
     }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked, files } = e.target;
+        const { name, value, type, files } = e.target;
         if (type === "file" && files && files[0]) {
             setFormData(prev => ({ ...prev, profilePictureFile: files[0] }));
             setPreview(URL.createObjectURL(files[0]));
         } else {
-            setFormData(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+            setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
 
@@ -158,8 +155,6 @@ export default function Dashboard() {
                     username: formData.username,
                     email: formData.email,
                     date_of_birth: formData.date_of_birth,
-                    setting1: formData.setting1,
-                    setting2: formData.setting2,
                 }),
             });
             if (!res.ok) {
@@ -179,7 +174,6 @@ export default function Dashboard() {
                 return;
             }
 
-            // Success, no alert
             setEditing(false);
             void fetchUserData();
         } catch (err) {
@@ -204,9 +198,7 @@ export default function Dashboard() {
                     {preview && <img src={preview} alt="Profile" className="profile-img mb-3" />}
                     <p><strong>Username:</strong> {userData.username}</p>
                     <p><strong>Email:</strong> {userData.email}</p>
-                    <p><strong>Date of Birth:</strong> {userData.date_of_birth || "Not set"}</p>
-                    <p><strong>Setting 1:</strong> {userData.setting1 ? "Enabled" : "Disabled"}</p>
-                    <p><strong>Setting 2:</strong> {userData.setting2 ? "Enabled" : "Disabled"}</p>
+                    <p><strong>Date of Birth:</strong> {userData.date_of_birth ? new Date(userData.date_of_birth).toISOString().split("T")[0] : "Not set"}</p>
 
                     {favoriteGames.length > 0 && (
                         <div>
@@ -251,16 +243,6 @@ export default function Dashboard() {
                         <input type="date" name="date_of_birth" value={formData.date_of_birth} className="form-control" onChange={handleInputChange} />
                     </div>
 
-                    <div className="form-check mb-3">
-                        <input type="checkbox" name="setting1" className="form-check-input" checked={formData.setting1} onChange={handleInputChange} />
-                        <label className="form-check-label">Enable Setting 1</label>
-                    </div>
-
-                    <div className="form-check mb-3">
-                        <input type="checkbox" name="setting2" className="form-check-input" checked={formData.setting2} onChange={handleInputChange} />
-                        <label className="form-check-label">Enable Setting 2</label>
-                    </div>
-
                     <div className="mb-3">
                         <label className="form-label">Favorite Games (up to 4)</label>
                         <input
@@ -283,7 +265,6 @@ export default function Dashboard() {
                             ))}
                         </div>
                     </div>
-
 
                     {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 

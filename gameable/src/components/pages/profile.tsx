@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Carousel } from "../game/Carousel"; // keep carousel for reviews
-import { GameStars } from "../game/GameStars"; // for star ratings
+import { Carousel } from "../game/Carousel";
+import { GameStars } from "../game/GameStars";
 import { settings } from "../../AppSettings.ts";
 import "./Profile.css";
 
@@ -39,7 +39,6 @@ export default function Profile() {
 
     const apiBase = settings.apiBaseUrl;
 
-    // Fetch public profile by username
     useEffect(() => {
         if (!username) return;
 
@@ -56,7 +55,6 @@ export default function Profile() {
             .finally(() => setLoading(false));
     }, [username, apiBase]);
 
-    // Fetch user's reviews when userData is available
     useEffect(() => {
         if (!userData?._id) return;
 
@@ -66,7 +64,6 @@ export default function Profile() {
             .catch(() => console.error("Failed to fetch reviews"));
     }, [userData?._id, apiBase]);
 
-    // Fetch user's favorite games when userData is available
     useEffect(() => {
         if (!userData?._id) return;
 
@@ -93,39 +90,51 @@ export default function Profile() {
     ));
 
     return (
-        <div className="profile-page">
-            <div className="text-center">
-                <h1>{userData.username}</h1>
-                {userData.profilePicture ? (
-                    <img
-                        src={`${apiBase}${userData.profilePicture}`}
-                        alt={`${userData.username}'s profile`}
-                        className="profile-img"
-                    />
-                ) : (
-                    <p>No profile picture.</p>
-                )}
-            </div>
-
-            {favoriteGames.length > 0 && (
-                <div className="my-4">
-                    <h2>Favorite Games</h2>
-                    <div className="d-flex gap-3 flex-wrap">
-                        {favoriteGames.map(game => (
-                            <div key={game._id} className="favorite-game-card">
-                                {game.image && (
-                                    <img
-                                        src={`${game.image}`}
-                                        alt={game.title}
-                                    />
-                                )}
-                                <div>{game.title}</div>
+        <div className="profile-page container">
+            <div className="profile-header text-center text-md-start mb-5">
+                <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4">
+                    {/* Profile Picture */}
+                    <div className="profile-img-wrapper">
+                        {userData.profilePicture ? (
+                            <img
+                                src={`${apiBase}${userData.profilePicture}`}
+                                alt={`${userData.username}'s profile`}
+                                className="profile-img shadow-lg"
+                            />
+                        ) : (
+                            <div className="no-profile-img shadow-lg">
+                                {userData.username[0].toUpperCase()}
                             </div>
-                        ))}
+                        )}
+                    </div>
+
+                    {/* User Info */}
+                    <div className="profile-info">
+                        <h1 className="fw-bold">{userData.username}</h1>
+
+                        {favoriteGames.length > 0 && (
+                            <div className="favorite-games-wrapper mt-3">
+                                <h5 className="favorite-games-title mb-2">Favorite Games</h5>
+                                <div className="favorite-games d-flex flex-wrap gap-3">
+                                    {favoriteGames.map(game => (
+                                        <div key={game._id} className="favorite-game-card shadow-sm">
+                                            {game.image && (
+                                                <img
+                                                    src={`${game.image}`}
+                                                    alt={game.title}
+                                                />
+                                            )}
+                                            <div className="mt-1 fw-semibold">{game.title}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
-            )}
+            </div>
 
+            {/* Reviews Section */}
             <h2 className="mt-5">Reviews by {userData.username}</h2>
             {reviews.length > 0 ? (
                 <Carousel id="profileReviews" items={reviewItems} visibleCount={3} step={1} />

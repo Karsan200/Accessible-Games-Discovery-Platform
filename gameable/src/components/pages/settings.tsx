@@ -184,6 +184,40 @@ export default function Settings() {
                     <span className="slider"></span>
                 </label>
             </div>
+
+            <h2>Voice Navigation Settings</h2>
+            {/* Voice Nav Settings */}
+            <div className="setting-row">
+                <div className="setting-info">
+                    <p className="setting-title">Voice Navigation</p>
+                    <p className="setting-description">Toggle to turn off the voice navigation module.</p>
+                </div>
+                <label className="switch">
+                    <input
+                        type="checkbox"
+                    />
+                    <span className="slider"></span>
+                </label>
+            </div>
+
+            {/* Voice Nav Location */}
+            <div className="setting-row">
+                <div className="setting-info">
+                    <p className="setting-title">Voice Nav Location</p>
+                    <p className="setting-description">Toggle to move the voice navigations location from right to left.</p>
+                </div>
+                <label className="switch">
+                    <input
+                        type="checkbox"
+                    />
+                    <span className="slider"></span>
+                </label>
+            </div>
+
+            {/* Voice Navigation Information */}
+            <div className="setting-row">
+
+            </div>
         </div>
     );
 }

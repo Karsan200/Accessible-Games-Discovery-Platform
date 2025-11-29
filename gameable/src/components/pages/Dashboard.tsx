@@ -112,10 +112,10 @@ export default function Dashboard() {
     const handleFavoriteToggle = (gameId: string) => {
         if (favoriteGames.includes(gameId)) {
             setFavoriteGames(prev => prev.filter(id => id !== gameId));
-        } else if (favoriteGames.length < 8) {
+        } else if (favoriteGames.length < 7) {
             setFavoriteGames(prev => [...prev, gameId]);
         } else {
-            setErrorMessage("You can select up to 8 favorite games.");
+            setErrorMessage("You can select up to 7 favorite games.");
         }
     };
 
@@ -265,7 +265,7 @@ export default function Dashboard() {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label">Favorite Games (up to 8)</label>
+                        <label className="form-label">Favorite Games (up to 7)</label>
                         <input
                             type="text"
                             className="form-control mb-2"

@@ -105,8 +105,8 @@ router.put("/:id/favorites", async (req, res) => {
     try {
         const { favorite_games } = req.body;
 
-        if (!Array.isArray(favorite_games) || favorite_games.length > 8) {
-            return res.status(400).json({ error: "You can select up to 8 favorite games." });
+        if (!Array.isArray(favorite_games) || favorite_games.length > 7) {
+            return res.status(400).json({ error: "You can select up to 7 favorite games." });
         }
 
         // Validate all games exist

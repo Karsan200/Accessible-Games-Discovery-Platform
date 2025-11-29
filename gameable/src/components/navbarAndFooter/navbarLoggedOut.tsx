@@ -7,6 +7,7 @@ export default function NavbarLoggedOut() {
     const navigate = useNavigate();
     const searchRef = useRef<HTMLInputElement | null>(null);
     const handleSearch = SearchHandler(searchRef, navigate);
+
     return (
         <>
             <nav className="nav">
@@ -18,6 +19,7 @@ export default function NavbarLoggedOut() {
                     <span className="mask-icon-login"/>
                 </button>
             </div>
+
             <form className="search-container " onSubmit={handleSearch}>
                 <input
                     ref={searchRef}
@@ -31,7 +33,7 @@ export default function NavbarLoggedOut() {
                 <li><NavLink to="/" className="home">Home</NavLink></li>
                 <li><NavLink to="/errorPages/userNotLoggedIn" className="wishlist">Wishlist</NavLink></li>
                 <li><NavLink to="/errorPages/userNotLoggedIn" className="profile">Profile</NavLink></li>
-                <li><NavLink to="/settings" className="settings">Settings</NavLink></li>
+                {/* Settings intentionally omitted for logged-out users */}
             </ul>
         </nav>
     </>

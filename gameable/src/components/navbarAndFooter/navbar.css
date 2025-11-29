@@ -179,6 +179,43 @@
     color: yellow;
 }
 
+/*Make Font Larger in Accessibility Settings*/
+body.large-font .nav {
+    font-size: 1.3rem;
+}
+
+body.large-font .nav .title {
+    font-size: 2.5rem;
+}
+
+body.large-font .nav ul {
+    font-size: 1.25rem;
+}
+
+body.large-font .nav li a {
+    font-size: 1.25rem;
+}
+
+body.large-font .auth-button .user-greeting,
+body.large-font .auth-button .auth-text {
+    font-size: 1.15rem;
+}
+
+body.large-font .search-bar {
+    font-size: 1.2rem;
+}
+
+body.large-font .search-btn {
+    width: 2rem;
+    height: 2rem;
+}
+
+body.large-font .mask-icon-login,
+body.large-font .mask-icon-logout {
+    width: 2rem;
+    height: 2rem;
+}
+
 @media (max-width: 48rem) {
     .nav {
         padding: 1rem;

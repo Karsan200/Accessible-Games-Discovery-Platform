@@ -9,6 +9,8 @@ type UserPayload = {
     email?: string;
     fontType?: boolean;
     fontSize?: boolean;
+    voiceNavEnabled?: boolean;
+    voiceNavLeft?: boolean;
 };
 
 export default function Settings() {
@@ -16,6 +18,8 @@ export default function Settings() {
     const [fontType, setFontType] = useState(false);
     const [fontSize, setFontSize] = useState(false);
     const [token, setToken] = useState<string | null>(null);
+    const [voiceNavEnabled, setVoiceNavEnabled] = useState(false);
+    const [voiceNavLeft, setVoiceNavLeft] = useState(false);
 
     const apiBase = settings?.apiBaseUrl ?? "http://localhost:5000";
 
@@ -28,6 +32,17 @@ export default function Settings() {
         document.body.classList.remove("default-font", "large-font");
         if (enabled) document.body.classList.add("large-font");
         else document.body.classList.add("default-font");
+    }
+
+    function applyVoiceNavEnabled(enabled: boolean) {
+        if (enabled) document.body.classList.add("voice-nav-enabled");
+        else document.body.classList.remove("voice-nav-enabled");
+    }
+
+    function applyVoiceNavLocation(enabled: boolean) {
+        document.body.classList.remove("vn-left", "vn-right");
+        if (enabled) document.body.classList.add("vn-left");
+        else document.body.classList.add("vn-right");
     }
 
     // Load user settings
@@ -46,6 +61,8 @@ export default function Settings() {
                     applyFontSizeClass(false);
                     setFontType(false);
                     setFontSize(false);
+                    setVoiceNavEnabled(false);
+                    setVoiceNavLeft(false);
                     setLoading(false);
                     return;
                 }
@@ -65,6 +82,8 @@ export default function Settings() {
                     applyFontSizeClass(false);
                     setFontType(false);
                     setFontSize(false);
+                    setVoiceNavEnabled(false);
+                    setVoiceNavLeft(false);
                     setLoading(false);
                     return;
                 }
@@ -77,12 +96,23 @@ export default function Settings() {
 
                 setFontSize(Boolean(data.fontSize));
                 applyFontSizeClass(Boolean(data.fontSize));
+
+                setVoiceNavEnabled(Boolean(data.voiceNavEnabled));
+                applyVoiceNavEnabled(Boolean(data.voiceNavEnabled));
+
+                setVoiceNavLeft(Boolean(data.voiceNavLeft));
+                applyVoiceNavLocation(Boolean(data.voiceNavLeft));
+
             } catch (err) {
                 console.error("Settings load error:", err);
                 applyFontClass(false);
                 applyFontSizeClass(false);
+                applyVoiceNavEnabled(false);
+                applyVoiceNavLocation(false);
                 setFontType(false);
                 setFontSize(false);
+                setVoiceNavEnabled(false);
+                setVoiceNavLeft(false);
             } finally {
                 if (mounted) setLoading(false);
             }
@@ -144,6 +174,60 @@ export default function Settings() {
             console.error(err);
             setFontSize(!next);
             applyFontSizeClass(!next);
+        }
+    }
+
+    async function toggleVoiceNav() {
+        const next = !voiceNavEnabled;
+        setVoiceNavEnabled(next);
+        applyVoiceNavEnabled(next);
+
+        try {
+            const authToken = token ?? (await Authentication.refreshToken());
+            if (!authToken) throw new Error("Not logged in");
+
+            const res = await fetch(`${apiBase}/api/users/me/voiceNav`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authToken}`,
+                },
+                credentials: "include",
+                body: JSON.stringify({ fontSize: next }),
+            });
+
+            if (!res.ok) throw new Error(`Failed to save voiceNav preference: ${res.status}`);
+        } catch (err) {
+            console.error(err);
+            setVoiceNavEnabled(!next);
+            applyVoiceNavEnabled(!next);
+        }
+    }
+
+    async function toggleNavLocation() {
+        const next = !voiceNavLeft;
+        setVoiceNavLeft(next);
+        applyVoiceNavLocation(next);
+
+        try {
+            const authToken = token ?? (await Authentication.refreshToken());
+            if (!authToken) throw new Error("Not logged in");
+
+            const res = await fetch(`${apiBase}/api/users/me/voiceNavLocation`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authToken}`,
+                },
+                credentials: "include",
+                body: JSON.stringify({ fontSize: next }),
+            });
+
+            if (!res.ok) throw new Error(`Failed to save voiceNav preference: ${res.status}`);
+        } catch (err) {
+            console.error(err);
+            setVoiceNavLeft(!next);
+            applyVoiceNavLocation(!next);
         }
     }
 

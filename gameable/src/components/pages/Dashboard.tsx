@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getUserIdFromToken } from "../../data/TokenUtility";
 import { Authentication } from "../../data/Authentication";
 import { settings } from "../../AppSettings";
+import "./Dashboard.css";
 
 type UserData = {
     username: string;
@@ -169,18 +170,17 @@ export default function Dashboard() {
     if (loading) return <p>Loading...</p>;
     if (!userData) return <p>User not found.</p>;
 
-    // Filter games based on search
     const filteredGames = allGames.filter(game =>
         game.title.toLowerCase().includes(gameSearch.toLowerCase())
     );
 
     return (
-        <div className="container my-4">
+        <div className="container dashboard-container">
             <h2 className="mb-4">User Dashboard</h2>
 
             {!editing ? (
                 <div>
-                    {preview && <img src={preview} alt="Profile" className="rounded-circle mb-3" width={150} height={150} />}
+                    {preview && <img src={preview} alt="Profile" className="profile-img mb-3" />}
                     <p><strong>Username:</strong> {userData.username}</p>
                     <p><strong>Email:</strong> {userData.email}</p>
                     <p><strong>Date of Birth:</strong> {userData.date_of_birth || "Not set"}</p>
@@ -190,7 +190,7 @@ export default function Dashboard() {
                     {favoriteGames.length > 0 && (
                         <div>
                             <strong>Favorite Games:</strong>
-                            <div className="d-flex flex-wrap gap-2 mt-2 justify-content-center">
+                            <div className="favorite-games mt-2">
                                 {allGames
                                     .filter(g => favoriteGames.includes(g._id))
                                     .map(g => (
@@ -212,7 +212,7 @@ export default function Dashboard() {
                     <div className="mb-3">
                         <label htmlFor="profilePicture" className="form-label">Profile Picture</label>
                         <input type="file" id="profilePicture" className="form-control" onChange={handleInputChange} />
-                        {preview && <img src={preview} alt="Preview" className="rounded-circle mt-2" width={100} height={100} />}
+                        {preview && <img src={preview} alt="Preview" className="profile-preview-img mt-2" />}
                     </div>
 
                     <div className="mb-3">
@@ -240,7 +240,6 @@ export default function Dashboard() {
                         <label className="form-check-label">Enable Setting 2</label>
                     </div>
 
-                    {/* Favorite Games Search */}
                     <div className="mb-3">
                         <label className="form-label">Favorite Games (up to 4)</label>
                         <input
@@ -255,7 +254,7 @@ export default function Dashboard() {
                                 <button
                                     key={game._id}
                                     type="button"
-                                    className={`btn ${favoriteGames.includes(game._id) ? "btn-success" : "btn-outline-secondary"}`}
+                                    className={`btn favorite-game-btn ${favoriteGames.includes(game._id) ? "btn-success" : "btn-outline-secondary"}`}
                                     onClick={() => handleFavoriteToggle(game._id)}
                                 >
                                     {game.title}

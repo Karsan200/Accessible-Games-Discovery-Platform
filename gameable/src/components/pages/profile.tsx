@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Carousel } from "../game/Carousel"; // keep carousel for reviews
 import { GameStars } from "../game/GameStars"; // for star ratings
-import { settings} from "../../AppSettings.ts";
+import { settings } from "../../AppSettings.ts";
 import "./Profile.css";
 
 interface PublicUser {
@@ -100,7 +100,7 @@ export default function Profile() {
                     <img
                         src={`${apiBase}${userData.profilePicture}`}
                         alt={`${userData.username}'s profile`}
-                        style={{ width: "150px", height: "150px", borderRadius: "50%" }}
+                        className="profile-img"
                     />
                 ) : (
                     <p>No profile picture.</p>
@@ -112,22 +112,11 @@ export default function Profile() {
                     <h2>Favorite Games</h2>
                     <div className="d-flex gap-3 flex-wrap">
                         {favoriteGames.map(game => (
-                            <div
-                                key={game._id}
-                                className="favorite-game-card p-2 border rounded text-center"
-                                style={{ minWidth: "120px", flex: "1 0 auto" }}
-                            >
+                            <div key={game._id} className="favorite-game-card">
                                 {game.image && (
                                     <img
                                         src={`${game.image}`}
                                         alt={game.title}
-                                        style={{
-                                            width: "100px",
-                                            height: "100px",
-                                            objectFit: "cover",
-                                            borderRadius: "8px",
-                                            marginBottom: "0.5rem",
-                                        }}
                                     />
                                 )}
                                 <div>{game.title}</div>

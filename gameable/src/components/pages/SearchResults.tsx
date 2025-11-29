@@ -242,6 +242,7 @@ export const SearchResults: React.FC = () => {
                                     name={r.title}
                                     description={r.tagline ?? ""}
                                     tags={r.tags}
+                                    rating={r.avgRating ?? 0}
                                     onClick={() => navigate(`/games/${r._id}`)}
                                 />
                             </Col>

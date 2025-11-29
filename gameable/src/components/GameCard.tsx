@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Stack } from "react-bootstrap";
 import { BlackButton } from "./BlackButton";
 import { GameTags } from "./game/GameTags";
+import {GameStars} from "./game/GameStars";
 
 interface GameCardProps {
     image: string;
@@ -9,6 +10,7 @@ interface GameCardProps {
     description: string;
     tagline?: string;
     tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
+    rating: number;
     onClick?: () => void;
 }
 
@@ -18,6 +20,7 @@ export const GameCard: React.FC<GameCardProps> = ({
                                                       description,
                                                       tagline,
                                                       tags,
+                                                      rating,
                                                       onClick,
                                                   }) => {
     const cardId = `gamecard-${name.replace(/\s+/g, "-").toLowerCase()}`;
@@ -74,6 +77,16 @@ export const GameCard: React.FC<GameCardProps> = ({
                 >
                     {name}
                 </Card.Title>
+
+                {rating !== undefined && (
+                    <div className="mb-2 d-flex flex-column align-items-center">
+                    <GameStars rating={rating} />
+                    <span className="text-muted" style={{ fontSize: "0.85rem" }}>
+                        ({rating.toFixed(1)}/5)
+                    </span>
+                    </div>
+                )}
+
 
                 <Card.Text
                     id={`${cardId}-tagline`}

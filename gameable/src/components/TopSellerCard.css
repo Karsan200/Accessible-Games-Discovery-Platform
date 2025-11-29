@@ -35,3 +35,11 @@
     font-size: 1.2rem;
     line-height: 1;
 }
+
+/*Dyslexic font setting*/
+body.dyslexic-font .top-seller-title,
+body.dyslexic-font .top-seller-tagline,
+body.dyslexic-font .top-seller-info,
+body.dyslexic-font .top-seller-stars {
+    font-family: "OpenDyslexic", Arial, sans-serif;
+}

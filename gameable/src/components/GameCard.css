@@ -17,3 +17,13 @@
     height: 100%;
     object-fit: cover;
 }
+
+/*Dyslexic font setting*/
+body.dyslexic-font .gamecard,
+body.dyslexic-font .gamecard .gamecard-image-wrapper,
+body.dyslexic-font .gamecard .gamecard-image,
+body.dyslexic-font .gamecard p,
+body.dyslexic-font .gamecard h3,
+body.dyslexic-font .gamecard h2 {
+    font-family: "OpenDyslexic", Arial, sans-serif;
+}

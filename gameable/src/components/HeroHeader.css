@@ -90,3 +90,14 @@
     margin: 0;
     text-align: left;
 }
+
+
+/*Dyslexic font setting*/
+body.dyslexic-font .hero-title,
+body.dyslexic-font .hero-description,
+body.dyslexic-font .hero-content-container,
+body.dyslexic-font .hero-left,
+body.dyslexic-font .hero-right,
+body.dyslexic-font .hero-button-row {
+    font-family: "OpenDyslexic", Arial, sans-serif;
+}

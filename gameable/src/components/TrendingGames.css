@@ -21,3 +21,11 @@
     text-align: center;
     margin-bottom: 48px;
 }
+
+
+
+/*Dyslexic font settings*/
+body.dyslexic-font .trending-heading,
+body.dyslexic-font .trending-subtitle {
+    font-family: "OpenDyslexic", Arial, sans-serif;
+}

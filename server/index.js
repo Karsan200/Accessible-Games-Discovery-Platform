@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser"; // Add this import
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { expressjwt } from "express-jwt";
 import { connectDB } from "./models/dbSetup.js";
@@ -51,7 +51,7 @@ app.use(
             "/auth/login", "/auth/register", "/auth/refresh",  "/auth/logout", // Authentication paths
             "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", { url: "/api/search", methods: ["GET"] }, // Public home page paths
             "/games", "/games/:id", // Public game list and details,
-            "api/reviews", "/voice-nav"
+            "api/reviews", "/voice-nav", "/voice-commands"
         ]
     })
 );

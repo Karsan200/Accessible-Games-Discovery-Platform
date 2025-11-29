@@ -170,12 +170,15 @@ export function Wishlist() {
                             />
 
                             <div className="wishlist-actions d-flex flex-column gap-1 ms-0">
-                                <BlackButton text="↑" onClick={() => moveUp(index)} />
-                                <BlackButton text="↓" onClick={() => moveDown(index)} />
+                                <BlackButton text="Up" onClick={() => moveUp(index)} />
+                                <BlackButton text="Down" onClick={() => moveDown(index)} />
                                 <IconCheckbox
-                                    text="⌫"
+                                    id={`wishlist-${item._id}`}
+                                    text="Remove"
                                     checked={false}
                                     onChange={(checked) => {
+                                        //console.log("Soft remove ID:", item._id);
+                                        //console.log("Checked:", checked);
                                         if (checked) softRemove(item._id);
                                     }}
                                 />

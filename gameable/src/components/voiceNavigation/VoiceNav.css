@@ -1,0 +1,120 @@
+/* Voice Nav Commands Intro*/
+.vn-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+}
+
+.vn-modal {
+    background: #fff;
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.vn-content {
+    overflow-y: auto;
+    margin-top: 0.75rem;
+    padding-right: 0.5rem;
+}
+
+.vn-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.vn-content::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.06);
+    border-radius: 10px;
+}
+
+.vn-content::-webkit-scrollbar-thumb {
+    background: #337A5B;
+    border-radius: 10px;
+}
+
+.vn-content::-webkit-scrollbar-thumb:hover {
+    background: #2a6148;
+}
+
+.vn-content {
+    scrollbar-width: thin;
+    scrollbar-color: #337A5B rgba(0,0,0,0.08);
+}
+
+.vn-close {
+    position: absolute;
+    top: -25px;
+    right: -35px;
+    background: transparent;
+    border: none;
+    font-size: 2.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #d6d6d6;
+}
+
+.vn-title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1B1B1B;
+}
+
+.vn-actions {
+    display: flex;
+    justify-content: center;
+    margin: 1rem;
+}
+
+@media (max-width: 520px) {
+    .vn-modal {
+        padding: 1rem;
+        max-width: 92%;
+    }
+}
+
+/* Voice Nav Overlay */
+.vn-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #337A5B;
+    background: rgba(255, 255, 255, 0.87);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.vn-box-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.vn-transcript {
+    margin-top: 8px;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    max-width: 200px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.vn-actions-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}

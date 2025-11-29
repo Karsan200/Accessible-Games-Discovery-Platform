@@ -1,0 +1,81 @@
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { GameCard } from "./GameCard";
+import { useNavigate } from "react-router-dom";
+
+interface Game {
+    id: string;
+    image: string;
+    name: string;
+    description: string;
+    tagline?: string;
+    tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
+}
+
+interface TrendingGamesProps {
+    games: Game[];
+}
+
+export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
+    const navigate = useNavigate();
+
+    return (
+        <section role="region" aria-label="Trending games" className="my-5 overflow-hidden">
+            <Container>
+                <h2
+                    style={{
+                        fontFamily: 'Poppins, sans-serif',
+                        fontStyle: 'normal',
+                        fontWeight: 600,
+                        fontSize: '48px',
+                        lineHeight: '120%',
+                        textAlign: 'center',
+                        color: '#000000',
+                        marginTop: '64px',
+                        marginBottom: '16px', // slightly reduced for spacing before subheading
+                    }}
+                    tabIndex={-1}
+                >
+                    Trending Games
+                </h2>
+
+                <p
+                    style={{
+                        fontFamily: 'Poppins, sans-serif',
+                        fontWeight: 400,
+                        fontSize: '18px',
+                        lineHeight: '150%',
+                        color: '#000000',
+                        textAlign: 'center',
+                        marginBottom: '48px',
+                    }}
+                >
+                    Discover the most popular games right now — see what players are loving today.
+                </p>
+
+                <Row className="g-3 g-md-4 justify-content-center" role="list" aria-label="Trending game list">
+                    {games.map((game) => (
+                        <Col
+                            key={game.id}
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
+                            role="listitem"
+                            className="d-flex justify-content-center"
+                        >
+                            <GameCard
+                                image={game.image}
+                                name={game.name}
+                                description={game.description}
+                                tagline={game.tagline}
+                                tags={game.tags}
+                                onClick={() => navigate(`/games/${game.id}`)}
+                            />
+                        </Col>
+                    ))}
+                </Row>
+            </Container>
+        </section>
+    );
+};

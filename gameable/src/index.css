@@ -13,9 +13,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  padding: 8rem 1.25rem 2rem;
+}
+
 a {
   font-weight: 500;
-  color: #646cff;
+  color: yellow;
   text-decoration: inherit;
 }
 a:hover {
@@ -24,7 +40,7 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
+  display: inline;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -47,7 +63,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: yellow;
 }
 button:focus,
 button:focus-visible {

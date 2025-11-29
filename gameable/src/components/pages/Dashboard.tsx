@@ -37,21 +37,33 @@ export default function Dashboard() {
     const [allGames, setAllGames] = useState<GameOption[]>([]);
     const [favoriteGames, setFavoriteGames] = useState<string[]>([]);
     const [gameSearch, setGameSearch] = useState<string>("");
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const navigate = useNavigate();
 
     const fetchUserData = async () => {
         setLoading(true);
+        setErrorMessage(null);
         try {
             const token = await Authentication.refreshToken();
-            if (!token) return alert("You must be logged in.");
+            if (!token) {
+                setErrorMessage("You must be logged in.");
+                return;
+            }
+
             const userId = getUserIdFromToken(token);
-            if (!userId) return alert("Invalid session.");
+            if (!userId) {
+                setErrorMessage("Invalid session.");
+                return;
+            }
 
             const res = await fetch(`${settings.apiBaseUrl}/user/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            if (!res.ok) return alert("Failed to load user data.");
+            if (!res.ok) {
+                setErrorMessage("Failed to load user data.");
+                return;
+            }
             const data: UserData = await res.json();
             setUserData(data);
             setFormData({
@@ -80,7 +92,7 @@ export default function Dashboard() {
             }
         } catch (err) {
             console.error(err);
-            alert("Error fetching user data.");
+            setErrorMessage("Error fetching user data.");
         } finally {
             setLoading(false);
         }
@@ -101,22 +113,28 @@ export default function Dashboard() {
     };
 
     const handleFavoriteToggle = (gameId: string) => {
-        setFavoriteGames(prev => {
-            if (prev.includes(gameId)) return prev.filter(id => id !== gameId);
-            else if (prev.length < 4) return [...prev, gameId];
-            else {
-                alert("You can select up to 4 favorite games.");
-                return prev;
-            }
-        });
+        if (favoriteGames.includes(gameId)) {
+            setFavoriteGames(prev => prev.filter(id => id !== gameId));
+        } else if (favoriteGames.length < 4) {
+            setFavoriteGames(prev => [...prev, gameId]);
+        } else {
+            setErrorMessage("You can select up to 4 favorite games.");
+        }
     };
 
     const handleSubmit = async () => {
+        setErrorMessage(null);
         try {
             const token = await Authentication.refreshToken();
-            if (!token || !userData) return alert("Invalid session.");
+            if (!token || !userData) {
+                setErrorMessage("Invalid session.");
+                return;
+            }
             const userId = getUserIdFromToken(token);
-            if (!userId) return alert("Invalid session.");
+            if (!userId) {
+                setErrorMessage("Invalid session.");
+                return;
+            }
 
             if (formData.profilePictureFile) {
                 const uploadData = new FormData();
@@ -128,7 +146,8 @@ export default function Dashboard() {
                 });
                 if (!uploadRes.ok) {
                     const err = await uploadRes.json();
-                    return alert(err?.error || "Failed to upload profile picture.");
+                    setErrorMessage(err?.error || "Failed to upload profile picture.");
+                    return;
                 }
             }
 
@@ -145,7 +164,8 @@ export default function Dashboard() {
             });
             if (!res.ok) {
                 const err = await res.json();
-                return alert(err?.error || "Failed to update user data.");
+                setErrorMessage(err?.error || "Failed to update user data.");
+                return;
             }
 
             const favRes = await fetch(`${settings.apiBaseUrl}/user/${userId}/favorites`, {
@@ -155,15 +175,16 @@ export default function Dashboard() {
             });
             if (!favRes.ok) {
                 const err = await favRes.json();
-                return alert(err?.error || "Failed to update favorite games.");
+                setErrorMessage(err?.error || "Failed to update favorite games.");
+                return;
             }
 
-            alert("Profile updated successfully!");
+            // Success, no alert
             setEditing(false);
             void fetchUserData();
         } catch (err) {
             console.error(err);
-            alert("Error updating profile.");
+            setErrorMessage("Error updating profile.");
         }
     };
 
@@ -262,6 +283,9 @@ export default function Dashboard() {
                             ))}
                         </div>
                     </div>
+
+
+                    {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 
                     <div className="mt-3">
                         <button className="btn btn-success me-2" onClick={handleSubmit}>Save Changes</button>

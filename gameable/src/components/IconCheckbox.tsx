@@ -2,15 +2,16 @@ import React from "react";
 import { ToggleButton } from "react-bootstrap";
 
 interface CheckboxProps {
+    id: string;
     text: string;
     checked: boolean;
     onChange?: (checked: boolean) => void;
 }
 
-export const IconCheckbox: React.FC<CheckboxProps> = ({ text, checked, onChange }) => {
+export const IconCheckbox: React.FC<CheckboxProps> = ({ id, text, checked, onChange }) => {
     return (
         <ToggleButton
-            id="wishlist-toggle-check"
+            id={id}
             type="checkbox"
             variant="outline-secondary"
             checked={checked}

@@ -5,10 +5,14 @@ import { settings } from "../../AppSettings.ts";
 import { useEffect, useState } from "react";
 import { getUserIdFromToken } from "../../data/TokenUtility";
 import { ApiDataHelper } from "../../data/ApiDataHelper";
+import {SearchHandler} from "../../data/SearchHandler.ts";
+import {useRef} from "react";
 
 export default function Navbar() {
     const { accessToken, setAccessToken } = useAuth();
     const navigate = useNavigate();
+    const searchRef = useRef<HTMLInputElement | null>(null);
+    const handleSearch = SearchHandler(searchRef, navigate);
     const [username, setUsername] = useState<string | null>(null);
     const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
@@ -69,15 +73,17 @@ export default function Navbar() {
                     </button>
                 </div>
             </div>
-
-            <form className="search-container">
+            <form className="search-container " onSubmit={handleSearch}>
                 <input
+                    ref={searchRef}
                     type="text"
                     name="search"
                     placeholder="Search games..."
                     className="search-bar"
                 />
-                <button type="submit" className="search-btn mask-icon-search" aria-label="Search"/>
+                <button type="submit" className="search-btn mask-icon-search" aria-label="Search">
+                    <span style={{ display: "none" }}>Search</span>
+                </button>
             </form>
 
             <ul>

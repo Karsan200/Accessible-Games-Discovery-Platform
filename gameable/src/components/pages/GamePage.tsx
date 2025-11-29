@@ -165,12 +165,10 @@ export function GamePage() {
         }
     }
 
-    // compute disabled state when token is available
     const currentUserId = accessToken ? getUserIdFromToken(accessToken) : null;
     const userAlreadyReviewed = currentUserId ? (game?.reviews ?? []).some(r => r.user?._id === currentUserId) : false;
     const isLoggedIn = !!currentUserId;
 
-    // Submit review
     async function handleReviewSubmit(rating: number, body: string) {
         if (!game?._id) return;
 
@@ -225,16 +223,33 @@ export function GamePage() {
     if (loading) return <p>Loading...</p>;
     if (!game) return <p>Game not found.</p>;
 
-    const imageItems: ReactElement[] = (game.media ?? [])
-        .filter((m) => !!m.url && (m.type === "screenshot" || m.type === "cover"))
+    // Carousel media items: exclude type "icon"
+    const mediaItems: ReactElement[] = (game.media ?? [])
+        .filter((m) => m.type !== "icon") // exclude icons
         .map((m, i) => {
-            const src = m.url.startsWith("http") ? m.url : `${settings.apiBaseUrl}${m.url}`;
+            const src = m.url.startsWith("http") ? m.url : `http://localhost:5000${m.url}`;
+
+            if (m.type === "trailer") {
+                //enable captions as default
+                const srcWithCaptions = src.includes("?") ? `${src}&cc_load_policy=1` : `${src}?cc_load_policy=1`;
+                return (
+                    <iframe
+                        key={i}
+                        src={srcWithCaptions}
+                        title="Game Trailer"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="game-trailer"
+                    />
+                );
+            }
+
             return (
                 <img
                     key={i}
                     src={src}
                     className="d-block w-100 rounded"
-                    alt={m.description ?? `Game screenshot ${i + 1}`}
+                    alt={m.description ?? `Game media ${i + 1}`}
                 />
             );
         });
@@ -273,10 +288,10 @@ export function GamePage() {
     const reviewCount = game.reviewCount ?? (game.reviews ? game.reviews.length : 0);
 
     return (
-        <div className="container my-5">
+        <div className="container my-5 game-page">
             <div className="game-page-flex">
                 <div className="game-images-col">
-                    <Carousel id="gameImages" items={imageItems} visibleCount={1} step={1} />
+                    <Carousel id="gameImages" items={mediaItems} visibleCount={1} step={1} />
 
                     <div className="game-details-left mt-3">
                         <h3 className="mb-2">Details</h3>
@@ -304,7 +319,9 @@ export function GamePage() {
 
                     <p className="game-description">{game.description}</p>
 
-                    <button className="btn btn-primary game-fav-btn" onClick={() => addToWishlist(game._id)}>Add to Wishlist</button>
+                    <button className="btn btn-primary game-fav-btn" onClick={() => addToWishlist(game._id)}>
+                        Add to Wishlist
+                    </button>
 
                     <h3 className="mt-4 mb-2">Accessibility</h3>
                     <p className="game-accessibility">{game.accessibility}</p>

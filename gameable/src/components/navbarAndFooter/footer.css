@@ -78,6 +78,25 @@
     font-weight: bold;
 }
 
+
+/*Make Font Larger in Accessibility Settings*/
+body.large-font .footer {
+    font-size: 1.2rem;
+}
+
+body.large-font .footer ul {
+    font-size: 1.15rem;
+}
+
+body.large-font .footer li a {
+    font-size: 1.15rem;
+}
+
+body.large-font .footer-bottom {
+    font-size: 1.05rem;
+}
+
+
 @media (max-width: 48rem) {
     .footer-bottom {
         flex-direction: column;

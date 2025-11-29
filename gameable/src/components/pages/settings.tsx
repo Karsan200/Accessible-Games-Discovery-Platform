@@ -193,7 +193,7 @@ export default function Settings() {
                     Authorization: `Bearer ${authToken}`,
                 },
                 credentials: "include",
-                body: JSON.stringify({ fontSize: next }),
+                body: JSON.stringify({ voiceNavigation: next }),
             });
 
             if (!res.ok) throw new Error(`Failed to save voiceNav preference: ${res.status}`);
@@ -220,7 +220,7 @@ export default function Settings() {
                     Authorization: `Bearer ${authToken}`,
                 },
                 credentials: "include",
-                body: JSON.stringify({ fontSize: next }),
+                body: JSON.stringify({ navigationLocation: next }),
             });
 
             if (!res.ok) throw new Error(`Failed to save voiceNav preference: ${res.status}`);
@@ -279,6 +279,8 @@ export default function Settings() {
                 <label className="switch">
                     <input
                         type="checkbox"
+                        checked={voiceNavEnabled}
+                        onChange={() => void toggleVoiceNav()}
                     />
                     <span className="slider"></span>
                 </label>
@@ -293,15 +295,17 @@ export default function Settings() {
                 <label className="switch">
                     <input
                         type="checkbox"
-                    />
+                        checked={voiceNavLeft}
+                        onChange={() => void toggleNavLocation()}
+                        />
                     <span className="slider"></span>
                 </label>
             </div>
 
-            {/* Voice Navigation Information */}
-            <div className="setting-row">
+            {/*/!* Voice Navigation Information *!/*/}
+            {/*<div className="setting-row">*/}
 
-            </div>
+            {/*</div>*/}
         </div>
     );
 }

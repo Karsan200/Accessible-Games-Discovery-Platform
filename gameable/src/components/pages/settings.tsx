@@ -34,15 +34,28 @@ export default function Settings() {
         else document.body.classList.add("default-font");
     }
 
-    function applyVoiceNavEnabled(enabled: boolean) {
-        if (enabled) document.body.classList.add("voice-nav-enabled");
-        else document.body.classList.remove("voice-nav-enabled");
+    function applyVoiceNavToggle(enabled: boolean){
+        const vnBox = document.querySelector(".vn-box") as HTMLElement;
+        if (!vnBox) return;
+
+        if (!enabled) {
+            vnBox.style.display = "flex";
+        } else {
+            vnBox.style.display = "none";
+        }
     }
 
-    function applyVoiceNavLocation(enabled: boolean) {
-        document.body.classList.remove("vn-left", "vn-right");
-        if (enabled) document.body.classList.add("vn-left");
-        else document.body.classList.add("vn-right");
+    function applyVoiceNavLocation(enabled: boolean){
+        const vnBox = document.querySelector(".vn-box") as HTMLElement;
+        if (!vnBox) return;
+
+        if (enabled) {
+            vnBox.style.left = "20px";
+            vnBox.style.right = "auto";
+        } else {
+            vnBox.style.left = "auto";
+            vnBox.style.right = "20px";
+        }
     }
 
     // Load user settings
@@ -59,6 +72,8 @@ export default function Settings() {
                 if (!newToken) {
                     applyFontClass(false);
                     applyFontSizeClass(false);
+                    applyVoiceNavToggle(false);
+                    applyVoiceNavLocation(false);
                     setFontType(false);
                     setFontSize(false);
                     setVoiceNavEnabled(false);
@@ -80,6 +95,8 @@ export default function Settings() {
                     console.warn("Failed to fetch user:", res.status);
                     applyFontClass(false);
                     applyFontSizeClass(false);
+                    applyVoiceNavToggle(false);
+                    applyVoiceNavLocation(false);
                     setFontType(false);
                     setFontSize(false);
                     setVoiceNavEnabled(false);
@@ -98,16 +115,18 @@ export default function Settings() {
                 applyFontSizeClass(Boolean(data.fontSize));
 
                 setVoiceNavEnabled(Boolean(data.voiceNavEnabled));
-                applyVoiceNavEnabled(Boolean(data.voiceNavEnabled));
+                applyVoiceNavToggle(Boolean(data.voiceNavEnabled));
+                console.log("Voice Nav Enabled", (Boolean(data.voiceNavEnabled)));
 
                 setVoiceNavLeft(Boolean(data.voiceNavLeft));
                 applyVoiceNavLocation(Boolean(data.voiceNavLeft));
+                console.log("Voice Nav Location", (Boolean(data.voiceNavLeft)));
 
             } catch (err) {
                 console.error("Settings load error:", err);
                 applyFontClass(false);
                 applyFontSizeClass(false);
-                applyVoiceNavEnabled(false);
+                applyVoiceNavToggle(false);
                 applyVoiceNavLocation(false);
                 setFontType(false);
                 setFontSize(false);
@@ -180,7 +199,7 @@ export default function Settings() {
     async function toggleVoiceNav() {
         const next = !voiceNavEnabled;
         setVoiceNavEnabled(next);
-        applyVoiceNavEnabled(next);
+        applyVoiceNavToggle(next);
 
         try {
             const authToken = token ?? (await Authentication.refreshToken());
@@ -196,11 +215,13 @@ export default function Settings() {
                 body: JSON.stringify({ voiceNavigation: next }),
             });
 
+            console.log("Voice Nav", res.json())
+
             if (!res.ok) throw new Error(`Failed to save voiceNav preference: ${res.status}`);
         } catch (err) {
             console.error(err);
             setVoiceNavEnabled(!next);
-            applyVoiceNavEnabled(!next);
+            applyVoiceNavToggle(!next);
         }
     }
 

@@ -4,7 +4,6 @@ import {useEffect, useState} from "react";
 import "./VoiceNav.css"
 import { Button } from "react-bootstrap";
 
-
 // Check the thing that is going to be clicked is on screen
 function isVisible(el: HTMLElement) {
     const rect = el.getBoundingClientRect();
@@ -155,7 +154,6 @@ let fieldWordCount = 0;
 
 export default function FloatingVoiceNavigation() {
     const [active] = useState(true);
-
     const navigate = useNavigate()
 
     const clickNavButton = (selector: string) => {

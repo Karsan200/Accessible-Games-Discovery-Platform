@@ -34,28 +34,19 @@ export default function Settings() {
         else document.body.classList.add("default-font");
     }
 
-    function applyVoiceNavToggle(enabled: boolean){
+    function applyVoiceNavToggle(enabled: boolean) {
         const vnBox = document.querySelector(".vn-box") as HTMLElement;
         if (!vnBox) return;
 
-        if (!enabled) {
-            vnBox.style.display = "flex";
-        } else {
-            vnBox.style.display = "none";
-        }
+        vnBox.classList.toggle("vn-hidden", enabled);
     }
 
-    function applyVoiceNavLocation(enabled: boolean){
+    function applyVoiceNavLocation(leftSide: boolean) {
         const vnBox = document.querySelector(".vn-box") as HTMLElement;
         if (!vnBox) return;
 
-        if (enabled) {
-            vnBox.style.left = "20px";
-            vnBox.style.right = "auto";
-        } else {
-            vnBox.style.left = "auto";
-            vnBox.style.right = "20px";
-        }
+        vnBox.classList.remove("vn-left", "vn-right");
+        vnBox.classList.add(leftSide ? "vn-left" : "vn-right");
     }
 
     // Load user settings

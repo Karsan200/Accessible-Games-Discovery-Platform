@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { GameCard } from "./GameCard";
 import { useNavigate } from "react-router-dom";
+import "./TrendingGames.css";
 
 interface Game {
     id: string;
@@ -22,34 +23,11 @@ export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
     return (
         <section role="region" aria-label="Trending games" className="my-5 overflow-hidden">
             <Container>
-                <h2
-                    style={{
-                        fontFamily: 'Poppins, sans-serif',
-                        fontStyle: 'normal',
-                        fontWeight: 600,
-                        fontSize: '48px',
-                        lineHeight: '120%',
-                        textAlign: 'center',
-                        color: '#000000',
-                        marginTop: '64px',
-                        marginBottom: '16px', // slightly reduced for spacing before subheading
-                    }}
-                    tabIndex={-1}
-                >
+                <h2 className="trending-heading" tabIndex={-1}>
                     Trending Games
                 </h2>
 
-                <p
-                    style={{
-                        fontFamily: 'Poppins, sans-serif',
-                        fontWeight: 400,
-                        fontSize: '18px',
-                        lineHeight: '150%',
-                        color: '#000000',
-                        textAlign: 'center',
-                        marginBottom: '48px',
-                    }}
-                >
+                <p className="trending-subtitle">
                     Discover the most popular games right now — see what players are loving today.
                 </p>
 

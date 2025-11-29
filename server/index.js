@@ -9,6 +9,8 @@ import gamesRouter from "./routes/gameRoutes.js";
 import  reviewRoute  from "./routes/reviewRoute.js";
 import searchRoutes from "./routes/searchRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import profileRoutes from "./routes/profileRoutes.js";
+
 
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
@@ -35,6 +37,7 @@ app.listen(5000, () => {
 });
 
 app.use("/images", express.static("public/gameImages"));
+app.use("/uploads", express.static("uploads"));
 app.use("/api/games", gamesRouter);
 app.use("/api/reviews", reviewRoute);
 
@@ -52,7 +55,9 @@ app.use(
             "/auth/login", "/auth/register", "/auth/refresh",  "/auth/logout", // Authentication paths
             "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", { url: "/api/search", methods: ["GET"] }, // Public home page paths
             "/games", "/games/:id", // Public game list and details,
-            "api/reviews", "/voice-nav", "/voice-commands"
+            "api/reviews", "/voice-nav", "/voice-commands",
+            "api/reviews",
+            /^\/uploads\/.*/, /^\/user\/username\/.*/, /^\/user\/.*\/favorites$/
         ]
     })
 );
@@ -84,5 +89,6 @@ app.use("/auth", authenticationRoutes);
 app.use("/wishlist", wishlistRoutes);
 app.use("/api/reviews", reviewRoute);
 app.use("/api/search", searchRoutes);
+app.use("/user", profileRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

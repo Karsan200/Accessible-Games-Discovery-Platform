@@ -1,33 +1,127 @@
-.manage-reviews-btn {
-    width: 100%;
-    gap: 1rem;
-    background: #fff;
-    border: 1px solid #337A5B;
-    border-radius: 8px;
-    padding: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+/* Profile Page */
+.profile-page {
+    padding: 2rem 1rem;
 }
-.manage-reviews-btn:focus, hover{
-    width: 100%;
-    gap: 1rem;
+
+/* Top Section */
+.profile-header {
+    background: #f7f7f7;
+    border-radius: 12px;
+    padding: 2rem 1rem;
+}
+
+/* Profile Picture */
+.profile-img-wrapper {
+    flex-shrink: 0;
+}
+
+.profile-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #337A5B;
+    transition: transform 0.3s ease;
+}
+
+.profile-img:hover {
+    transform: scale(1.05);
+}
+
+/* Fallback profile avatar */
+.no-profile-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
     background: #337A5B;
-    border: 1px solid #337A5B;
+    color: #fff;
+    font-size: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Profile Info */
+.profile-info h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Favorite Games */
+.favorite-games {
+    gap: 1rem;
+}
+
+.favorite-game-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 0.5rem;
+    min-width: 120px;
+    text-align: center;
+    flex: 1 0 auto;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.favorite-game-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
     border-radius: 8px;
-    padding: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease;
 }
 
-@media (max-width: 576px) {
-    .manage-reviews-btn {
-        text-align: center;
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-    }
+.favorite-game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
-.manage-reviews-btn:focus,
-.manage-reviews-btn:hover {
-    background: #e9e7e6;
-    outline: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+/* Reviews Section */
+.review-box {
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    padding: 1rem;
+    background: #F2F0EF;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+    text-align: left;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.profile-review-box {
+    margin: 0 0.5rem;
+}
+
+.review-box h4 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.review-box p {
+    margin: 0;
+}
+
+.review-meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Carousel Controls */
+#profileReviews .control-btn {
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#profileReviews .control-left {
+    left: -20px;
+}
+
+#profileReviews .control-right {
+    right: -20px;
 }

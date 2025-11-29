@@ -1,0 +1,33 @@
+/* ----- Section ----- */
+.top-sellers-section {
+    margin-top: 128px;
+}
+
+/* ----- Heading ----- */
+.top-sellers-heading {
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 120%;
+    text-align: center;
+    color: #000000;
+    margin-bottom: 16px;
+}
+
+/* ----- Subtitle ----- */
+.top-sellers-subtitle {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 150%;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+/*Dyslexic font settings*/
+body.dyslexic-font .top-sellers-heading,
+body.dyslexic-font .top-sellers-subtitle {
+    font-family: "OpenDyslexic", Arial, sans-serif;
+}

@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Stack } from "react-bootstrap";
 import { BlackButton } from "./BlackButton";
 import { GameTags } from "./game/GameTags";
+import "./GameCard.css";
 
 interface GameCardProps {
     image: string;
@@ -24,7 +25,7 @@ export const GameCard: React.FC<GameCardProps> = ({
 
     return (
         <Card
-            className="h-100 shadow-sm flex-grow-1"
+            className="h-100 shadow-sm flex-grow-1 gamecard"
             role="group"
             aria-labelledby={`${cardId}-title`}
             aria-describedby={`${cardId}-tagline`}
@@ -32,29 +33,12 @@ export const GameCard: React.FC<GameCardProps> = ({
             onKeyDown={(e) => {
                 if (e.key === "Enter" && onClick) onClick();
             }}
-            style={{
-                cursor: "pointer",
-                minWidth: "100%",
-                maxWidth: "300px",
-            }}
         >
-            <div
-                style={{
-                    width: "100%",
-                    height: "150px",
-                    overflow: "hidden",
-                    borderTopLeftRadius: "0.375rem",
-                    borderTopRightRadius: "0.375rem",
-                }}
-            >
+            <div className="gamecard-image-wrapper">
                 <img
                     src={image}
                     alt={`${name} game cover`}
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                    }}
+                    className="gamecard-image"
                 />
             </div>
 

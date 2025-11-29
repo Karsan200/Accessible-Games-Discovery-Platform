@@ -17,16 +17,28 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
     const [accessToken, setAccessToken] = useState<string | null>(null);
 
-    // Load token on app start and apply dyslexic font if enabled
+    function applyFontClass(enabled: boolean) {
+        if (enabled) document.body.classList.add("dyslexic-font");
+        else document.body.classList.remove("dyslexic-font");
+    }
+
+    function applyFontSizeClass(enabled: boolean) {
+        document.body.classList.remove("default-font", "large-font");
+        if (enabled) document.body.classList.add("large-font");
+        else document.body.classList.add("default-font");
+    }
+
+    // Load token on app start and apply dyslexic/font-size if enabled
     useEffect(() => {
         async function initAuth() {
             // Get refreshed token
             const newToken = await Authentication.refreshToken();
             setAccessToken(newToken);
 
-            // if no token then user logged out and ensure default font
+            // if no token then user logged out and ensure default font classes
             if (!newToken) {
-                document.body.classList.remove("dyslexic-font");
+                applyFontClass(false);
+                applyFontSizeClass(false);
                 return;
             }
 
@@ -42,26 +54,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 });
 
                 if (!res.ok) {
-                    // If user could not be loaded, remove dyslexic font
-                    document.body.classList.remove("dyslexic-font");
+                    // If user could not be loaded, reset font classes
+                    applyFontClass(false);
+                    applyFontSizeClass(false);
                     return;
                 }
 
                 const user = await res.json();
 
                 // Apply font based on user preference
-                if (user.fontType === true) {
-                    document.body.classList.add("dyslexic-font");
-                } else {
-                    document.body.classList.remove("dyslexic-font");
-                }
+                applyFontClass(user.fontType === true);
+                applyFontSizeClass(user.fontSize === true);
             } catch (error) {
                 console.error("Error loading user font preference:", error);
-                document.body.classList.remove("dyslexic-font");
+                applyFontClass(false);
+                applyFontSizeClass(false);
             }
         }
 
-        // Run only once on app load
         void initAuth();
     }, []);
 

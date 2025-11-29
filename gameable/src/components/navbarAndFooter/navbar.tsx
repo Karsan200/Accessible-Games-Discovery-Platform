@@ -1,8 +1,8 @@
 import './navbar.css'
-import {NavLink, useNavigate} from 'react-router-dom';
-import {useAuth} from "../../data/AuthContext.tsx";
-import {settings} from "../../AppSettings.ts";
-import {useEffect, useState} from "react";
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from "../../data/AuthContext.tsx";
+import { settings } from "../../AppSettings.ts";
+import { useEffect, useState } from "react";
 import { getUserIdFromToken } from "../../data/TokenUtility";
 import { ApiDataHelper } from "../../data/ApiDataHelper";
 
@@ -10,6 +10,7 @@ export default function Navbar() {
     const { accessToken, setAccessToken } = useAuth();
     const navigate = useNavigate();
     const [username, setUsername] = useState<string | null>(null);
+    const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
     async function handleLogout() {
         try {
@@ -31,29 +32,44 @@ export default function Navbar() {
         const userId = getUserIdFromToken(accessToken);
         if (!userId) return;
 
-        async function fetchUsername() {
+        async function fetchUserData() {
             try {
                 const res = await ApiDataHelper(`/user/${userId}`, { method: "GET", headers: {} }, { accessToken, setAccessToken });
                 if (!res.ok) return;
                 const data = await res.json();
                 setUsername(data.username);
+                setProfilePicture(data.profilePicture || null);
             } catch (err) {
-                console.error("Failed to fetch username:", err);
+                console.error("Failed to fetch user data:", err);
             }
         }
 
-        void fetchUsername();
+        void fetchUserData();
     }, [accessToken, setAccessToken]);
 
     return (
         <nav className="nav">
             <div className="nav-header">
                 <NavLink to="/" className="title">Game Able</NavLink>
-                <button className="auth-section auth-button" aria-label="Logout" onClick={handleLogout}>
-                    <span className="user-greeting">Hello{username ? `, ${username}` : ', User'}</span>
-                    <span className="mask-icon-logout"/>
-                </button>
+
+                <div className="auth-section">
+                    {username && profilePicture && (
+                        <button
+                            className="profile-pic-btn"
+                            onClick={() => navigate('/dashboard')}
+                            aria-label="Go to dashboard"
+                        >
+                            <img src={settings.apiBaseUrl + profilePicture} alt="Profile" />
+                        </button>
+                    )}
+
+                    <button className="auth-button" aria-label="Logout" onClick={handleLogout}>
+                        <span className="user-greeting">Hello{username ? `, ${username}` : ', User'}</span>
+                        <span className="mask-icon-logout"/>
+                    </button>
+                </div>
             </div>
+
             <form className="search-container">
                 <input
                     type="text"
@@ -63,6 +79,7 @@ export default function Navbar() {
                 />
                 <button type="submit" className="search-btn mask-icon-search" aria-label="Search"/>
             </form>
+
             <ul>
                 <li><NavLink to="/" className="home">Home</NavLink></li>
                 <li><NavLink to="/wishlist" className="wishlist">Wishlist</NavLink></li>

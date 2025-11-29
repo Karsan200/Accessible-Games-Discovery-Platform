@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Carousel } from "../game/Carousel"; // keep carousel for reviews
 import { GameStars } from "../game/GameStars"; // for star ratings
+import { settings} from "../../AppSettings.ts";
 import "./Profile.css";
 
 interface PublicUser {
@@ -35,11 +36,13 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    const apiBase = settings.apiBaseUrl;
+
     // Fetch public profile by username
     useEffect(() => {
         if (!username) return;
 
-        fetch(`http://localhost:5000/user/username/${username}`)
+        fetch(`${apiBase}/user/username/${username}`)
             .then(res => res.json())
             .then(data => {
                 if (data.error) {
@@ -50,27 +53,27 @@ export default function Profile() {
             })
             .catch(() => setError("Failed to load profile"))
             .finally(() => setLoading(false));
-    }, [username]);
+    }, [username, apiBase]);
 
     // Fetch user's reviews when userData is available
     useEffect(() => {
         if (!userData?._id) return;
 
-        fetch(`http://localhost:5000/api/reviews/user/${userData._id}`)
+        fetch(`${apiBase}/api/reviews/user/${userData._id}`)
             .then(res => res.json())
             .then(revData => setReviews(revData.reviews || []))
             .catch(() => console.error("Failed to fetch reviews"));
-    }, [userData?._id]);
+    }, [userData?._id, apiBase]);
 
     // Fetch user's favorite games when userData is available
     useEffect(() => {
         if (!userData?._id) return;
 
-        fetch(`http://localhost:5000/user/${userData._id}/favorites`)
+        fetch(`${apiBase}/user/${userData._id}/favorites`)
             .then(res => res.json())
             .then(favData => setFavoriteGames(favData.favorite_games || []))
             .catch(() => console.error("Failed to fetch favorite games"));
-    }, [userData?._id]);
+    }, [userData?._id, apiBase]);
 
     if (loading) return <h2>Loading...</h2>;
     if (error) return <h2>{error}</h2>;
@@ -94,7 +97,7 @@ export default function Profile() {
                 <h1>{userData.username}</h1>
                 {userData.profilePicture ? (
                     <img
-                        src={`http://localhost:5000${userData.profilePicture}`}
+                        src={`${apiBase}${userData.profilePicture}`}
                         alt={`${userData.username}'s profile`}
                         style={{ width: "150px", height: "150px", borderRadius: "50%" }}
                     />

@@ -1,0 +1,92 @@
+/* ----- Hero Section Container ----- */
+.hero-header {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    background: #ffffff;
+    margin-top: -128px;
+}
+
+/* ----- Carousel Arrow Buttons ----- */
+.hero-arrow {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid #000;
+    background-color: #151515;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+}
+
+/* ----- Slide Background Image ----- */
+.hero-slide-image {
+    width: 100%;
+    height: 345px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* ----- Content Layout Below Carousel ----- */
+.hero-content-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1280px;
+    width: 100%;
+    margin-top: 32px;
+    padding: 0 16px;
+    gap: 40px;
+}
+
+/* ----- Left Column ----- */
+.hero-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+/* Title */
+.hero-title {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 64px;
+    line-height: 120%;
+    color: #000000;
+    margin: 0;
+    text-align: left;
+}
+
+/* Buttons Row */
+.hero-button-row {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+/* ----- Right Column ----- */
+.hero-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+/* Description */
+.hero-description {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #000000;
+    margin: 0;
+    text-align: left;
+}

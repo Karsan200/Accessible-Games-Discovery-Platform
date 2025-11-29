@@ -1,6 +1,8 @@
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
+import "./VoiceNav.css"
+import { Button } from "react-bootstrap";
 
 
 // Check the thing that is going to be clicked is on screen
@@ -496,48 +498,29 @@ export default function FloatingVoiceNavigation() {
     }
 
     return (
-        <div style={styles.box}>
-            <div style={styles.container}>
+        <div className="vn-box">
+            <div className="vn-box-inner">
                 <p>Microphone: {listening ? "ON" : "OFF"}</p>
 
-                <button onClick={() => SpeechRecognition.startListening({ continuous: true })}>
-                    Start
-                </button>
-
-                <button onClick={SpeechRecognition.stopListening}>Stop</button>
-
-                <button onClick={resetTranscript}>Reset</button>
-                <div style={styles.transcriptBox}>
+                <div className="vn-actions-row">
+                    <Button
+                        variant={listening ? "danger" : "success"}
+                        onClick={() => {
+                            if (listening) {
+                                SpeechRecognition.stopListening();
+                            } else {
+                                SpeechRecognition.startListening({ continuous: true });
+                            }
+                        }}
+                    >
+                        {listening ? "Stop" : "Start"}
+                    </Button>
+                    <Button onClick={resetTranscript}>Reset</Button>
+                </div>
+                <div className="vn-transcript">
                     <p>{transcript}</p>
                 </div>
             </div>
         </div>
     );
 }
-
-const styles: { [key: string]: React.CSSProperties } = {
-    box: {
-        position: "fixed",
-        bottom: "20px",
-        right: "20px",
-        zIndex: 9999,
-        padding: "12px",
-        borderRadius: "10px",
-        border: "2px solid #007bff",
-        background: "0 rgba(255, 255, 255, 0.87)",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
-    },
-    container: {
-        bottom: "20px",
-        right: "20px",
-        zIndex: 9999,
-    },
-    transcriptBox: {
-        marginTop: "8px",
-        padding: "10px",
-        background: "white",
-        borderRadius: "8px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-        maxWidth: "200px",
-    }
-};

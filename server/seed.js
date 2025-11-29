@@ -46,6 +46,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1995-04-12"),
                 fontSize: true,
                 fontType: false,
+                autoCaptions: true,
+                voiceNavigation: true,
+                navigationLocation: true,
                 salt: salt1,
             },
             {
@@ -57,6 +60,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1990-09-01"),
                 fontSize: false,
                 fontType: true,
+                autoCaptions: true,
+                voiceNavigation: false,
+                navigationLocation: false,
                 salt: salt1,
             },
             {
@@ -68,6 +74,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1985-02-20"),
                 fontSize: true,
                 fontType: true,
+                autoCaptions: true,
+                voiceNavigation: true,
+                navigationLocation: true,
                 salt: salt1,
             },
             {
@@ -79,6 +88,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1995-05-27"),
                 fontSize: true,
                 fontType: true,
+                autoCaptions: true,
+                voiceNavigation: true,
+                navigationLocation: true,
                 salt: salt1,
             },
             {
@@ -90,6 +102,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1995-05-27"),
                 fontSize: true,
                 fontType: true,
+                autoCaptions: true,
+                voiceNavigation: true,
+                navigationLocation: true,
                 salt: salt1,
             },
             {
@@ -101,6 +116,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1995-05-27"),
                 fontSize: true,
                 fontType: true,
+                autoCaptions: true,
+                voiceNavigation: true,
+                navigationLocation: true,
                 salt: salt1,
             },
             {
@@ -112,6 +130,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1995-05-27"),
                 fontSize: true,
                 fontType: true,
+                autoCaptions: true,
+                voiceNavigation: true,
+                navigationLocation: true,
                 salt: salt1,
             },
             {
@@ -123,6 +144,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1995-05-27"),
                 fontSize: true,
                 fontType: true,
+                autoCaptions: true,
+                voiceNavigation: true,
+                navigationLocation: true,
                 salt: salt1,
             },
             {
@@ -134,6 +158,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1995-05-27"),
                 fontSize: true,
                 fontType: true,
+                autoCaptions: true,
+                voiceNavigation: true,
+                navigationLocation: true,
                 salt: salt1,
             },
             {
@@ -145,6 +172,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1995-05-27"),
                 fontSize: true,
                 fontType: true,
+                autoCaptions: true,
+                voiceNavigation: true,
+                navigationLocation: true,
                 salt: salt1,
             },
             {
@@ -156,6 +186,9 @@ async function seedDatabase() {
                 date_of_birth: new Date("1995-05-27"),
                 fontSize: true,
                 fontType: true,
+                autoCaptions: true,
+                voiceNavigation: true,
+                navigationLocation: true,
                 salt: salt1,
             },
         ]);

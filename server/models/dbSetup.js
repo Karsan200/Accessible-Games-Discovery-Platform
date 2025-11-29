@@ -20,6 +20,12 @@ const userSchema = new mongoose.Schema({
     date_of_birth: Date,
     fontSize: { type: Boolean, default: false },
     fontType: { type: Boolean, default: false },
+    autoCaptions: { type: Boolean, default: true },
+    voiceNavigation: { type: Boolean, default: true },
+    navigationLocation: { type: Boolean, default: false },
+
+
+
 });
 
 // Sessions collection

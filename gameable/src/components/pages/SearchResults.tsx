@@ -97,7 +97,6 @@ export const SearchResults: React.FC = () => {
 
             const baseUrl = settings.apiBaseUrl.replace(/\/$/, "");
             const url = `${baseUrl}/api/search?${qs.toString()}`;
-            console.log("Fetching search URL:", url, { query, genreList, accessibilityList, sortParam });
 
             const makeRequest = (token?: string) => {
                 const headers: Record<string, string> = { Accept: "application/json" };
@@ -149,9 +148,6 @@ export const SearchResults: React.FC = () => {
                 }
 
                 const data: SearchResult[] = await res.json();
-                // print each game so you can manually inspect DB fields
-                data.forEach((g, i) => console.log(`Loaded game [${i}]:`, g));
-                console.log("Search response length:", data.length);
                 setResults(data);
             } catch (e: unknown) {
                 const err = e as Error;
@@ -192,7 +188,6 @@ export const SearchResults: React.FC = () => {
 
     // called by FilterBar -> updates URL which triggers fetch via useEffect
     function handleApplyFilters(filters: { genre?: string[]; accessibility?: string[]; sort?: string }) {
-        console.log("handleApplyFilters called:", filters);
         const target = buildSearchUrl({
             q: query,
             genre: filters.genre ?? null,
@@ -245,7 +240,7 @@ export const SearchResults: React.FC = () => {
                                 <GameCard
                                     image={imageUrl}
                                     name={r.title}
-                                    description={r.description ?? ""}
+                                    description={r.tagline ?? ""}
                                     tags={r.tags}
                                     onClick={() => navigate(`/games/${r._id}`)}
                                 />

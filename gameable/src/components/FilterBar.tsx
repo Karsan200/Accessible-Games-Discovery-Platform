@@ -143,7 +143,6 @@ export default function FilterBar({ onApply, initial }: FilterBarProps) {
     }
 
     function apply() {
-        console.log("FilterBar apply:", { genre: selectedGenres, accessibility: selectedAccessibility, sort });
         onApply({ genre: selectedGenres, accessibility: selectedAccessibility, sort });
         setOpenGenres(false);
         setOpenAccessibility(false);

@@ -13,7 +13,6 @@ router.get("/options", async (req, res) => {
             Genre.find({}, { name: 1 }).sort({ name: 1 }).lean(),
             AccessibilityGroup.find({}, { name: 1 }).sort({ name: 1 }).lean(),
         ]);
-        console.log("Found genres:", genres.length, "accessibility groups:", accessibility.length);
         res.json({
             genres: genres.map((g) => g.name),
             accessibility: accessibility.map((a) => a.name),
@@ -33,9 +32,6 @@ router.get("/", async (req, res) => {
         const genreParam = req.query.genre;
         const accessibilityParam = req.query.accessibility;
         const sort = req.query.sort || "relevance";
-
-        console.log("GET /api/search");
-        console.log("Received query params:", req.query);
 
         // === STEP 1: Build base match filter for text search ===
         const match = {};
@@ -60,14 +56,13 @@ router.get("/", async (req, res) => {
             genreNames = String(genreParam).split(",").map(g => g.trim()).filter(Boolean);
         }
 
-        // Convert genre names to genre IDs and filter games
         if (genreNames.length > 0) {
             const genres = await Genre.find({ name: { $in: genreNames } }, { _id: 1 }).lean();
             const genreIds = genres.map(g => g._id);
 
             if (genreIds.length > 0) {
-                // Match games where genre_ids contains at least one of the selected genres
-                match.genre_ids = { $in: genreIds };
+                // Match games where genre_ids contains all selected genres
+                match.genre_ids = { $all: genreIds };
             } else {
                 // No matching genres found - return empty result set
                 match._id = { $in: [] };
@@ -86,7 +81,6 @@ router.get("/", async (req, res) => {
         // Games must have ALL selected accessibility features (AND logic)
         let filteredGameIds = null;
         if (accessibilityNames.length > 0) {
-            console.log("  Looking up accessibility groups:", accessibilityNames);
 
             // Convert accessibility names to group IDs
             const accessibilityGroups = await AccessibilityGroup.find({
@@ -94,8 +88,6 @@ router.get("/", async (req, res) => {
             }).select("_id");
 
             const groupIds = accessibilityGroups.map((g) => g._id);
-
-            console.log("  Found accessibility group IDs:", groupIds);
 
             if (groupIds.length > 0) {
                 // Find all tags that match any of the selected accessibility groups
@@ -119,8 +111,6 @@ router.get("/", async (req, res) => {
                     (gameId) => gameAccessibilityCounts[gameId].size >= requiredCount
                 );
 
-                console.log("  Found game IDs with ALL selected accessibility features:", filteredGameIds);
-
                 // Add game ID filter to match query
                 if (filteredGameIds.length > 0) {
                     // Convert string IDs to ObjectId for MongoDB
@@ -135,15 +125,6 @@ router.get("/", async (req, res) => {
                 match._id = { $in: [] };
             }
         }
-
-
-
-        console.log("Running search pipeline");
-        console.log("  q:", q);
-        console.log("  genres:", genreNames);
-        console.log("  accessibility:", accessibilityNames);
-        console.log("  sort:", sort);
-        console.log("Match filter before aggregation:", JSON.stringify(match, null, 2));
 
         // Build aggregation pipeline
         const pipeline = [
@@ -238,8 +219,6 @@ router.get("/", async (req, res) => {
 
         // Execute aggregation
         const games = await Game.aggregate(pipeline).allowDiskUse(true);
-
-        console.log("Search returned:", games.length, "games");
 
         res.json(games);
 

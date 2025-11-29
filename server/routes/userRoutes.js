@@ -4,7 +4,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import cors from "cors";
-import { User, Game } from "../models/dbSetup.js";
+import { User, Game, GameMedia } from "../models/dbSetup.js";
 
 const router = express.Router();
 
@@ -73,12 +73,28 @@ router.put("/:id", async (req, res) => {
 
 // Favourite game routes
 
-// GET favorite games
+// GET favorite games with images
 router.get("/:id/favorites", async (req, res) => {
     try {
         const user = await User.findById(req.params.id).populate("favorite_games", "title");
         if (!user) return res.status(404).json({ error: "User not found" });
-        res.json({ favorite_games: user.favorite_games });
+
+        // Fetch cover/icon for each favorite game
+        const favoriteGamesWithImages = await Promise.all(
+            user.favorite_games.map(async (game) => {
+                const media = await GameMedia.findOne({
+                    game_id: game._id,
+                    type: { $in: ["cover", "icon"] }
+                }).lean();
+                return {
+                    _id: game._id,
+                    title: game.title,
+                    image: media ? media.url : null,
+                };
+            })
+        );
+
+        res.json({ favorite_games: favoriteGamesWithImages });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

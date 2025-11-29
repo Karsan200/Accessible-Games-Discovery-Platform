@@ -26,6 +26,7 @@ interface Review {
 interface GameOption {
     _id: string;
     title: string;
+    image?: string[];
 }
 
 export default function Profile() {
@@ -116,7 +117,20 @@ export default function Profile() {
                                 className="favorite-game-card p-2 border rounded text-center"
                                 style={{ minWidth: "120px", flex: "1 0 auto" }}
                             >
-                                {game.title}
+                                {game.image && (
+                                    <img
+                                        src={`${game.image}`}
+                                        alt={game.title}
+                                        style={{
+                                            width: "100px",
+                                            height: "100px",
+                                            objectFit: "cover",
+                                            borderRadius: "8px",
+                                            marginBottom: "0.5rem",
+                                        }}
+                                    />
+                                )}
+                                <div>{game.title}</div>
                             </div>
                         ))}
                     </div>

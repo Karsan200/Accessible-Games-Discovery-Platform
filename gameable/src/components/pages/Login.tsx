@@ -73,7 +73,7 @@ export function Login() {
                     </Form.Control.Feedback>
                 </Form.Floating>
                 <Button variant="outline-primary" className="w-100 py-2" onClick={() => { void handleSubmit() }}>
-                    Login
+                    Submit
                 </Button>
             </Form>
         </Container></div>

@@ -1,5 +1,6 @@
 import express from "express";
 import { Game, GameMedia, Review, Tag, Genre } from "../models/dbSetup.js";
+import { toEmbedUrl } from "../utils/youtube.js";
 
 const router = express.Router();
 
@@ -27,6 +28,51 @@ router.get("/:id/media", async (req, res) => {
         res.json(media);
     } catch (err) {
         console.error("Media fetch error:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/* Add media (trailer, screenshot, cover, etc.) */
+router.post("/:id/media", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { type, url, description } = req.body;
+
+        if (!type || !url) {
+            return res.status(400).json({ error: "type and url are required" });
+        }
+
+        const allowedTypes = ["trailer", "screenshot", "cover", "concept_art", "other", "icon"];
+        if (!allowedTypes.includes(type)) {
+            return res.status(400).json({ error: "Invalid media type" });
+        }
+
+        // Validate game exists
+        const game = await Game.findById(id);
+        if (!game) {
+            return res.status(404).json({ error: "Game not found" });
+        }
+
+        // Normalize trailer URLs
+        let saveUrl = url;
+        if (type === "trailer") {
+            const embed = toEmbedUrl(url);
+            if (!embed) {
+                return res.status(400).json({ error: "Invalid YouTube URL" });
+            }
+            saveUrl = embed;
+        }
+
+        const media = await GameMedia.create({
+            game_id: id,
+            type,
+            url: saveUrl,
+            description: description || "",
+        });
+
+        res.status(201).json(media);
+    } catch (err) {
+        console.error("Error creating media:", err);
         res.status(500).json({ error: err.message });
     }
 });

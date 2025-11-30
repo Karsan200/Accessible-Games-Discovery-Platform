@@ -1,0 +1,45 @@
+/* Main Card Container */
+.top-seller-card {
+    cursor: pointer;
+    padding: 16px;
+}
+
+/* Row Layout */
+.top-seller-row {
+    flex-wrap: nowrap;
+}
+
+/* Game Image */
+.top-seller-image {
+    width: 100%;
+    max-width: 120px;
+    height: 120px;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+/* Left Text Column */
+.top-seller-info {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+/* Title + Tagline formatting */
+.top-seller-title,
+.top-seller-tagline {
+    word-break: break-word;
+}
+
+/* Star Rating */
+.top-seller-stars {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/*Dyslexic font setting*/
+body.dyslexic-font .top-seller-title,
+body.dyslexic-font .top-seller-tagline,
+body.dyslexic-font .top-seller-info,
+body.dyslexic-font .top-seller-stars {
+    font-family: "OpenDyslexic", Arial, sans-serif;
+}

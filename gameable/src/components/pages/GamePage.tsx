@@ -8,7 +8,7 @@ import { GameTags } from "../game/GameTags";
 import { GameStars } from "../game/GameStars";
 import { Carousel } from "../game/Carousel";
 import ReviewModel from "../../models/forms/ReviewModel";
-import { settings} from "../../AppSettings.ts";
+import { settings } from "../../AppSettings.ts";
 import "./GamePage.css";
 
 const DEFAULT_PROFILE_IMG = `${settings.apiBaseUrl}/images/profilepicTemp.png`;
@@ -66,6 +66,7 @@ export function GamePage() {
     const [loading, setLoading] = useState(true);
     const [reviewModalOpen, setReviewModalOpen] = useState(false);
     const [accessToken, setAccessToken] = useState<string | null>(null);
+    const [autoCaptions, setAutoCaptions] = useState(true); // user auto captions preference
 
     // Fetch game
     useEffect(() => {
@@ -84,11 +85,29 @@ export function GamePage() {
         if (id) fetchGame();
     }, [id]);
 
-    // Refresh token
+    // Refresh token and load user preferences
     useEffect(() => {
         async function initAuth() {
             const token = await Authentication.refreshToken();
             setAccessToken(token);
+
+            if (!token) return;
+
+            try {
+                const res = await fetch(`${settings.apiBaseUrl}/api/users/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    setAutoCaptions(Boolean(data.autoCaptions));
+                }
+            } catch (err) {
+                console.error("Failed to load user preferences:", err);
+            }
         }
 
         void initAuth();
@@ -114,9 +133,9 @@ export function GamePage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ userId, gameId })
+                body: JSON.stringify({ userId, gameId }),
             });
 
             if (!res.ok) {
@@ -127,15 +146,13 @@ export function GamePage() {
             }
 
             const data = await res.json();
-            const message = data + " added to wishlist!";
-            alert(message);
+            alert(`${data} added to wishlist!`);
         } catch (err) {
             console.error(err);
             alert("Could not add to wishlist.");
         }
     }
 
-    // Open review modal only if user hasn't already reviewed
     async function handleOpenReview() {
         if (!game?._id) return;
 
@@ -152,7 +169,9 @@ export function GamePage() {
                 return;
             }
 
-            const hasReviewed = (game.reviews ?? []).some((r) => r.user?._id === userId);
+            const hasReviewed = (game.reviews ?? []).some(
+                (r) => r.user?._id === userId
+            );
             if (hasReviewed) {
                 alert("You have already submitted a review for this game.");
                 return;
@@ -166,7 +185,9 @@ export function GamePage() {
     }
 
     const currentUserId = accessToken ? getUserIdFromToken(accessToken) : null;
-    const userAlreadyReviewed = currentUserId ? (game?.reviews ?? []).some(r => r.user?._id === currentUserId) : false;
+    const userAlreadyReviewed = currentUserId
+        ? (game?.reviews ?? []).some((r) => r.user?._id === currentUserId)
+        : false;
     const isLoggedIn = !!currentUserId;
 
     async function handleReviewSubmit(rating: number, body: string) {
@@ -191,7 +212,7 @@ export function GamePage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(newReview),
             });
@@ -225,17 +246,23 @@ export function GamePage() {
 
     // Carousel media items: exclude type "icon"
     const mediaItems: ReactElement[] = (game.media ?? [])
-        .filter((m) => m.type !== "icon") // exclude icons
+        .filter((m) => m.type !== "icon")
         .map((m, i) => {
             const src = m.url.startsWith("http") ? m.url : `http://localhost:5000${m.url}`;
 
             if (m.type === "trailer") {
-                //enable captions as default
-                const srcWithCaptions = src.includes("?") ? `${src}&cc_load_policy=1` : `${src}?cc_load_policy=1`;
+                // Respect autoCaptions setting
+                const finalSrc =
+                    !autoCaptions
+                        ? src // captions disabled
+                        : src.includes("?")
+                            ? `${src}&cc_load_policy=1`
+                            : `${src}?cc_load_policy=1`; // captions enabled
+
                 return (
                     <iframe
                         key={i}
-                        src={srcWithCaptions}
+                        src={finalSrc}
                         title="Game Trailer"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
@@ -267,12 +294,11 @@ export function GamePage() {
                 </h4>
                 <p className="mb-2">{r.body}</p>
                 <div className="review-meta d-flex align-items-center">
-                    <Link to={`/profile/${username}`} className="d-flex align-items-center text-decoration-none">
-                        <img
-                            src={profilePicUrl}
-                            alt={username}
-                            className="review-avatar me-2"
-                        />
+                    <Link
+                        to={`/profile/${username}`}
+                        className="d-flex align-items-center text-decoration-none"
+                    >
+                        <img src={profilePicUrl} alt={username} className="review-avatar me-2" />
                         <strong>{username}</strong>
                     </Link>
                 </div>
@@ -319,7 +345,10 @@ export function GamePage() {
 
                     <p className="game-description">{game.description}</p>
 
-                    <button className="btn btn-primary game-fav-btn" onClick={() => addToWishlist(game._id)}>
+                    <button
+                        className="btn btn-primary game-fav-btn"
+                        onClick={() => addToWishlist(game._id)}
+                    >
                         Add to Wishlist
                     </button>
 
@@ -341,10 +370,20 @@ export function GamePage() {
                     className="btn btn-primary game-fav-btn reviews-add-btn"
                     onClick={handleOpenReview}
                     disabled={!isLoggedIn || userAlreadyReviewed}
-                    title={!isLoggedIn ? "Log in to add a review" : userAlreadyReviewed ? "You have already reviewed" : "Add a review"}
+                    title={
+                        !isLoggedIn
+                            ? "Log in to add a review"
+                            : userAlreadyReviewed
+                                ? "You have already reviewed"
+                                : "Add a review"
+                    }
                     aria-disabled={!isLoggedIn || userAlreadyReviewed}
                 >
-                    {!isLoggedIn ? "Log in to review" : userAlreadyReviewed ? "Review submitted" : "Add a Review"}
+                    {!isLoggedIn
+                        ? "Log in to review"
+                        : userAlreadyReviewed
+                            ? "Review submitted"
+                            : "Add a Review"}
                 </button>
             </div>
 

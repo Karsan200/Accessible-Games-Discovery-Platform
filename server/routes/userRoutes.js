@@ -96,4 +96,29 @@ router.patch("/me/voiceNavLocation", async (req, res) => {
     }
 });
 
+// Update auto captions
+router.patch("/me/autoCaptions", async (req, res) => {
+    console.log("PATCH /me/autoCaptions body:", req.body);
+    try {
+        if (!req.currentUser) return res.status(401).json({ error: "Not logged in" });
+
+        const { autoCaptions } = req.body;
+        console.log("autoCaptions type:", typeof autoCaptions, "value:", autoCaptions);
+
+        if (typeof autoCaptions !== "boolean")
+            return res.status(400).json({ error: "Invalid autoCaptions value" });
+
+        const updated = await User.findByIdAndUpdate(
+            req.currentUser._id,
+            { autoCaptions },
+            { new: true }
+        ).lean();
+
+        res.json(updated);
+    } catch (err) {
+        console.error("PATCH /users/me/autoCaptions error:", err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 export default router;

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Authentication } from "../../data/Authentication";
 import { settings } from "../../AppSettings";
 import "./Settings.css";
+import {Button} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
 
 type UserPayload = {
     _id?: string;
@@ -20,6 +22,7 @@ export default function Settings() {
     const [token, setToken] = useState<string | null>(null);
     const [voiceNavEnabled, setVoiceNavEnabled] = useState(false);
     const [voiceNavLeft, setVoiceNavLeft] = useState(false);
+    const navigate = useNavigate();
 
     const apiBase = settings?.apiBaseUrl ?? "http://localhost:5000";
 
@@ -315,9 +318,15 @@ export default function Settings() {
             </div>
 
             {/*/!* Voice Navigation Information *!/*/}
-            {/*<div className="setting-row">*/}
+            <div className="setting-row">
+                <p> For More Information on Voice Commands Click Here:</p>
+                <div className="vn-actions">
+                    <Button onClick={() => {navigate("/voice-commands")}} variant="primary">
+                        More Info
+                    </Button>
+                </div>
 
-            {/*</div>*/}
+            </div>
         </div>
     );
 }

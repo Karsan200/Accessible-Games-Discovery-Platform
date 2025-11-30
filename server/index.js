@@ -11,11 +11,11 @@ import searchRoutes from "./routes/searchRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 
-
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
 
 import wishlistRoutes from "./routes/wishlistRoutes.js";
+import filterRoutes from "./routes/filterRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -57,7 +57,9 @@ app.use(
             "/games", "/games/:id", // Public game list and details,
             "api/reviews", "/voice-nav", "/voice-commands",
             "api/reviews",
-            /^\/uploads\/.*/, /^\/user\/username\/.*/, /^\/user\/.*\/favorites$/
+            /^\/uploads\/.*/, /^\/user\/username\/.*/, /^\/user\/.*\/favorites$/,
+            { url: "/api/search", methods: ["GET"] },            // public search
+            { url: "/api/search/options", methods: ["GET"] },    // public options
         ]
     })
 );
@@ -88,7 +90,7 @@ app.use("/api/home", homeRoutes);
 app.use("/auth", authenticationRoutes);
 app.use("/wishlist", wishlistRoutes);
 app.use("/api/reviews", reviewRoute);
-app.use("/api/search", searchRoutes);
 app.use("/user", profileRoutes);
+app.use("/api/search", filterRoutes);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

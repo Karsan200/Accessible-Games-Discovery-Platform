@@ -3,9 +3,17 @@ import type { ReactNode } from "react";
 import { Authentication } from "./Authentication.ts";
 import { settings } from "../AppSettings";
 
+type Prefs = {
+    voiceNavEnabled: boolean;
+    voiceNavLeft: boolean;
+};
+
 export type AuthContextType = {
     accessToken: string | null;
     setAccessToken: (token: string | null) => void;
+
+    prefs: Prefs;
+    setPrefs: React.Dispatch<React.SetStateAction<Prefs>>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -16,6 +24,10 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [accessToken, setAccessToken] = useState<string | null>(null);
+    const [prefs, setPrefs] = useState<Prefs>({
+        voiceNavEnabled: true,
+        voiceNavLeft: false,
+    });
 
     // Load token on app start and apply dyslexic font if enabled
     useEffect(() => {
@@ -49,6 +61,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
                 const user = await res.json();
 
+                const updatedPrefs: Prefs = {
+                    voiceNavEnabled: user.voiceNavigation,
+                    voiceNavLeft: user.navigationLocation,
+
+                };
+
+                setPrefs(updatedPrefs);
+
                 // Apply font based on user preference
                 if (user.fontType === true) {
                     document.body.classList.add("dyslexic-font");
@@ -56,7 +76,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     document.body.classList.remove("dyslexic-font");
                 }
             } catch (error) {
-                console.error("Error loading user font preference:", error);
+                console.error("Error loading user preferences:", error);
                 document.body.classList.remove("dyslexic-font");
             }
         }
@@ -66,7 +86,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ accessToken, setAccessToken }}>
+        <AuthContext.Provider value={{ accessToken, setAccessToken, prefs, setPrefs }}>
             {children}
         </AuthContext.Provider>
     );

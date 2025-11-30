@@ -9,8 +9,8 @@ type UserPayload = {
     email?: string;
     fontType?: boolean;
     fontSize?: boolean;
-    voiceNavEnabled?: boolean;
-    voiceNavLeft?: boolean;
+    voiceNavigation?: boolean;
+    navigationLocation?: boolean;
 };
 
 export default function Settings() {
@@ -105,13 +105,13 @@ export default function Settings() {
                 setFontSize(Boolean(data.fontSize));
                 applyFontSizeClass(Boolean(data.fontSize));
 
-                setVoiceNavEnabled(Boolean(data.voiceNavEnabled));
-                applyVoiceNavToggle(Boolean(data.voiceNavEnabled));
-                console.log("Voice Nav Enabled", (Boolean(data.voiceNavEnabled)));
+                setVoiceNavEnabled(Boolean(data.voiceNavigation));
+                applyVoiceNavToggle(Boolean(data.voiceNavigation));
+                //console.log("Voice Nav Enabled", (Boolean(data.voiceNavigation)));
 
-                setVoiceNavLeft(Boolean(data.voiceNavLeft));
-                applyVoiceNavLocation(Boolean(data.voiceNavLeft));
-                console.log("Voice Nav Location", (Boolean(data.voiceNavLeft)));
+                setVoiceNavLeft(Boolean(data.navigationLocation));
+                applyVoiceNavLocation(Boolean(data.navigationLocation));
+                //console.log("Voice Nav Location", (Boolean(data.navigationLocation)));
 
             } catch (err) {
                 console.error("Settings load error:", err);
@@ -206,7 +206,7 @@ export default function Settings() {
                 body: JSON.stringify({ voiceNavigation: next }),
             });
 
-            console.log("Voice Nav", res.json())
+            //console.log("Voice Nav", res.json())
 
             if (!res.ok) throw new Error(`Failed to save voiceNav preference: ${res.status}`);
         } catch (err) {

@@ -1,6 +1,7 @@
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {useAuth} from "../../data/AuthContext.tsx";
 import "./VoiceNav.css"
 import { Button } from "react-bootstrap";
 
@@ -495,8 +496,18 @@ export default function FloatingVoiceNavigation() {
         return <p>Browser Support Speech Recognition</p>
     }
 
+    const { prefs } = useAuth();
+    //console.log(prefs.voiceNavEnabled)
+    //console.log(prefs.voiceNavLeft)
+
+    const className = [
+        "vn-box",
+        prefs.voiceNavEnabled ? "vn-hidden" : "vn-visible",
+        prefs.voiceNavLeft ? "vn-left" : "vn-right",
+    ].join(" ");
+
     return (
-        <div className="vn-box">
+        <div className={className}>
             <div className="vn-box-inner">
                 <p>Microphone: {listening ? "ON" : "OFF"}</p>
 

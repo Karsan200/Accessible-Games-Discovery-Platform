@@ -79,12 +79,17 @@ export function Login() {
                 <Button variant="outline-primary" className="w-100 py-2 mb-3" onClick={() => { void handleSubmit() }}>
                     Submit
                 </Button>
-                <small className="text-muted d-block mb-2">
-                    Don’t have an account?
-                </small>
-                <Button variant="outline-primary" className="w-100 py-2 mb-3" onClick={() => navigate("/register")}>
-                    Register
-                </Button>
+                <div className="text-center">
+                  <span
+                      onClick={() => navigate("/register")}
+                      style={{
+                          cursor: "pointer",
+                          textDecoration: "underline",
+                      }}
+                  >
+                    Don’t have an account?, Register
+                  </span>
+                </div>
             </Form>
         </Container></div>
     )

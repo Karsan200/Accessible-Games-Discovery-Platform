@@ -5,6 +5,7 @@ import { LoginForm } from "../../logic/LoginForm.tsx";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useAuth } from "../../data/AuthContext.tsx";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
     // Email States
@@ -18,6 +19,9 @@ export function Login() {
     // Other States
     const banner = useState(<></>);
     const auth = useAuth();
+
+    // Calling UseNavigate for redirecting to the register page
+    const navigate = useNavigate();
 
     async function handleSubmit() {
         await LoginForm({
@@ -72,8 +76,14 @@ export function Login() {
                         {passwordMessage[0]}
                     </Form.Control.Feedback>
                 </Form.Floating>
-                <Button variant="outline-primary" className="w-100 py-2" onClick={() => { void handleSubmit() }}>
+                <Button variant="outline-primary" className="w-100 py-2 mb-3" onClick={() => { void handleSubmit() }}>
                     Submit
+                </Button>
+                <small className="text-muted d-block mb-2">
+                    Don’t have an account?
+                </small>
+                <Button variant="outline-primary" className="w-100 py-2 mb-3" onClick={() => navigate("/register")}>
+                    Register
                 </Button>
             </Form>
         </Container></div>

@@ -54,5 +54,46 @@ router.patch("/me/fontSize", async (req, res) => {
     }
 });
 
+// Update nav bar enabled (boolean)
+router.patch("/me/voiceNav", async (req, res) => {
+    console.log("PATCH /me/voiceNav body:", req.body);
+    try {
+        if (!req.currentUser) return res.status(401).json({ error: "Not logged in" });
+        const { voiceNavigation } = req.body;
+        console.log("voiceNavigation type:", typeof voiceNavigation, "value:", voiceNavigation);
+        if (typeof voiceNavigation !== "boolean")
+            return res.status(400).json({ error: "Invalid voiceNavigation value" });
+        const updated = await User.findByIdAndUpdate(
+            req.currentUser._id,
+            { voiceNavigation },
+            { new: true }
+        ).lean();
+        res.json(updated);
+    } catch (err) {
+        console.error("PATCH /users/me/voiceNav error:", err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+// Update nav bar location (boolean)
+router.patch("/me/voiceNavLocation", async (req, res) => {
+    console.log("PATCH /me/voiceNavLocation body:", req.body);
+    try {
+        if (!req.currentUser) return res.status(401).json({ error: "Not logged in" });
+        const { navigationLocation } = req.body;
+        console.log("navigationLocation type:", typeof navigationLocation, "value:", navigationLocation);
+        if (typeof navigationLocation !== "boolean")
+            return res.status(400).json({ error: "Invalid navigationLocation value" });
+        const updated = await User.findByIdAndUpdate(
+            req.currentUser._id,
+            { navigationLocation },
+            { new: true }
+        ).lean();
+        res.json(updated);
+    } catch (err) {
+        console.error("PATCH /users/me/voiceNavLocation error:", err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
 
 export default router;

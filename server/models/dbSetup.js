@@ -24,9 +24,6 @@ const userSchema = new mongoose.Schema({
     autoCaptions: { type: Boolean, default: true },
     voiceNavigation: { type: Boolean, default: true },
     navigationLocation: { type: Boolean, default: false },
-
-
-
 });
 
 // Sessions collection

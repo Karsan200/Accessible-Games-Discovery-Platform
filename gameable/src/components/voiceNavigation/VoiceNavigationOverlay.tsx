@@ -1,9 +1,9 @@
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {useAuth} from "../../data/AuthContext.tsx";
 import "./VoiceNav.css"
 import { Button } from "react-bootstrap";
-
 
 // Check the thing that is going to be clicked is on screen
 function isVisible(el: HTMLElement) {
@@ -155,7 +155,6 @@ let fieldWordCount = 0;
 
 export default function FloatingVoiceNavigation() {
     const [active] = useState(true);
-
     const navigate = useNavigate()
 
     const clickNavButton = (selector: string) => {
@@ -497,8 +496,18 @@ export default function FloatingVoiceNavigation() {
         return <p>Browser Support Speech Recognition</p>
     }
 
+    const { prefs } = useAuth();
+    //console.log(prefs.voiceNavEnabled)
+    //console.log(prefs.voiceNavLeft)
+
+    const className = [
+        "vn-box",
+        prefs.voiceNavEnabled ? "vn-hidden" : "vn-visible",
+        prefs.voiceNavLeft ? "vn-left" : "vn-right",
+    ].join(" ");
+
     return (
-        <div className="vn-box">
+        <div className={className}>
             <div className="vn-box-inner">
                 <p>Microphone: {listening ? "ON" : "OFF"}</p>
 

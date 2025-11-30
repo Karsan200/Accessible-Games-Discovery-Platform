@@ -1,13 +1,14 @@
 import React from "react";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import { GameTags } from "./game/GameTags";
+import "./TopSellerCard.css";
 
 interface TopSellerCardProps {
     image: string;
     title: string;
     tagline?: string;
     tags: ("Visual" | "Audio" | "Motor" | "Cognitive")[];
-    rating: number; // 0-10 from DB
+    rating: number; // 0–10 from DB
     onViewGame?: () => void;
 }
 
@@ -19,14 +20,12 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                                                                 rating,
                                                                 onViewGame,
                                                             }) => {
-
     const starRating = Math.round(rating);
-    const formattedRating = rating.toFixed(1); // <-- 1 decimal place
+    const formattedRating = rating.toFixed(1);
 
     return (
         <Card
-            className="mb-3 shadow-sm"
-            style={{ cursor: "pointer", padding: "16px" }}
+            className="mb-3 shadow-sm top-seller-card"
             tabIndex={0}
             aria-label={`${title}, rated ${formattedRating} out of 10, tags: ${tags.join(", ")}, tagline: ${tagline || ""}`}
             role="group"
@@ -34,45 +33,35 @@ export const TopSellerCard: React.FC<TopSellerCardProps> = ({
                 if (e.key === "Enter" && onViewGame) onViewGame();
             }}
         >
-            <Row className="align-items-center" style={{ flexWrap: "nowrap" }}>
+            <Row className="align-items-center top-seller-row">
+                {/* Image */}
                 <Col xs="auto" className="d-flex justify-content-center mb-2 mb-sm-0">
                     <Card.Img
                         src={image}
                         alt={`${title} app icon`}
-                        style={{
-                            width: "100%",
-                            maxWidth: "120px",
-                            height: "120px",
-                            borderRadius: "15px",
-                            objectFit: "cover",
-                        }}
+                        className="top-seller-image"
                     />
                 </Col>
 
-                <Col
-                    className="d-flex flex-column justify-content-start align-items-start"
-                    style={{ minWidth: 0, flex: "1 1 auto" }}
-                >
-                    <div className="mb-1" aria-hidden={false}>
+                {/* Title + Tags + Tagline */}
+                <Col className="d-flex flex-column justify-content-start align-items-start top-seller-info">
+                    <div className="mb-1">
                         <GameTags tags={tags} />
                     </div>
 
-                    <Card.Title className="fw-bold mb-1" title={title} style={{ wordBreak: "break-word" }}>
+                    <Card.Title className="fw-bold mb-1 top-seller-title" title={title}>
                         {title}
                     </Card.Title>
 
-                    <Card.Text className="mb-0" title={tagline} style={{ wordBreak: "break-word" }}>
+                    <Card.Text className="mb-0 top-seller-tagline" title={tagline}>
                         {tagline}
                     </Card.Text>
                 </Col>
 
-                <Col
-                    xs="auto"
-                    className="d-flex flex-column align-items-center justify-content-center ms-3"
-                >
+                {/* Rating + Button */}
+                <Col xs="auto" className="d-flex flex-column align-items-center justify-content-center ms-3">
                     <div
-                        className="mb-2"
-                        style={{ fontSize: "1.2rem", lineHeight: 1 }}
+                        className="top-seller-stars mb-2"
                         aria-label={`Rating: ${formattedRating} out of 10`}
                         role="img"
                     >

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ReactElement } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { GameBreadcrumbs } from "../game/GameBreadcrumbs";
 import { Authentication } from "../../data/Authentication.ts";
 import { getUserIdFromToken } from "../../data/TokenUtility.ts";
@@ -8,9 +8,10 @@ import { GameTags } from "../game/GameTags";
 import { GameStars } from "../game/GameStars";
 import { Carousel } from "../game/Carousel";
 import ReviewModel from "../../models/forms/ReviewModel";
+import { settings} from "../../AppSettings.ts";
 import "./GamePage.css";
 
-const DEFAULT_PROFILE_IMG = "http://localhost:5000/images/profilepicTemp.png";
+const DEFAULT_PROFILE_IMG = `${settings.apiBaseUrl}/images/profilepicTemp.png`;
 
 type UserSummary = {
     _id?: string;
@@ -70,7 +71,7 @@ export function GamePage() {
     useEffect(() => {
         async function fetchGame() {
             try {
-                const res = await fetch(`http://localhost:5000/api/games/${id}`);
+                const res = await fetch(`${settings.apiBaseUrl}/api/games/${id}`);
                 const data = await res.json();
                 setGame(data as Game);
             } catch (err) {
@@ -109,7 +110,7 @@ export function GamePage() {
                 return;
             }
 
-            const res = await fetch('http://localhost:5000/wishlist/add', {
+            const res = await fetch(`${settings.apiBaseUrl}/wishlist/add`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -186,7 +187,7 @@ export function GamePage() {
 
             const newReview = { user_id: userId, rating: Number(rating), body: body || "" };
 
-            const res = await fetch(`http://localhost:5000/api/reviews/${game._id}`, {
+            const res = await fetch(`${settings.apiBaseUrl}/api/reviews/${game._id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -208,7 +209,8 @@ export function GamePage() {
                 return;
             }
 
-            const updatedRes = await fetch(`http://localhost:5000/api/games/${game._id}`);
+            // Refresh updated game data
+            const updatedRes = await fetch(`${settings.apiBaseUrl}/api/games/${game._id}`);
             const updated = await updatedRes.json();
             setGame(updated);
             setReviewModalOpen(false);
@@ -253,23 +255,26 @@ export function GamePage() {
         });
 
     const reviewItems: ReactElement[] = (game.reviews ?? []).map((r, i) => {
+        const profilePicUrl = r.user?.profilePicture
+            ? `${settings.apiBaseUrl}${r.user.profilePicture}`
+            : DEFAULT_PROFILE_IMG;
+        const username = r.user?.username ?? "Anonymous";
+
         return (
             <div className="review-box w-100 h-100" key={i}>
                 <h4 className="mb-1">
                     <GameStars rating={r.rating ?? 0} />
                 </h4>
                 <p className="mb-2">{r.body}</p>
-                <div className="review-meta">
-                    <img
-                        src={
-                            r.user?.profilePicture
-                                ? `http://localhost:5000${r.user.profilePicture}`
-                                : DEFAULT_PROFILE_IMG
-                        }
-                        alt={r.user?.username ?? "Anonymous"}
-                        className="review-avatar"
-                    />
-                    <strong>{r.user?.username ?? "Anonymous"}</strong>
+                <div className="review-meta d-flex align-items-center">
+                    <Link to={`/profile/${username}`} className="d-flex align-items-center text-decoration-none">
+                        <img
+                            src={profilePicUrl}
+                            alt={username}
+                            className="review-avatar me-2"
+                        />
+                        <strong>{username}</strong>
+                    </Link>
                 </div>
             </div>
         );

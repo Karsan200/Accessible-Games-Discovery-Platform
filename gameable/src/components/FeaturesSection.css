@@ -106,3 +106,17 @@
 .audio .feature-text { color: #558068; }
 .motor .feature-text { color: #b58249; }
 .cognitive .feature-text { color: #628E9E; }
+
+
+/*Dyslexic font setting*/
+/* Dyslexic font override for FeaturesSection */
+body.dyslexic-font .features-container,
+body.dyslexic-font .section-title,
+body.dyslexic-font .heading,
+body.dyslexic-font .subtext,
+body.dyslexic-font .features-content,
+body.dyslexic-font .feature-card,
+body.dyslexic-font .feature-card .feature-icon,
+body.dyslexic-font .feature-card .feature-text {
+    font-family: "OpenDyslexic", Arial, sans-serif;
+}

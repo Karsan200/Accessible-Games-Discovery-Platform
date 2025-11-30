@@ -93,3 +93,17 @@
 .switch input:checked + .slider::before {
     transform: translateX(22px);
 }
+
+.vn-hidden {
+    display: none;
+}
+
+.vn-left {
+    left: 20px;
+    right: auto;
+}
+
+.vn-right {
+    left: auto;
+    right: 20px;
+}

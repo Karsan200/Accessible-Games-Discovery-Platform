@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
     profilePicture: String,
     role: String,
     date_of_birth: Date,
+    favorite_games: [{ type: mongoose.Schema.Types.ObjectId, ref: "Game" }],
     fontSize: { type: Boolean, default: false },
     fontType: { type: Boolean, default: false },
     autoCaptions: { type: Boolean, default: true },

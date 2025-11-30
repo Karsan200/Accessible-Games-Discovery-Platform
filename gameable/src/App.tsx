@@ -24,6 +24,7 @@ import FloatingVoiceNavigation from "./components/voiceNavigation/VoiceNavigatio
 // <-- Added imports
 import Profile from "./components/pages/profile.tsx";
 import MyReviews from "./components/pages/MyReviews.tsx";
+import Dashboard from "./components/pages/Dashboard.tsx";
 import Settings from "./components/pages/settings.tsx";
 import VoiceCommandsPage from "./components/voiceNavigation/VoiceCommandsPage.tsx";
 import VoiceCommandsIntro from "./components/voiceNavigation/VoiceCommandsIntro.tsx";
@@ -49,6 +50,7 @@ function AppContent() {
                     <Route path="/games" element={<Games />} />
                     <Route path="/games/:id" element={<GamePage />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/my-reviews" element={<MyReviews />} />
                     <Route path="/errorPages/userNotLoggedIn" element={<UserNotLoggedIn />}/>
                     <Route path="/settings" element={<Settings />} />
@@ -56,6 +58,7 @@ function AppContent() {
                     <Route path="/footerPages/contactUs" element={<ContactUs />} />
                     <Route path="/footerPages/accessibilityStatement" element={<AccessibilityStatement />}/>
                     <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/voice-commands" element={<VoiceCommandsPage/> } />
                 </Routes>
                 <FloatingVoiceNavigation/>

@@ -310,9 +310,18 @@ export default function Settings() {
                 </label>
             </div>
 
+            <div className="setting-row">
+                <p>For More Information on Voice Commands Click Here:</p>
+                <div className="vn-actions">
+                    <Button onClick={() => navigate("/voice-commands")} variant="primary">
+                        More Info
+                    </Button>
+                </div>
+            </div>
+
             <h2>Video Settings</h2>
 
-            {/* NEW — Auto Captions Toggle */}
+            {/* Auto Captions Toggle */}
             <div className="setting-row">
                 <div className="setting-info">
                     <p className="setting-title">Auto Captions</p>
@@ -328,15 +337,6 @@ export default function Settings() {
                     />
                     <span className="slider"></span>
                 </label>
-            </div>
-
-            <div className="setting-row">
-                <p>For More Information on Voice Commands Click Here:</p>
-                <div className="vn-actions">
-                    <Button onClick={() => navigate("/voice-commands")} variant="primary">
-                        More Info
-                    </Button>
-                </div>
             </div>
         </div>
     );

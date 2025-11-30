@@ -31,6 +31,7 @@ export default function NavbarLoggedOut() {
             </form>
             <ul>
                 <li><NavLink to="/" className="home">Home</NavLink></li>
+                <li><NavLink to="/search?q=" className="games">Games</NavLink></li>
                 <li><NavLink to="/errorPages/userNotLoggedIn" className="wishlist">Wishlist</NavLink></li>
                 <li><NavLink to="/errorPages/userNotLoggedIn" className="profile">Profile</NavLink></li>
                 {/* Settings intentionally omitted for logged-out users */}

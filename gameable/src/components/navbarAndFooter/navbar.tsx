@@ -88,6 +88,7 @@ export default function Navbar() {
 
             <ul>
                 <li><NavLink to="/" className="home">Home</NavLink></li>
+                <li><NavLink to="/search?q=" className="games">Games</NavLink></li>
                 <li><NavLink to="/wishlist" className="wishlist">Wishlist</NavLink></li>
                 <li>
                     <NavLink

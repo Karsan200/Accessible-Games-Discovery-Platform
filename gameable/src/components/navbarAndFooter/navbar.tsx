@@ -2,14 +2,14 @@ import './navbar.css'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../data/AuthContext.tsx";
 import { settings } from "../../AppSettings.ts";
-import { useEffect, useState } from "react";
-import { getUserIdFromToken } from "../../data/TokenUtility";
-import { ApiDataHelper } from "../../data/ApiDataHelper";
+import { useEffect, useState} from "react";
+import {getUserIdFromToken} from "../../data/TokenUtility";
+import {ApiDataHelper} from "../../data/ApiDataHelper";
 import {SearchHandler} from "../../data/SearchHandler.ts";
 import {useRef} from "react";
 
 export default function Navbar() {
-    const { accessToken, setAccessToken } = useAuth();
+    const {accessToken, setAccessToken} = useAuth();
     const navigate = useNavigate();
     const searchRef = useRef<HTMLInputElement | null>(null);
     const handleSearch = SearchHandler(searchRef, navigate);
@@ -38,7 +38,16 @@ export default function Navbar() {
 
         async function fetchUserData() {
             try {
-                const res = await ApiDataHelper(`/user/${userId}`, { method: "GET", headers: {} }, { accessToken, setAccessToken });
+                const res = await ApiDataHelper(`/user/${userId}`, {method: "GET", headers: {}}, {
+                    accessToken, setAccessToken,
+                    prefs: {
+                        voiceNavEnabled: false,
+                        voiceNavLeft: false
+                    },
+                    setPrefs: function (): void {
+                        throw new Error('Function not implemented.');
+                    }
+                });
                 if (!res.ok) return;
                 const data = await res.json();
                 setUsername(data.username);

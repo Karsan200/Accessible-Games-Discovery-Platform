@@ -83,6 +83,7 @@ describe("FloatingVoiceNavigation hardcoded commands", () => {
         commands = [];
         jest.clearAllMocks();
 
+        // @ts-ignore
         mockUseSpeechRecognition.mockImplementation(({ commands: cmd }) => {
             commands.push(...cmd);
             return {

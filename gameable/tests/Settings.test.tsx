@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor, within } from "@testing-library/rea
 import Settings from "../src/components/pages/settings";
 import { Authentication } from "../src/data/Authentication";
 import { MemoryRouter } from "react-router-dom";
+import FloatingVoiceNavigation from "../src/components/voiceNavigation/VoiceNavigationOverlay";
 
 jest.mock("../src/data/Authentication", () => ({
     Authentication: { refreshToken: jest.fn() }
@@ -135,3 +136,115 @@ describe("Settings Component - FontType & FontSize", () => {
         );
     });
 });
+
+describe("Settings Component - Voice Navigation", () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        document.body.innerHTML = `<div class="vn-box vn-hidden"></div>`;
+    });
+
+    test("loads initial voice nav settings and applies classes", async () => {
+        (Authentication.refreshToken as jest.Mock).mockResolvedValue("token123");
+        mockFetch.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                fontType: false,
+                fontSize: false,
+                voiceNavigation: true,
+                navigationLocation: true,
+            }),
+        });
+
+        render(
+            <MemoryRouter>
+                <Settings />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => expect(screen.queryByText("Loading...")).toBeNull());
+
+        const vnBox = document.querySelector(".vn-box");
+        expect(vnBox).not.toBeNull();
+        await waitFor(() => expect(vnBox).toHaveClass("vn-hidden"));
+        await waitFor(() => expect(vnBox).toHaveClass("vn-left"));
+    });
+
+    test("toggles voice navigation correctly", async () => {
+        (Authentication.refreshToken as jest.Mock).mockResolvedValue("token123");
+        mockFetch.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                fontType: false,
+                fontSize: false,
+                voiceNavigation: false,
+                navigationLocation: false,
+            }),
+        });
+        mockFetch.mockResolvedValue({ ok: true, json: async () => ({}) });
+
+        render(
+            <MemoryRouter>
+                <Settings />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => expect(screen.queryByText("Loading...")).toBeNull());
+
+        const voiceNavRow = screen.getByText(/Toggle to turn off the voice navigation module/i)
+            .closest(".setting-row");
+        const voiceNavCheckbox = within(voiceNavRow!).getByRole("checkbox") as HTMLInputElement;
+        expect(voiceNavCheckbox.checked).toBe(false);
+
+        fireEvent.click(voiceNavCheckbox);
+
+        await waitFor(() => expect(voiceNavCheckbox.checked).toBe(true));
+
+        const vnBox = document.querySelector(".vn-box");
+        expect(vnBox).not.toBeNull();
+        await waitFor(() => expect(vnBox).toHaveClass("vn-hidden"));
+
+        expect(mockFetch).toHaveBeenCalledWith(
+            expect.stringContaining("/api/users/me/voiceNav"),
+            expect.objectContaining({
+                method: "PATCH",
+                body: JSON.stringify({ voiceNavigation: true }),
+                headers: expect.any(Object),
+            })
+        );
+    });
+
+    test("toggles voice nav location correctly", async () => {
+        (Authentication.refreshToken as jest.Mock).mockResolvedValue("token123");
+        mockFetch.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                fontType: false,
+                fontSize: false,
+                voiceNavigation: true,
+                navigationLocation: false,
+            }),
+        });
+        mockFetch.mockResolvedValue({ ok: true, json: async () => ({}) });
+
+        render(
+            <MemoryRouter>
+                <Settings />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => expect(screen.queryByText("Loading...")).toBeNull());
+
+        const voiceNavLocationRow = screen.getByText(/Toggle to move the voice navigation location/i)
+            .closest(".setting-row");
+        const navLocationCheckbox = within(voiceNavLocationRow!).getByRole("checkbox") as HTMLInputElement;
+        expect(navLocationCheckbox.checked).toBe(false);
+
+        fireEvent.click(navLocationCheckbox);
+
+        await waitFor(() => expect(navLocationCheckbox.checked).toBe(true));
+
+        const vnBox = document.querySelector(".vn-box");
+        expect(vnBox).not.toBeNull();
+        await waitFor(() => expect(vnBox).toHaveClass("vn-left"));
+    });
+})

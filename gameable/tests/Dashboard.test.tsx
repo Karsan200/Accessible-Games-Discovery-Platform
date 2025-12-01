@@ -17,6 +17,14 @@ jest.mock("react-router-dom", () => ({
 jest.mock("../src/data/Authentication");
 jest.mock("../src/data/TokenUtility");
 
+// 🚫 Suppress console errors to remove noise in test output
+beforeAll(() => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+});
+afterAll(() => {
+    (console.error as jest.Mock).mockRestore();
+});
+
 describe("Dashboard Component", () => {
     const mockUserData = {
         username: "TestUser",

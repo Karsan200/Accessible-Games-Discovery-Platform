@@ -5,11 +5,12 @@ import { getUserIdFromToken } from "../../data/TokenUtility.ts"
 import { WishlistGameCard } from "../WishlistGameCard.tsx";
 import { IconCheckbox } from "../IconCheckbox.tsx";
 import { BlackButton } from "../BlackButton.tsx";
+import {useAuth} from "../../data/AuthContext";
 
 // --- Interfaces ---
 interface Game {
     title: string;
-    body?: string;
+    tagline?: string;
 }
 
 interface Media {
@@ -39,7 +40,7 @@ export function Wishlist() {
     }, []);
 
     const userId = getUserIdFromToken(accessToken);
-    const auth = { accessToken, setAccessToken };
+    const auth = useAuth();
     // Helper: common headers with auth
     const authHeaders = () => ({
         "Content-Type": "application/json",
@@ -166,7 +167,7 @@ export function Wishlist() {
                             <WishlistGameCard
                                 image={cover || ""}
                                 name={game.title}
-                                description={game.body || "No description available."}
+                                description={game.tagline || "No description available."}
                             />
 
                             <div className="wishlist-actions d-flex flex-column gap-1 ms-0">

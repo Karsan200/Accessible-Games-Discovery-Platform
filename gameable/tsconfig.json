@@ -11,7 +11,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": ["jest", "node", "@testing-library/jest-dom"],
+    "typeRoots": ["./node_modules/@types"]
   },
   "include": [
     "src",          // main code

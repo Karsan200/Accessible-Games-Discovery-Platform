@@ -223,8 +223,8 @@ export default function Dashboard() {
                                             .filter(g => favoriteGames.includes(g._id))
                                             .map(g => (
                                                 <span key={g._id} className="badge bg-primary me-1 mb-1">
-                                        {g.title}
-                                    </span>
+                                                    {g.title}
+                                                </span>
                                             ))}
                                     </div>
                                 </div>
@@ -250,18 +250,18 @@ export default function Dashboard() {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label">Username</label>
-                        <input type="text" name="username" value={formData.username} className="form-control" onChange={handleInputChange} />
+                        <label htmlFor="username" className="form-label">Username</label>
+                        <input type="text" id="username" name="username" value={formData.username} className="form-control" onChange={handleInputChange} />
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label">Email</label>
-                        <input type="email" name="email" value={formData.email} className="form-control" onChange={handleInputChange} />
+                        <label htmlFor="email" className="form-label">Email</label>
+                        <input type="email" id="email" name="email" value={formData.email} className="form-control" onChange={handleInputChange} />
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label">Date of Birth</label>
-                        <input type="date" name="date_of_birth" value={formData.date_of_birth} className="form-control" onChange={handleInputChange} />
+                        <label htmlFor="date_of_birth" className="form-label">Date of Birth</label>
+                        <input type="date" id="date_of_birth" name="date_of_birth" value={formData.date_of_birth} className="form-control" onChange={handleInputChange} />
                     </div>
 
                     <div className="mb-3">

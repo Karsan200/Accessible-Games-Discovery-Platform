@@ -39,6 +39,7 @@ export default function Profile() {
 
     const apiBase = settings.apiBaseUrl;
 
+    // Fetch user data
     useEffect(() => {
         if (!username) return;
 
@@ -55,6 +56,7 @@ export default function Profile() {
             .finally(() => setLoading(false));
     }, [username, apiBase]);
 
+    // Fetch reviews
     useEffect(() => {
         if (!userData?._id) return;
 
@@ -64,6 +66,7 @@ export default function Profile() {
             .catch(() => console.error("Failed to fetch reviews"));
     }, [userData?._id, apiBase]);
 
+    // Fetch favorite games
     useEffect(() => {
         if (!userData?._id) return;
 
@@ -73,9 +76,10 @@ export default function Profile() {
             .catch(() => console.error("Failed to fetch favorite games"));
     }, [userData?._id, apiBase]);
 
+    // Handle loading/error/user-not-found states
     if (loading) return <h2>Loading...</h2>;
     if (error) return <h2>{error}</h2>;
-    if (!userData) return <h2>User not found</h2>;
+    if (!userData || !userData.username) return <h2>User not found</h2>;
 
     const reviewItems = reviews.map((r) => (
         <div className="review-box w-100 h-100 profile-review-box" key={r._id}>
@@ -103,7 +107,7 @@ export default function Profile() {
                             />
                         ) : (
                             <div className="no-profile-img shadow-lg">
-                                {userData.username[0].toUpperCase()}
+                                {userData.username?.[0]?.toUpperCase() || "U"}
                             </div>
                         )}
                     </div>
@@ -118,9 +122,9 @@ export default function Profile() {
                                 <div className="favorite-games d-flex flex-wrap gap-3">
                                     {favoriteGames.map(game => (
                                         <div key={game._id} className="favorite-game-card shadow-sm">
-                                            {game.image && (
+                                            {game.image?.[0] && (
                                                 <img
-                                                    src={`${game.image}`}
+                                                    src={game.image[0]}
                                                     alt={game.title}
                                                 />
                                             )}

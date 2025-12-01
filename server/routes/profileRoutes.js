@@ -143,7 +143,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // POST upload profile picture
-router.post("/:id/profile-picture", upload.single("profilePicture"), async (req, res) => {
+export const updateProfilePicture = async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: "No file uploaded." });
 
@@ -161,6 +161,9 @@ router.post("/:id/profile-picture", upload.single("profilePicture"), async (req,
         console.error(err);
         res.status(500).json({ error: err.message });
     }
-});
+};
+
+// Use the same function in the router
+router.post("/:id/profile-picture", upload.single("profilePicture"), updateProfilePicture);
 
 export default router;

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Authentication } from "../../data/Authentication";
 import { settings } from "../../AppSettings";
 import "./Settings.css";
-import {Button} from "react-bootstrap";
-import {useNavigate} from "react-router-dom";
+import { Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 type UserPayload = {
     _id?: string;
@@ -13,17 +13,22 @@ type UserPayload = {
     fontSize?: boolean;
     voiceNavigation?: boolean;
     navigationLocation?: boolean;
+    autoCaptions?: boolean;
 };
 
 export default function Settings() {
     const [loading, setLoading] = useState(true);
+
     const [fontType, setFontType] = useState(false);
     const [fontSize, setFontSize] = useState(false);
-    const [token, setToken] = useState<string | null>(null);
     const [voiceNavEnabled, setVoiceNavEnabled] = useState(false);
     const [voiceNavLeft, setVoiceNavLeft] = useState(false);
-    const navigate = useNavigate();
 
+    // NEW — Auto captions setting
+    const [autoCaptions, setAutoCaptions] = useState(true);
+
+    const [token, setToken] = useState<string | null>(null);
+    const navigate = useNavigate();
     const apiBase = settings?.apiBaseUrl ?? "http://localhost:5000";
 
     // Apply global classes
@@ -31,6 +36,7 @@ export default function Settings() {
         if (enabled) document.body.classList.add("dyslexic-font");
         else document.body.classList.remove("dyslexic-font");
     }
+
     function applyFontSizeClass(enabled: boolean) {
         document.body.classList.remove("default-font", "large-font");
         if (enabled) document.body.classList.add("large-font");
@@ -40,14 +46,12 @@ export default function Settings() {
     function applyVoiceNavToggle(enabled: boolean) {
         const vnBox = document.querySelector(".vn-box") as HTMLElement;
         if (!vnBox) return;
-
         vnBox.classList.toggle("vn-hidden", enabled);
     }
 
     function applyVoiceNavLocation(leftSide: boolean) {
         const vnBox = document.querySelector(".vn-box") as HTMLElement;
         if (!vnBox) return;
-
         vnBox.classList.remove("vn-left", "vn-right");
         vnBox.classList.add(leftSide ? "vn-left" : "vn-right");
     }
@@ -64,14 +68,17 @@ export default function Settings() {
                 setToken(newToken);
 
                 if (!newToken) {
-                    applyFontClass(false);
-                    applyFontSizeClass(false);
-                    applyVoiceNavToggle(false);
-                    applyVoiceNavLocation(false);
                     setFontType(false);
                     setFontSize(false);
                     setVoiceNavEnabled(false);
                     setVoiceNavLeft(false);
+                    setAutoCaptions(true);
+
+                    applyFontClass(false);
+                    applyFontSizeClass(false);
+                    applyVoiceNavToggle(false);
+                    applyVoiceNavLocation(false);
+
                     setLoading(false);
                     return;
                 }
@@ -87,14 +94,6 @@ export default function Settings() {
 
                 if (!res.ok) {
                     console.warn("Failed to fetch user:", res.status);
-                    applyFontClass(false);
-                    applyFontSizeClass(false);
-                    applyVoiceNavToggle(false);
-                    applyVoiceNavLocation(false);
-                    setFontType(false);
-                    setFontSize(false);
-                    setVoiceNavEnabled(false);
-                    setVoiceNavLeft(false);
                     setLoading(false);
                     return;
                 }
@@ -110,22 +109,15 @@ export default function Settings() {
 
                 setVoiceNavEnabled(Boolean(data.voiceNavigation));
                 applyVoiceNavToggle(Boolean(data.voiceNavigation));
-                //console.log("Voice Nav Enabled", (Boolean(data.voiceNavigation)));
 
                 setVoiceNavLeft(Boolean(data.navigationLocation));
                 applyVoiceNavLocation(Boolean(data.navigationLocation));
-                //console.log("Voice Nav Location", (Boolean(data.navigationLocation)));
+
+                // NEW — auto captions loading
+                setAutoCaptions(Boolean(data.autoCaptions));
 
             } catch (err) {
                 console.error("Settings load error:", err);
-                applyFontClass(false);
-                applyFontSizeClass(false);
-                applyVoiceNavToggle(false);
-                applyVoiceNavLocation(false);
-                setFontType(false);
-                setFontSize(false);
-                setVoiceNavEnabled(false);
-                setVoiceNavLeft(false);
             } finally {
                 if (mounted) setLoading(false);
             }
@@ -145,7 +137,7 @@ export default function Settings() {
             const authToken = token ?? (await Authentication.refreshToken());
             if (!authToken) throw new Error("Not logged in");
 
-            const res = await fetch(`${apiBase}/api/users/me/font`, {
+            await fetch(`${apiBase}/api/users/me/font`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -154,8 +146,6 @@ export default function Settings() {
                 credentials: "include",
                 body: JSON.stringify({ fontType: next }),
             });
-
-            if (!res.ok) throw new Error(`Failed to save fontType: ${res.status}`);
         } catch (err) {
             console.error(err);
             setFontType(!next);
@@ -172,7 +162,7 @@ export default function Settings() {
             const authToken = token ?? (await Authentication.refreshToken());
             if (!authToken) throw new Error("Not logged in");
 
-            const res = await fetch(`${apiBase}/api/users/me/fontSize`, {
+            await fetch(`${apiBase}/api/users/me/fontSize`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -181,8 +171,6 @@ export default function Settings() {
                 credentials: "include",
                 body: JSON.stringify({ fontSize: next }),
             });
-
-            if (!res.ok) throw new Error(`Failed to save fontSize: ${res.status}`);
         } catch (err) {
             console.error(err);
             setFontSize(!next);
@@ -199,7 +187,7 @@ export default function Settings() {
             const authToken = token ?? (await Authentication.refreshToken());
             if (!authToken) throw new Error("Not logged in");
 
-            const res = await fetch(`${apiBase}/api/users/me/voiceNav`, {
+            await fetch(`${apiBase}/api/users/me/voiceNav`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -208,10 +196,6 @@ export default function Settings() {
                 credentials: "include",
                 body: JSON.stringify({ voiceNavigation: next }),
             });
-
-            //console.log("Voice Nav", res.json())
-
-            if (!res.ok) throw new Error(`Failed to save voiceNav preference: ${res.status}`);
         } catch (err) {
             console.error(err);
             setVoiceNavEnabled(!next);
@@ -228,7 +212,7 @@ export default function Settings() {
             const authToken = token ?? (await Authentication.refreshToken());
             if (!authToken) throw new Error("Not logged in");
 
-            const res = await fetch(`${apiBase}/api/users/me/voiceNavLocation`, {
+            await fetch(`${apiBase}/api/users/me/voiceNavLocation`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -237,12 +221,36 @@ export default function Settings() {
                 credentials: "include",
                 body: JSON.stringify({ navigationLocation: next }),
             });
-
-            if (!res.ok) throw new Error(`Failed to save voiceNav preference: ${res.status}`);
         } catch (err) {
             console.error(err);
             setVoiceNavLeft(!next);
             applyVoiceNavLocation(!next);
+        }
+    }
+
+    // NEW — Auto captions toggle
+    async function toggleAutoCaptions() {
+        const next = !autoCaptions;
+        setAutoCaptions(next);
+
+        try {
+            const authToken = token ?? (await Authentication.refreshToken());
+            if (!authToken) throw new Error("Not logged in");
+
+            const res = await fetch(`${apiBase}/api/users/me/autoCaptions`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authToken}`,
+                },
+                credentials: "include",
+                body: JSON.stringify({ autoCaptions: next }),
+            });
+
+            if (!res.ok) throw new Error("Failed to update autoCaptions");
+        } catch (err) {
+            console.error(err);
+            setAutoCaptions(!next);
         }
     }
 
@@ -259,11 +267,7 @@ export default function Settings() {
                     <p className="setting-description">Toggle to use a dyslexia-friendly typeface across the site.</p>
                 </div>
                 <label className="switch">
-                    <input
-                        type="checkbox"
-                        checked={fontType}
-                        onChange={() => void toggleFontType()}
-                    />
+                    <input type="checkbox" checked={fontType} onChange={() => void toggleFontType()} />
                     <span className="slider"></span>
                 </label>
             </div>
@@ -275,28 +279,21 @@ export default function Settings() {
                     <p className="setting-description">Toggle to use larger font size across the site.</p>
                 </div>
                 <label className="switch">
-                    <input
-                        type="checkbox"
-                        checked={fontSize}
-                        onChange={() => void toggleFontSize()}
-                    />
+                    <input type="checkbox" checked={fontSize} onChange={() => void toggleFontSize()} />
                     <span className="slider"></span>
                 </label>
             </div>
 
             <h2>Voice Navigation Settings</h2>
-            {/* Voice Nav Settings */}
+
+            {/* Voice Nav */}
             <div className="setting-row">
                 <div className="setting-info">
                     <p className="setting-title">Voice Navigation</p>
                     <p className="setting-description">Toggle to turn off the voice navigation module.</p>
                 </div>
                 <label className="switch">
-                    <input
-                        type="checkbox"
-                        checked={voiceNavEnabled}
-                        onChange={() => void toggleVoiceNav()}
-                    />
+                    <input type="checkbox" checked={voiceNavEnabled} onChange={() => void toggleVoiceNav()} />
                     <span className="slider"></span>
                 </label>
             </div>
@@ -305,27 +302,41 @@ export default function Settings() {
             <div className="setting-row">
                 <div className="setting-info">
                     <p className="setting-title">Voice Nav Location</p>
-                    <p className="setting-description">Toggle to move the voice navigations location from right to left.</p>
+                    <p className="setting-description">Toggle to move the voice navigation location from right to left.</p>
                 </div>
                 <label className="switch">
-                    <input
-                        type="checkbox"
-                        checked={voiceNavLeft}
-                        onChange={() => void toggleNavLocation()}
-                        />
+                    <input type="checkbox" checked={voiceNavLeft} onChange={() => void toggleNavLocation()} />
                     <span className="slider"></span>
                 </label>
             </div>
 
-            {/*/!* Voice Navigation Information *!/*/}
             <div className="setting-row">
-                <p> For More Information on Voice Commands Click Here:</p>
+                <p>For More Information on Voice Commands Click Here:</p>
                 <div className="vn-actions">
-                    <Button onClick={() => {navigate("/voice-commands")}} variant="primary">
+                    <Button onClick={() => navigate("/voice-commands")} variant="primary">
                         More Info
                     </Button>
                 </div>
+            </div>
 
+            <h2>Video Settings</h2>
+
+            {/* Auto Captions Toggle */}
+            <div className="setting-row">
+                <div className="setting-info">
+                    <p className="setting-title">Auto Captions</p>
+                    <p className="setting-description">
+                        Toggle to automatically enable closed captions on YouTube trailers.
+                    </p>
+                </div>
+                <label className="switch">
+                    <input
+                        type="checkbox"
+                        checked={autoCaptions}
+                        onChange={() => void toggleAutoCaptions()}
+                    />
+                    <span className="slider"></span>
+                </label>
             </div>
         </div>
     );

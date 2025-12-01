@@ -1,4 +1,3 @@
-// File: `gameable/src/pages/SearchResults.tsx`
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { GameCard } from "../GameCard.tsx";
@@ -24,22 +23,23 @@ export interface SearchResult {
 /*
  * Reading the search query from the URL parameters
  * Fetching search results from the backend API
- * Handling loading, error, and no results states
+ * Handling loading and error
  * Displaying the search results using GameCard components
  */
 
 export const SearchResults: React.FC = () => {
-    // Reading the search query from the URL parameters
     const [searchParams] = useSearchParams();
     const query = searchParams.get("q") ?? "";
 
-    // prefer repeated params, fallback to CSV if present
+    // Prefer repeated params, fallback to CSV
     const genreList = searchParams.getAll("genre");
     const accessibilityList = searchParams.getAll("accessibility");
+
     if (genreList.length === 0 && searchParams.get("genre")) {
         const raw = searchParams.get("genre") ?? "";
         if (raw) genreList.push(...raw.split(",").filter(Boolean));
     }
+
     if (accessibilityList.length === 0 && searchParams.get("accessibility")) {
         const raw = searchParams.get("accessibility") ?? "";
         if (raw) accessibilityList.push(...raw.split(",").filter(Boolean));
@@ -47,27 +47,21 @@ export const SearchResults: React.FC = () => {
 
     const sortParam = searchParams.get("sort") ?? "relevance";
 
-    // Const's for search results, loading status, and error message
     const [results, setResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
     const navigate = useNavigate();
 
-    // casting FilterBar to a typed component
     const FilterBarTyped = FilterBar as unknown as React.ComponentType<{
         onApply: (filters: { genre?: string[]; accessibility?: string[]; sort?: string }) => void;
         initial?: { genre: string[]; accessibility: string[]; sort: string };
     }>;
 
-    // Hook to fetch search results when the query changes
+    // Fetch search results (now ALSO runs when query is empty)
     useEffect(() => {
-        if (!query) {
-            setResults([]);
-            return;
-        }
         const controller = new AbortController();
 
-        // Refreshing to get a new access token
         const callRefresh = async (): Promise<string | undefined> => {
             try {
                 const r = await fetch(`${settings.apiBaseUrl.replace(/\/$/, "")}/auth/refresh`, {
@@ -83,16 +77,16 @@ export const SearchResults: React.FC = () => {
             }
         };
 
-        // Fetching search results from the backend API
         const fetchResults = async () => {
             setLoading(true);
             setError(null);
 
             const qs = new URLSearchParams();
-            qs.set("q", query);
-            // append arrays as repeated params (genre=..., genre=...)
+            qs.set("q", query); // empty string now allowed
+
             for (const g of genreList) qs.append("genre", g);
             for (const a of accessibilityList) qs.append("accessibility", a);
+
             qs.set("sort", sortParam);
 
             const baseUrl = settings.apiBaseUrl.replace(/\/$/, "");
@@ -111,7 +105,6 @@ export const SearchResults: React.FC = () => {
                 const token = localStorage.getItem("accessToken") ?? undefined;
                 let res = await makeRequest(token);
 
-                // If unauthorised, attempt a refresh to get a new token and retry the request
                 if (res.status === 401) {
                     const newToken = await callRefresh();
                     if (newToken) {
@@ -123,23 +116,20 @@ export const SearchResults: React.FC = () => {
                     }
                 }
 
-                // If not found, set error message
                 if (res.status === 404) {
                     const body = await res.text().catch(() => "");
                     setError(
-                        `Search not found (404). ${body || "Ensure backend is running and \\`settings.apiBaseUrl\\` is correct."}`
+                        `Search not found (404). ${body || "Ensure backend is running and settings.apiBaseUrl is correct."}`
                     );
                     return;
                 }
 
-                // If response is not ok, set error message
                 if (!res.ok) {
                     const body = await res.text().catch(() => "");
                     setError(`Search failed: ${res.status} ${body}`);
                     return;
                 }
 
-                // Ensuring the response is valid JSON
                 const contentType = res.headers.get("content-type") || "";
                 if (!contentType.includes("application/json")) {
                     const body = await res.text();
@@ -161,22 +151,21 @@ export const SearchResults: React.FC = () => {
 
         void fetchResults();
         return () => controller.abort();
-        // serialize arrays in deps to avoid unnecessary fetches
     }, [query, JSON.stringify(genreList), JSON.stringify(accessibilityList), sortParam]);
 
-    // Prompting the user to enter a search query
-    if (!query) return <div>Please enter a search query.</div>;
-    // Returning loading message if still loading
     if (loading) return <div>Searching…</div>;
-    // Returning the error message if there is an error
     if (error) return <div>Error: {error}</div>;
-    // Checking if there are no results, or it is null and returning a message
-    if (results.length === 0) return <div>No results found for &quot;{query}&quot;.</div>;
+    if (results.length === null) return <div>No results found.</div>;
 
-    function buildSearchUrl(params: { q: string; genre?: string[] | null; accessibility?: string[]; sort?: string }) {
+    function buildSearchUrl(params: {
+        q: string;
+        genre?: string[] | null;
+        accessibility?: string[];
+        sort?: string;
+    }) {
         const u = new URLSearchParams();
         if (params.q) u.set("q", params.q);
-        if (params.genre && params.genre.length) {
+        if (params.genre?.length) {
             for (const g of params.genre) u.append("genre", g);
         }
         if (params.accessibility?.length) {
@@ -186,8 +175,11 @@ export const SearchResults: React.FC = () => {
         return `/search?${u.toString()}`;
     }
 
-    // called by FilterBar -> updates URL which triggers fetch via useEffect
-    function handleApplyFilters(filters: { genre?: string[]; accessibility?: string[]; sort?: string }) {
+    function handleApplyFilters(filters: {
+        genre?: string[];
+        accessibility?: string[];
+        sort?: string;
+    }) {
         const target = buildSearchUrl({
             q: query,
             genre: filters.genre ?? null,
@@ -198,12 +190,8 @@ export const SearchResults: React.FC = () => {
     }
 
     return (
-        <section role="region" aria-label={`Search results for ${query}`} className="my-5">
+        <section role="region" aria-label="Available Games:" className="my-5">
             <Container>
-                <h1 style={{ textAlign: "center", marginBottom: "16px" }}>
-                    Search results for "{query}"
-                </h1>
-
                 <div className="filter-panel" style={{ marginBottom: 24 }}>
                     <FilterBarTyped
                         onApply={handleApplyFilters}

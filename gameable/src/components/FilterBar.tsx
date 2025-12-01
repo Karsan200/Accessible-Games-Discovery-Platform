@@ -86,7 +86,7 @@ export default function FilterBar({ onApply, initial }: FilterBarProps) {
                                     <Form.Check
                                         key={g}
                                         type="checkbox"
-                                        id={`genre-${g}`}
+                                        id={`${g}`}
                                         label={g}
                                         checked={selectedGenres.includes(g)}
                                         onChange={() => toggleArrayItem(setSelectedGenres, g)}
@@ -118,7 +118,7 @@ export default function FilterBar({ onApply, initial }: FilterBarProps) {
                                     <Form.Check
                                         key={a}
                                         type="checkbox"
-                                        id={`access-${a}`}
+                                        id={`${a}`}
                                         label={a}
                                         checked={selectedAccessibility.includes(a)}
                                         onChange={() => toggleArrayItem(setSelectedAccessibility, a)}

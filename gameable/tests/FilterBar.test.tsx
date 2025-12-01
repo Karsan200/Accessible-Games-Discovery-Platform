@@ -54,9 +54,14 @@ beforeEach(() => {
 });
 
 // function to render the component and capture the onApply callback
-function setup(initial?: FilterBarProps["initial"]) {
+async function setup(initial?: FilterBarProps["initial"]) {
     const onApply = jest.fn();
     render(<FilterBar onApply={onApply} initial={initial} />);
+
+    await waitFor(() => {
+        expect(fetch).toHaveBeenCalled();
+    });
+
     return { onApply };
 }
 
@@ -67,7 +72,7 @@ describe("FilterBar Component", () => {
     });
 
     test("fetches filter options on mount", async () => {
-        setup();
+        await setup();
 
         // waiting for the API call to be made when the component mounts
         await waitFor(() => {
@@ -79,7 +84,7 @@ describe("FilterBar Component", () => {
     });
 
     test("renders genre and accessibility options", async () => {
-        setup();
+        await setup();
 
         // opening the genre dropdown
         fireEvent.click(await screen.findByText("All Genres"));
@@ -94,7 +99,7 @@ describe("FilterBar Component", () => {
 
     test("shows fallback text when no options are available", async () => {
         mockFetchEmpty();
-        setup();
+        await setup();
 
         fireEvent.click(await screen.findByText("All Genres"));
         expect(await screen.findByText("No genres available")).toBeTruthy();
@@ -104,7 +109,7 @@ describe("FilterBar Component", () => {
     });
 
     test("allows selecting and deselecting a genre", async () => {
-        setup();
+        await setup();
 
         fireEvent.click(await screen.findByText("All Genres"));
 
@@ -118,7 +123,7 @@ describe("FilterBar Component", () => {
     });
 
     test("allows selecting and deselecting accessibility options", async () => {
-        setup();
+        await setup();
 
         fireEvent.click(await screen.findByText("All Features"));
 
@@ -131,7 +136,7 @@ describe("FilterBar Component", () => {
     });
 
     test("allows selecting multiple genres", async () => {
-        setup();
+        await setup();
 
         fireEvent.click(await screen.findByText("All Genres"));
         fireEvent.click(await screen.findByLabelText("Action"));
@@ -145,7 +150,7 @@ describe("FilterBar Component", () => {
     });
 
     test("allows selecting multiple accessibility options", async () => {
-        setup();
+        await setup();
 
         fireEvent.click(await screen.findByText("All Features"));
         fireEvent.click(await screen.findByLabelText("Visual"));
@@ -159,7 +164,7 @@ describe("FilterBar Component", () => {
     });
 
     test("changes sort option", async () => {
-        setup();
+        await setup();
 
         // selecting a new sort option
         const sortSelect = screen.getByDisplayValue("Relevance") as HTMLSelectElement;
@@ -172,7 +177,7 @@ describe("FilterBar Component", () => {
     });
 
     test("applies selected filters when clicking Apply Filters", async () => {
-        const { onApply } = setup();
+        const { onApply } =  await setup();
 
         fireEvent.click(await screen.findByText("All Genres"));
         fireEvent.click(await screen.findByLabelText("Action"));
@@ -195,7 +200,7 @@ describe("FilterBar Component", () => {
     });
 
     test("applies filters with no selections", async () => {
-        const { onApply } = setup();
+        const { onApply } = await setup();
 
         fireEvent.click(screen.getByText("Apply Filters"));
 
@@ -207,7 +212,7 @@ describe("FilterBar Component", () => {
     });
 
     test("clears all filters when Clear All is clicked", async () => {
-        const { onApply } = setup({
+        const { onApply } = await setup({
             genre: ["Action"],
             accessibility: ["Visual"],
             sort: "rating",
@@ -223,7 +228,7 @@ describe("FilterBar Component", () => {
     });
 
     test("uses initial values when provided", async () => {
-        setup({
+        await setup({
             genre: ["RPG"],
             accessibility: ["Audio"],
             sort: "rating",
@@ -238,7 +243,7 @@ describe("FilterBar Component", () => {
     });
 
     test("uses default empty values when initial is undefined", async () => {
-        setup();
+        await setup();
 
         expect(await screen.findByText("All Genres")).toBeTruthy();
         expect(screen.getByText("All Features")).toBeTruthy();
@@ -253,7 +258,7 @@ describe("FilterBar Component", () => {
         // forcing a failed API response
         mockFetchFailure();
         const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-        setup();
+        await setup();
 
         // waiting for the error to be logged
         await waitFor(() => {
@@ -273,7 +278,7 @@ describe("FilterBar Component", () => {
         // checking handling of network failures
         mockFetchNetworkError();
         const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-        setup();
+        await setup();
 
         await waitFor(() => {
             expect(consoleSpy).toHaveBeenCalledWith(
@@ -294,20 +299,20 @@ describe("FilterBar Component", () => {
             })
         );
 
-        setup();
+        await setup();
 
         fireEvent.click(await screen.findByText("All Genres"));
         expect(await screen.findByText("No genres available")).toBeTruthy();
     });
 
     test("displays selected genres in dropdown toggle", async () => {
-        setup({ genre: ["Action", "RPG"] });
+        await setup({ genre: ["Action", "RPG"] });
 
         expect(await screen.findByText("Action, RPG")).toBeTruthy();
     });
 
     test("displays selected accessibility features in dropdown toggle", async () => {
-        setup({ accessibility: ["Visual", "Audio"] });
+        await setup({ accessibility: ["Visual", "Audio"] });
 
         expect(await screen.findByText("Visual, Audio")).toBeTruthy();
     });

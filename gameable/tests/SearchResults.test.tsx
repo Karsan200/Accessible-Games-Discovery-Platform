@@ -63,8 +63,8 @@ afterEach(() => {
 });
 
 // function to render component with router context
-function renderWithRouter(initialUrl: string) {
-    return render(
+async function renderWithRouter(initialUrl: string) {
+    const utils = render(
         <MemoryRouter initialEntries={[initialUrl]}>
             <Routes>
                 <Route path="/search" element={<SearchResults />} />
@@ -72,17 +72,22 @@ function renderWithRouter(initialUrl: string) {
             </Routes>
         </MemoryRouter>
     );
+
+    await waitFor(() => {
+        expect(fetch).toHaveBeenCalled();
+    });
+    return utils;
 }
 
 describe("SearchResults Component", () => {
 
     test("shows loading state initially", async () => {
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
         expect(screen.getByText(/Searching/i)).toBeTruthy();
     });
 
     test("fetches and displays results", async () => {
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
 
         const game1 = await screen.findByText("Test Game");
         const game2 = await screen.findByText("Another Game");
@@ -92,19 +97,19 @@ describe("SearchResults Component", () => {
     });
 
     test("displays correct result count", async () => {
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
         const count = await screen.findByText(/Showing 2 results/i);
         expect(count).toBeTruthy();
     });
 
     test("renders GameCard components", async () => {
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
         const cards = await screen.findAllByTestId("game-card");
         expect(cards.length).toBe(2);
     });
 
     test("navigates when clicking a game card", async () => {
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
 
         const card = await screen.findByText("Test Game");
         fireEvent.click(card);
@@ -116,7 +121,7 @@ describe("SearchResults Component", () => {
     });
 
     test("handles empty query string", async () => {
-        renderWithRouter("/search?q=");
+        await renderWithRouter("/search?q=");
 
         // Waiting until the fetch call has been triggered
         await waitFor(() => {
@@ -138,7 +143,7 @@ describe("SearchResults Component", () => {
             })
         );
 
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
 
         const message = await screen.findByText(/Showing 0 results/i);
         expect(message).toBeTruthy();
@@ -154,7 +159,7 @@ describe("SearchResults Component", () => {
             })
         );
 
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
 
         const error = await screen.findByText(/Search not found \(404\)/i);
         expect(error).toBeTruthy();
@@ -170,7 +175,7 @@ describe("SearchResults Component", () => {
             })
         );
 
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
 
         const error = await screen.findByText(/Invalid JSON response/i);
         expect(error).toBeTruthy();
@@ -200,7 +205,7 @@ describe("SearchResults Component", () => {
             });
         });
 
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
 
         await screen.findByText("Test Game");
         expect(callCount).toBe(2);
@@ -215,14 +220,14 @@ describe("SearchResults Component", () => {
             return Promise.resolve({ ok: false, status: 401 });
         });
 
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
 
         const error = await screen.findByText(/Unauthorized and refresh failed/i);
         expect(error).toBeTruthy();
     });
 
     test("handles multiple genre and accessibility filters", async () => {
-        renderWithRouter(
+        await renderWithRouter(
             "/search?q=test&genre=Action&genre=RPG&accessibility=Visual&accessibility=Audio"
         );
 
@@ -240,7 +245,7 @@ describe("SearchResults Component", () => {
     });
 
     test("handles CSV format fallback for filters (encoded)", async () => {
-        renderWithRouter("/search?q=test&genre=Action,RPG&accessibility=Visual,Audio");
+        await renderWithRouter("/search?q=test&genre=Action,RPG&accessibility=Visual,Audio");
 
         await waitFor(() => {
             expect(fetch).toHaveBeenCalled();
@@ -269,14 +274,14 @@ describe("SearchResults Component", () => {
             })
         );
 
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
 
         const game = await screen.findByText("No Icon Game");
         expect(game).toBeTruthy();
     });
 
     test("applies sort parameter", async () => {
-        renderWithRouter("/search?q=test&sort=rating");
+        await renderWithRouter("/search?q=test&sort=rating");
 
         await waitFor(() => {
             expect(fetch).toHaveBeenCalled();
@@ -288,7 +293,7 @@ describe("SearchResults Component", () => {
     });
 
     test("applies filters and triggers a new fetch", async () => {
-        renderWithRouter("/search?q=test");
+        await renderWithRouter("/search?q=test");
 
         const btn = await screen.findByTestId("apply-filters");
         fireEvent.click(btn);

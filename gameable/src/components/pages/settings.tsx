@@ -21,7 +21,7 @@ export default function Settings() {
 
     const [fontType, setFontType] = useState(false);
     const [fontSize, setFontSize] = useState(false);
-    const [voiceNavEnabled, setVoiceNavEnabled] = useState(false);
+    const [voiceNavEnabled, setVoiceNavEnabled] = useState(true);
     const [voiceNavLeft, setVoiceNavLeft] = useState(false);
 
     // NEW — Auto captions setting
@@ -76,7 +76,7 @@ export default function Settings() {
 
                     applyFontClass(false);
                     applyFontSizeClass(false);
-                    applyVoiceNavToggle(false);
+                    applyVoiceNavToggle(true);
                     applyVoiceNavLocation(false);
 
                     setLoading(false);

@@ -502,7 +502,7 @@ export default function FloatingVoiceNavigation() {
 
     const className = [
         "vn-box",
-        prefs.voiceNavEnabled ? "vn-hidden" : "vn-visible",
+        prefs.voiceNavEnabled ? "vn-visible" : "vn-hidden",
         prefs.voiceNavLeft ? "vn-left" : "vn-right",
     ].join(" ");
 

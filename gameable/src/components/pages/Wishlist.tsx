@@ -5,7 +5,7 @@ import { getUserIdFromToken } from "../../data/TokenUtility.ts"
 import { WishlistGameCard } from "../WishlistGameCard.tsx";
 import { IconCheckbox } from "../IconCheckbox.tsx";
 import { BlackButton } from "../BlackButton.tsx";
-import {useAuth} from "../../data/AuthContext";
+import { useAuth } from "../../data/AuthContext";
 
 // --- Interfaces ---
 interface Game {

@@ -17,6 +17,11 @@ jest.mock("../src/data/ApiDataHelper.tsx", () => ({
     ApiDataHelper: (url: string, options: any, auth: any) => mockApiDataHelper(url, options, auth)
 }));
 
+const mockUseAuth = jest.fn();
+jest.mock("../src/data/AuthContext.tsx", () => ({
+    useAuth: () => mockUseAuth()
+}));
+
 jest.mock("../src/components/WishlistGameCard.tsx", () => ({
     WishlistGameCard: ({ name }: any) => <div data-testid="wishlist-game-card">{name}</div>
 }));

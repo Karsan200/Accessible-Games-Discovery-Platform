@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { GameCard } from "./GameCard";
+import { GameCard } from "./GameCardHome";
 import { useNavigate } from "react-router-dom";
 import "./TrendingGames.css";
 
@@ -49,7 +49,7 @@ export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
                                 tagline={game.tagline}
                                 tags={game.tags}
                                 onClick={() => navigate(`/games/${game.id}`)}
-                                rating={0}                            />
+                                                          />
                         </Col>
                     ))}
                 </Row>

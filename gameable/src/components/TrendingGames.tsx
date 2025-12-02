@@ -49,7 +49,7 @@ export const TrendingGames: React.FC<TrendingGamesProps> = ({ games }) => {
                                 tagline={game.tagline}
                                 tags={game.tags}
                                 onClick={() => navigate(`/games/${game.id}`)}
-                            />
+                                rating={0}                            />
                         </Col>
                     ))}
                 </Row>

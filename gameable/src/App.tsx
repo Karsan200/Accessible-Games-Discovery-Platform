@@ -25,6 +25,7 @@ import FloatingVoiceNavigation from "./components/voiceNavigation/VoiceNavigatio
 // <-- Added imports
 import Profile from "./components/pages/profile.tsx";
 import MyReviews from "./components/pages/MyReviews.tsx";
+import SubmitGame from "./components/pages/SubmitGame.tsx";
 
 function AppContent() {
     const { accessToken } = useAuth();
@@ -36,6 +37,7 @@ function AppContent() {
             {isLoggedIn ? (
                 <Navbar />
             ) : (
+
                 <NavbarLoggedOut />
             )}
             <main className="main">
@@ -55,6 +57,7 @@ function AppContent() {
                     <Route path="/footerPages/accessibilityStatement" element={<AccessibilityStatement />}/>
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/voice-nav" element={<FloatingVoiceNavigation/> } />
+                    <Route path="/submitGame" element={isLoggedIn ? <SubmitGame /> : <UserNotLoggedIn />} />
                 </Routes>
                 <FloatingVoiceControl />
             </main>

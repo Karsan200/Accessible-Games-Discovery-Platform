@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import {
     User,
     Game,
+    Publisher,
     GameMedia,
     Genre,
     Wishlist,
@@ -35,7 +36,7 @@ async function seedDatabase() {
         console.log("Seeding database...");
 
         // === Users ===
-        const [PixelPanda, RocketRaccoon, BouncyBear, GigglyGiraffe, pubMojang, pubRobTop, pubSupercell,        pubTapBlaze, pubPlayrix, pubBigDuckGamesLLC, pubPlaystack
+        const [PixelPanda, RocketRaccoon, BouncyBear, GigglyGiraffe, Mojang, RobTop, Supercell, TapBlaze, Playrix, BigDuckGamesLLC, Playstack
         ] = await User.create([
             {
                 username: "PixelPanda",
@@ -159,6 +160,53 @@ async function seedDatabase() {
                 salt: salt1,
             },
         ]);
+
+        // === Publishers ===
+        const [
+            pubMojang,
+            pubRobTop,
+            pubSupercell,
+            pubTapBlaze,
+            pubPlayrix,
+            pubBigDuckGamesLLC,
+            pubPlaystack
+            ] = await Publisher.create([
+            {
+                name: "Mojang",
+                description: "We created Mincecraft.",
+                email: "mojang@example.com"
+            },
+            {
+                name: "RobTop",
+                description: "We created Geometry Dash.",
+                email: "roboto@example.com"
+            },
+            {
+                name: "Supercell",
+                description: "We created Clash Royale.",
+                email: "supercell@example.com"
+            },
+            {
+                name: "TapBlaze",
+                description: "We created Good Pizza Great Pizza.",
+                email: "tapblaze@example.com"
+            },
+            {
+                name: "Playrix",
+                description: "We created Township.",
+                email: "playrix@example.com"
+            },
+            {
+                name: "Big Duck Games LLC",
+                description: "We created Flow Free.",
+                email: "bigduckgamesllc@example.com"
+            },
+            {
+                name: "Playstack",
+                description: "We created Balatro.",
+                email: "playstack@example.com"
+            }
+        ])
 
 
         // === Genres ===

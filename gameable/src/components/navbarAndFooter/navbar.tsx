@@ -51,6 +51,7 @@ export default function Navbar() {
                 <li><NavLink to="/wishlist" className="wishlist">Wishlist</NavLink></li>
                 <li><NavLink to="/profile" className="profile">Profile</NavLink></li>
                 <li><NavLink to="/settings" className="settings">Settings</NavLink></li>
+                <li><NavLink to="/submitGame" className="submitGame">Submit Game</NavLink></li>
             </ul>
         </nav>
     )

@@ -1,8 +1,11 @@
 import express from "express";
 import { Game, GameMedia, Review, Tag, Genre } from "../models/dbSetup.js";
 import { toEmbedUrl } from "../utils/youtube.js";
+import { addGameWithMedia} from "../controllers/gameController.js";
 
 const router = express.Router();
+
+router.post("/with-media", addGameWithMedia);
 
 // Light list
 router.get("/", async (req, res) => {

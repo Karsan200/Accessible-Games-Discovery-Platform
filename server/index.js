@@ -6,8 +6,10 @@ import { expressjwt } from "express-jwt";
 import { connectDB } from "./models/dbSetup.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import gamesRouter from "./routes/gameRoutes.js";
-import  reviewRoute  from "./routes/reviewRoute.js";
+import reviewRoute  from "./routes/reviewRoute.js";
 import searchRoutes from "./routes/searchRoutes.js";
+import publisherRouter from "./routes/publishers.js";
+import genreRouter from "./routes/genres.js";
 
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import { authenticationService } from "./logic/authenticationService.js";
@@ -33,12 +35,13 @@ app.listen(5000, () => {
     console.log("API running on http://localhost:5000");
 });
 
+// Connect to MongoDB
+await connectDB();
+
 app.use("/images", express.static("public/gameImages"));
 app.use("/api/games", gamesRouter);
 app.use("/api/reviews", reviewRoute);
 
-// Connect to MongoDB
-await connectDB();
 
 // Set JWT middleware (protects all routes by default)
 app.use(
@@ -49,12 +52,20 @@ app.use(
         // Paths exempt from JWT authentication
         path: [
             "/auth/login", "/auth/register", "/auth/refresh",  "/auth/logout", // Authentication paths
-            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", { url: "/api/search", methods: ["GET"] }, // Public home page paths
+            "/api/home/hero", "/api/home/trending", "/api/home/top-sellers", { url: "/api/search",  methods: ["GET"] }, // Public home page paths
             "/games", "/games/:id", // Public game list and details,
-            "api/reviews", "/voice-nav"
+            "api/reviews", "/voice-nav",
+            { url: "/api/publishers", methods: ["GET"] },
+            { url: "/api/genres", methods: ["GET"] },
         ]
     })
 );
+
+app.use("/api/publishers", publisherRouter);
+app.use("/api/genres", genreRouter);
+app.use("/api/games", gamesRouter);
+
+
 
 // Current user middleware (Makes user document available in req.currentUser for protected routes)
 app.use(async (req, res, next) => {

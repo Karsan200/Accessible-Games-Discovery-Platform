@@ -18,5 +18,9 @@
   "include": [
     "src",          // main code
     "tests"         // your tests folder
+  ],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
   ]
 }

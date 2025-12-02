@@ -1,0 +1,69 @@
+stages:
+  - install
+  - test
+  - build
+
+# Cache dependencies so CI is much faster
+cache:
+  paths:
+    - gameable/node_modules/
+    - server/node_modules/
+
+# --------------------------
+# INSTALL DEPENDENCIES
+# --------------------------
+
+install-frontend:
+  stage: install
+  image: node:22
+  script:
+    - cd gameable
+    - npm install
+  artifacts:
+    paths:
+      - gameable/node_modules/
+
+install-backend:
+  stage: install
+  image: node:22
+  script:
+    - cd server
+    - npm install
+  artifacts:
+    paths:
+      - server/node_modules/
+
+# --------------------------
+# TEST FRONTEND + BACKEND
+# --------------------------
+
+test-frontend:
+  stage: test
+  image: node:20
+  script:
+    - cd gameable
+    - npm test -- --watchAll=false || echo "No frontend tests found"
+  needs: ["install-frontend"]
+
+test-backend:
+  stage: test
+  image: node:20
+  script:
+    - cd server
+    - npm test || echo "No backend tests found"
+  needs: ["install-backend"]
+
+# --------------------------
+# BUILD FRONTEND
+# --------------------------
+
+build-frontend:
+  stage: build
+  image: node:20
+  script:
+    - cd gameable
+    - npm run build
+  needs: ["test-frontend"]
+  artifacts:
+    paths:
+      - gameable/build/

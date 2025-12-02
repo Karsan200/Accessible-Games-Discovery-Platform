@@ -11,7 +11,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "noEmit": false,
+    "noEmit": true,
     "composite": true,
     "types": ["jest", "node", "@testing-library/jest-dom"],
     "typeRoots": ["./node_modules/@types"]

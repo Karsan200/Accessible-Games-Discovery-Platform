@@ -420,6 +420,7 @@ export default function FloatingVoiceNavigation() {
         {
             command: ["write in *", "type in *"],
             callback: (spoken: string) => {
+                // @ts-ignore
                 const { text, index } = parseVoiceCommand(spoken);
 
                 // Find visible textareas

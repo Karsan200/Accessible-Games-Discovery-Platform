@@ -39,7 +39,7 @@ install-backend:
 
 test-frontend:
   stage: test
-  image: node:20
+  image: node:22
   script:
     - cd gameable
     - npm test -- --watchAll=false || echo "No frontend tests found"
@@ -47,7 +47,7 @@ test-frontend:
 
 test-backend:
   stage: test
-  image: node:20
+  image: node:22
   script:
     - cd server
     - npm test || echo "No backend tests found"
@@ -59,7 +59,7 @@ test-backend:
 
 build-frontend:
   stage: build
-  image: node:20
+  image: node:22
   script:
     - cd gameable
     - npm run build

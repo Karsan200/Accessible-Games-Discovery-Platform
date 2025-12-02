@@ -1,6 +1,7 @@
 import React from "react";
 import { TopSellerCard } from "./TopSellerCard";
 import { useNavigate } from "react-router-dom";
+import "./TopSellersSection.css";
 
 interface Game {
     id: string;
@@ -24,36 +25,12 @@ export const TopSellersSection: React.FC<TopSellersSectionProps> = ({ games }) =
     };
 
     return (
-        <section className="container my-5" aria-labelledby="top-sellers-heading">
-            <h2
-                id="top-sellers-heading"
-                style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontStyle: 'normal',
-                    fontWeight: 600,
-                    fontSize: '48px',
-                    lineHeight: '120%',
-                    textAlign: 'center',
-                    color: '#000000',
-                    marginTop: '128px',
-                    marginBottom: '16px',
-                }}
-                tabIndex={-1}
-            >
+        <section className="container my-5 top-sellers-section" aria-labelledby="top-sellers-heading">
+            <h2 id="top-sellers-heading" className="top-sellers-heading" tabIndex={-1}>
                 Highest Rated
             </h2>
 
-            <p
-                style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontWeight: 400,
-                    fontSize: '18px',
-                    lineHeight: '150%',
-                    color: '#000000',
-                    textAlign: 'center',
-                    marginBottom: '48px',
-                }}
-            >
+            <p className="top-sellers-subtitle">
                 Explore the top-rated games loved by players — find out what everyone's talking about
             </p>
 

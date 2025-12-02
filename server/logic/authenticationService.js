@@ -22,12 +22,16 @@ export class authenticationService {
         // Create password salt
         const salt = cryptographyService.createSalt()
 
+        // Path to default profile picture
+        const defaultProfilePic = "/uploads/profile_pics/profilepicTemp.png";
+
         // Create new user
         const newUser = new User({
             username: username,
             email: email,
             password: cryptographyService.hashPassword(password, salt),
-            salt: salt
+            salt: salt,
+            profilePicture: defaultProfilePic
         })
 
         await newUser.save();

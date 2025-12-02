@@ -5,8 +5,8 @@ import "./FeaturesSection.css";
 export const FeaturesSection: React.FC = () => {
     const navigate = useNavigate();
 
-    const handleClick = () => {
-        navigate("/games");
+    const goToAccessibilitySearch = (value: string) => {
+        navigate(`/search?accessibility=${encodeURIComponent(value)}`);
     };
 
     return (
@@ -29,7 +29,10 @@ export const FeaturesSection: React.FC = () => {
             <div className="features-content">
 
                 {/* Visual */}
-                <button className="feature-card visual" onClick={handleClick}>
+                <button
+                    className="feature-card visual"
+                    onClick={() => goToAccessibilitySearch("Visual")}
+                >
                     <div className="feature-icon">
                         <i className="bi bi-eye"></i>
                     </div>
@@ -37,7 +40,10 @@ export const FeaturesSection: React.FC = () => {
                 </button>
 
                 {/* Audio */}
-                <button className="feature-card audio" onClick={handleClick}>
+                <button
+                    className="feature-card audio"
+                    onClick={() => goToAccessibilitySearch("Hearing")}
+                >
                     <div className="feature-icon">
                         <i className="bi bi-volume-up"></i>
                     </div>
@@ -45,7 +51,10 @@ export const FeaturesSection: React.FC = () => {
                 </button>
 
                 {/* Motor */}
-                <button className="feature-card motor" onClick={handleClick}>
+                <button
+                    className="feature-card motor"
+                    onClick={() => goToAccessibilitySearch("Motor")}
+                >
                     <div className="feature-icon">
                         <i className="bi bi-hand-index"></i>
                     </div>
@@ -53,7 +62,10 @@ export const FeaturesSection: React.FC = () => {
                 </button>
 
                 {/* Cognitive */}
-                <button className="feature-card cognitive" onClick={handleClick}>
+                <button
+                    className="feature-card cognitive"
+                    onClick={() => goToAccessibilitySearch("Cognitive")}
+                >
                     <div className="feature-icon">
                         <i className="bi bi-infinity"></i>
                     </div>

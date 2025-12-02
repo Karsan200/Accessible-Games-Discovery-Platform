@@ -1,0 +1,110 @@
+/*remove navbar padding*/
+.accessibility-page,
+.main > .accessibility-page {
+    margin-top: -8rem !important;
+    margin-bottom: -2rem !important;
+    padding-top: 0 !important;
+    position: relative;
+    top: 0;
+}
+
+.accessibility-page {
+    display: flex;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    min-height: 100vh;
+    padding: 0;
+    gap: 0;
+    align-items: stretch;
+    box-sizing: border-box;
+    background: transparent;
+}
+
+.access-left {
+    flex: 0 0 50vw;
+    max-width: 50vw;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.access-left img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0;
+    padding: 0;
+}
+
+.access-right {
+    flex: 1 1 50vw;
+    max-width: 50vw;
+    padding: 2rem 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: #ffffff;
+    color: #111;
+    box-sizing: border-box;
+    min-height: auto;
+}
+
+.access-logo {
+    display: block;
+    align-self: center;
+    width: 96px;
+    height: auto;
+    margin: 0 0 1rem;
+}
+
+.access-right h1 {
+    margin: 0 0 2rem;
+    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+    font-weight: 500;
+    color: #337A5B;
+    line-height: 1.15;
+}
+
+.access-body {
+    margin: 0 0 1rem;
+    color: #111;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+/* Responsive: hide left image and make right column full-width on small screens */
+@media (max-width: 880px) {
+    .accessibility-page {
+        flex-direction: column;
+    }
+
+    /* remove the left column completely on small screens */
+    .access-left {
+        display: none;
+        position: static;
+        height: auto;
+        max-width: 0;
+        flex: 0 0 0;
+        overflow: hidden;
+    }
+
+    /* right column fills the viewport width */
+    .access-right {
+        max-width: 100%;
+        width: 100%;
+        padding: 1.5rem 1.5rem;
+        min-height: auto;
+    }
+
+    /* ensure any img rule for .access-left doesn't reappear */
+    .access-left img {
+        display: none;
+        height: auto;
+    }
+}
+

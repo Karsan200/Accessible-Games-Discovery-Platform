@@ -70,6 +70,13 @@
     background: #edc9ff;
 }
 
+
+/*Make Tag text larger with accessibility settings*/
+body.large-font .accessibility-tag {
+    font-size: 0.95rem;
+}
+
+
 /* increase vertical padding and slightly reduce font for tight layouts */
 @media (max-width: 520px) {
     :root {

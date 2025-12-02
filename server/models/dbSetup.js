@@ -30,7 +30,13 @@ const userSchema = new mongoose.Schema({
             moderateReviews: Boolean,
             manageFeaturedContent: Boolean
         }
-    }
+    },
+    favorite_games: [{ type: mongoose.Schema.Types.ObjectId, ref: "Game" }],
+    fontSize: { type: Boolean, default: false },
+    fontType: { type: Boolean, default: false },
+    autoCaptions: { type: Boolean, default: true },
+    voiceNavigation: { type: Boolean, default: true },
+    navigationLocation: { type: Boolean, default: false },
 });
 
 // Sessions collection

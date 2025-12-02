@@ -1,3 +1,48 @@
+/*Adding dyslexic font*/
+@import url('https://cdn.jsdelivr.net/npm/open-dyslexic/font-face.min.css');
+
+body.dyslexic-font {
+  font-family: "OpenDyslexic", Arial, sans-serif;
+}
+
+body:not(.dyslexic-font) {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+/*Make Font Larger in Accessibility Settings*/
+
+/* Default font (small/normal) */
+.default-font {
+  font-size: 16px; /* body text */
+}
+
+/* Large font */
+.large-font {
+  font-size: 22px; /* body text */
+}
+
+/* Large font */
+body.large-font {
+  font-size: 22px; /* base size for body text */
+}
+
+body.large-font *,
+body.large-font p,
+body.large-font div,
+body.large-font span,
+body.large-font h1,
+body.large-font h2,
+body.large-font h3,
+body.large-font h4,
+body.large-font h5,
+body.large-font h6,
+body.large-font button {
+  font-size: inherit; /* inherit from body */
+}
+
+
+
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -13,9 +58,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  padding: 8rem 1.25rem 2rem;
+}
+
 a {
   font-weight: 500;
-  color: #646cff;
+  color: yellow;
   text-decoration: inherit;
 }
 a:hover {
@@ -24,7 +85,7 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
+  display: inline;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -47,7 +108,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: yellow;
 }
 button:focus,
 button:focus-visible {

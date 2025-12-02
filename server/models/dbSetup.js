@@ -1,38 +1,51 @@
 // server/models/dbSetup.js
-import mongoose from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
+// Connect to MongoDB
 export async function connectDB() {
-    try {
-        await mongoose.connect("mongodb://localhost:27017/database");
-        console.log("Connected to MongoDB");
-    } catch (err) {
-        console.error("MongoDB connection error:", err);
-    }
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to MongoDB");
 }
 
-// Schema
+// === SCHEMAS ===
 
 // Users collection
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    salt: { type: String, required: true },
     profilePicture: String,
     role: String,
     date_of_birth: Date,
-    setting1: { type: Boolean, default: false },
-    setting2: { type: Boolean, default: false }, // Editable settings add more where needed
+    favorite_games: [{ type: mongoose.Schema.Types.ObjectId, ref: "Game" }],
+    fontSize: { type: Boolean, default: false },
+    fontType: { type: Boolean, default: false },
+    autoCaptions: { type: Boolean, default: true },
+    voiceNavigation: { type: Boolean, default: true },
+    navigationLocation: { type: Boolean, default: false },
+});
+
+// Sessions collection
+const sessionSchema = new mongoose.Schema({
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    token: { type: String, required: true },
+    created_at: { type: Date, default: Date.now, expires: '6h' }, // The Session expires in 6 hours
 });
 
 // Games collection
 const gameSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    body: String, // Description of the game
-    release_date: Date,
-    publisher_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    genre_id: { type: mongoose.Schema.Types.ObjectId, ref: "Genre" },
-    last_update: Date,
-    age_rating: Number,
+    tagline: { type: String },
+    description: { type: String },
+    details: { type: String },
+    accessibility: { type: String },
+    release_date: { type: Date },
+    publisher_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    genre_ids: [{ type: Schema.Types.ObjectId, ref: "Genre" }],
+    last_update: { type: Date },
+    age_rating: { type: Number },
+
 });
 
 // Game Media collection
@@ -40,7 +53,7 @@ const gameMediaSchema = new mongoose.Schema({
     game_id: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
     type: {
         type: String,
-        enum: ["trailer", "screenshot", "cover", "concept_art", "other"],
+        enum: ["trailer", "screenshot", "cover", "concept_art", "other", "icon"],
         required: true,
     },
     url: { type: String, required: true },
@@ -59,6 +72,19 @@ const wishlistSchema = new mongoose.Schema({
     game_id: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
     status: String,
     created_at: { type: Date, default: Date.now },
+    removed_at: {type: Date, default: null }, // For soft delete, Active items removed_at = null, Deleted items removed_at = Date
+    weight: { type: Number, default: 0 },
+});
+
+// Incrementing weight per user
+wishlistSchema.pre("save", async function (next) {
+    if (this.weight == null || this.weight === 0) {
+        const count = await mongoose.model("Wishlist").countDocuments({
+            user_id: this.user_id
+        });
+        this.weight = count + 1;
+    }
+    next();
 });
 
 // Reviews collection
@@ -68,6 +94,7 @@ const reviewSchema = new mongoose.Schema({
     rating: { type: Number, required: true, min: 0, max: 10 },
     body: String, // Review Text
     flagged: { type: Boolean, default: false },
+    created_at: { type: Date, default: Date.now },
 });
 
 // Accessibility Group collection
@@ -87,8 +114,9 @@ const tagSchema = new mongoose.Schema({
     },
 });
 
-// Models
+// === MODELS ===
 export const User = mongoose.model("User", userSchema);
+export const Session = mongoose.model("Session", sessionSchema);
 export const Game = mongoose.model("Game", gameSchema);
 export const GameMedia = mongoose.model("GameMedia", gameMediaSchema);
 export const Genre = mongoose.model("Genre", genreSchema);

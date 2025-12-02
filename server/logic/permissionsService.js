@@ -20,6 +20,11 @@ export class permissionsService {
             }
         }
 
+        // If all permissions are false, set permissions to null
+        if (validPermissions.every(perm => permissions[perm] === false)) {
+            permissions = null;
+        }
+
         // Find the user
         const user = await User.findOne({ _id: userId });
         if (!user) {

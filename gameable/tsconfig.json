@@ -12,16 +12,11 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "noEmit": true,
-    "composite": true,
     "types": ["jest", "node", "@testing-library/jest-dom"],
     "typeRoots": ["./node_modules/@types"]
   },
   "include": [
     "src",          // main code
     "tests"         // your tests folder
-  ],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
   ]
 }

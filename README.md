@@ -2,13 +2,13 @@
 
 Gameable is a web-based marketplace designed to make discovering mobile games easier, more inclusive, and more enjoyable for everyone. Built with accessibility at its core, the platform empowers users to browse, review, and Wishlist games based on the accessibility features that matter most to them.
 
-## Browse by Accessibility
+### Browse by Accessibility
 Explore games using filters for accessibility options such as motor, audio and cognitive. Find games that fit your needs quickly and easily.
-## Community Reviews
+### Community Reviews
 Share your experiences and learn from others. Users can leave detailed reviews focusing on both gameplay and accessibility, helping the community make informed decisions.
-## Wishlist
+### Wishlist
 Add games to your Wishlist to keep track of titles you want to try later.
-## Built in Accessibility
+### Built in Accessibility
 Our platform has been designed to be inclusive for everyone:
 -	Voice Navigation: Browse the entire marketplace hands-free using built in voice commands, has additional settings to make it work best for you.
 -	Font Adjustments: A larger font size is available as well as dyslexic friendly font

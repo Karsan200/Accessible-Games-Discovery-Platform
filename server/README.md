@@ -9,7 +9,7 @@ To run the Express app, follow these steps:
    npm install
    ```
 4. Copy the `.envExample` file to a new file named `.env` and configure the environment variables as needed.
-5. Start the development server with:
+5. Start the server with:
 ```bash
    node index.js
 ```

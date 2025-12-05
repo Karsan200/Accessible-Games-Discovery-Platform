@@ -4,6 +4,7 @@ import { BlackButton } from "./BlackButton";
 import { WhiteButton } from "./WhiteButton";
 import { GameTags } from "./game/GameTags";
 import { useNavigate } from "react-router-dom";
+import "./HeroHeader.css";
 
 interface HeroSlide {
     id: string;
@@ -26,18 +27,6 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
     const safeIndex = Math.min(activeIndex, slides.length - 1);
     const activeSlide = slides[safeIndex];
 
-    const arrowStyle: React.CSSProperties = {
-        width: "48px",
-        height: "48px",
-        borderRadius: "50%",
-        border: "1px solid #000",
-        backgroundColor: "#151515",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "12px",
-    };
-
     const handlePlayNow = () => {
         navigate(`/games/${activeSlide.id}`);
     };
@@ -53,17 +42,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
     };
 
     return (
-        <section
-            style={{
-                width: "100%",
-                maxWidth: "1440px",
-                margin: "0 auto",
-                background: "#FFFFFF",
-                marginTop: "-128px",
-            }}
-            aria-label="Hero Carousel"
-        >
-            {/* Carousel */}
+        <section className="hero-header" aria-label="Hero Carousel">
             <Carousel
                 activeIndex={safeIndex}
                 onSelect={(index) => setActiveIndex(index)}
@@ -73,12 +52,12 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                 slide={true}
                 className="w-100"
                 prevIcon={
-                    <div style={arrowStyle}>
+                    <div className="hero-arrow">
                         <span aria-hidden="true" className="carousel-control-prev-icon" />
                     </div>
                 }
                 nextIcon={
-                    <div style={arrowStyle}>
+                    <div className="hero-arrow">
                         <span aria-hidden="true" className="carousel-control-next-icon" />
                     </div>
                 }
@@ -86,14 +65,8 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                 {slides.map((slide) => (
                     <Carousel.Item key={slide.id}>
                         <div
-                            style={{
-                                width: "100%",
-                                height: "345px",
-                                backgroundImage: `url(${slide.image})`,
-                                backgroundSize: "cover",
-                                backgroundPosition: "center",
-                                backgroundRepeat: "no-repeat",
-                            }}
+                            className="hero-slide-image"
+                            style={{ backgroundImage: `url(${slide.image})` }}
                             role="img"
                             aria-label={slide.title}
                         />
@@ -101,53 +74,14 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                 ))}
             </Carousel>
 
-            {/* Content Below Carousel */}
-            <Container
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    maxWidth: "1280px",
-                    width: "100%",
-                    marginTop: "32px",
-                    padding: "0 16px",
-                    gap: "40px",
-                }}
-            >
-                {/* Left Column: Title + Buttons */}
-                <div
-                    style={{
-                        flex: 1,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        gap: "16px",
-                    }}
-                >
-                    <h1
-                        style={{
-                            fontFamily: "'Poppins', sans-serif",
-                            fontWeight: 600,
-                            fontSize: "64px",
-                            lineHeight: "120%",
-                            color: "#000000",
-                            margin: 0,
-                            textAlign: "left",
-                        }}
-                        tabIndex={0}
-                    >
+            <Container className="hero-content-container">
+                {/* Left Column */}
+                <div className="hero-left">
+                    <h1 className="hero-title" tabIndex={0}>
                         {activeSlide.title}
                     </h1>
 
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: "16px",
-                            marginTop: "16px",
-                        }}
-                    >
+                    <div className="hero-button-row">
                         <BlackButton
                             text="Play Now"
                             aria-label={`Play ${activeSlide.title}`}
@@ -161,37 +95,16 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({ slides }) => {
                     </div>
                 </div>
 
-                {/* Right Column: Tags + Description */}
-                <div
-                    style={{
-                        flex: 1,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        justifyContent: "flex-start",
-                        gap: "12px",
-                    }}
-                >
-                    {/* Accessibility Tags */}
+                {/* Right Column */}
+                <div className="hero-right">
                     {activeSlide.tags && activeSlide.tags.length > 0 && (
                         <div>
                             <GameTags tags={activeSlide.tags} />
                         </div>
                     )}
 
-                    {/* Description */}
                     {activeSlide.description && (
-                        <p
-                            style={{
-                                fontFamily: "'Poppins', sans-serif",
-                                fontWeight: 400,
-                                fontSize: "16px",
-                                lineHeight: "150%",
-                                color: "#000000",
-                                margin: 0,
-                                textAlign: "left",
-                            }}
-                        >
+                        <p className="hero-description">
                             {activeSlide.description}
                         </p>
                     )}

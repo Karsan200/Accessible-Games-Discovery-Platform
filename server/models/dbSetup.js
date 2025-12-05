@@ -18,8 +18,12 @@ const userSchema = new mongoose.Schema({
     profilePicture: String,
     role: String,
     date_of_birth: Date,
-    setting1: { type: Boolean, default: false },
-    setting2: { type: Boolean, default: false }, // Editable settings add more where needed
+    favorite_games: [{ type: mongoose.Schema.Types.ObjectId, ref: "Game" }],
+    fontSize: { type: Boolean, default: false },
+    fontType: { type: Boolean, default: false },
+    autoCaptions: { type: Boolean, default: true },
+    voiceNavigation: { type: Boolean, default: true },
+    navigationLocation: { type: Boolean, default: false },
 });
 
 // Sessions collection

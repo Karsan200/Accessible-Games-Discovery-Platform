@@ -2,7 +2,6 @@ import './App.css'
 import Navbar from './components/navbarAndFooter/navbar.tsx'
 import NavbarLoggedOut from "./components/navbarAndFooter/navbarLoggedOut.tsx";
 import UserNotLoggedIn from './components/navbarAndFooter/errorPages/userNotLoggedIn';
-import FloatingVoiceControl from './components/voiceNavigation/VoiceNavigationOverlay.tsx'
 import AboutUs from "./components/navbarAndFooter/footerPages/aboutUs.tsx";
 import ContactUs from "./components/navbarAndFooter/footerPages/contactUs.tsx";
 import AccessibilityStatement from "./components/navbarAndFooter/footerPages/acessibilityStatement.tsx";
@@ -26,6 +25,10 @@ import FloatingVoiceNavigation from "./components/voiceNavigation/VoiceNavigatio
 import Profile from "./components/pages/profile.tsx";
 import MyReviews from "./components/pages/MyReviews.tsx";
 import SubmitGame from "./components/pages/SubmitGame.tsx";
+import Dashboard from "./components/pages/Dashboard.tsx";
+import Settings from "./components/pages/settings.tsx";
+import VoiceCommandsPage from "./components/voiceNavigation/VoiceCommandsPage.tsx";
+import VoiceCommandsIntro from "./components/voiceNavigation/VoiceCommandsIntro.tsx";
 
 function AppContent() {
     const { accessToken } = useAuth();
@@ -37,7 +40,6 @@ function AppContent() {
             {isLoggedIn ? (
                 <Navbar />
             ) : (
-
                 <NavbarLoggedOut />
             )}
             <main className="main">
@@ -49,17 +51,21 @@ function AppContent() {
                     <Route path="/games" element={<Games />} />
                     <Route path="/games/:id" element={<GamePage />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/my-reviews" element={<MyReviews />} />
                     <Route path="/errorPages/userNotLoggedIn" element={<UserNotLoggedIn />}/>
-                    <Route path="/settings" element={<h1>Settings</h1>} />
+                    <Route path="/settings" element={<Settings />} />
                     <Route path="/footerPages/aboutUs" element={<AboutUs />} />
                     <Route path="/footerPages/contactUs" element={<ContactUs />} />
                     <Route path="/footerPages/accessibilityStatement" element={<AccessibilityStatement />}/>
                     <Route path="/wishlist" element={<Wishlist />} />
                     <Route path="/voice-nav" element={<FloatingVoiceNavigation/> } />
                     <Route path="/submitGame" element={isLoggedIn ? <SubmitGame /> : <UserNotLoggedIn />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/voice-commands" element={<VoiceCommandsPage/> } />
                 </Routes>
-                <FloatingVoiceControl />
+                <FloatingVoiceNavigation/>
+                <VoiceCommandsIntro />
             </main>
 
             <Footer />

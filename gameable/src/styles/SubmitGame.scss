@@ -1,0 +1,24 @@
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+.media-section-title {
+  margin-top: 2rem;
+}
+
+.media-error {
+  // uses Bootstrap’s $danger if you import bootstrap first
+  color: $danger;
+}
+
+.submit-game-page {
+  .submit-game-form {
+    max-width: 720px;
+    margin: 0 auto;
+
+    .form-label {
+      display: block;
+      text-align: left;
+      font-weight: 600;
+    }
+  }
+}

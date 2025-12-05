@@ -1,5 +1,8 @@
+// File: src/components/common/GenreSelect.tsx
+
 import { useEffect, useState } from "react";
-import {settings} from "../../AppSettings.ts";
+import { settings } from "../../AppSettings.ts";
+import "../../styles/GenreSelect.scss";
 
 type Genre = { _id: string; name: string };
 
@@ -31,17 +34,15 @@ export default function GenreSelect({ selected, onChange }: Props) {
                 });
 
                 if (!res.ok) {
-                    // Try to parse JSON error body, but treat it as unknown
                     let body: unknown = null;
                     try {
                         body = await res.json();
                     } catch {
-                        // ignore JSON parse errors – keep body as null
+                        // ignore JSON parse errors
                     }
 
                     let msg: string;
 
-                    // Safely check for a string `error` property
                     if (
                         body &&
                         typeof body === "object" &&
@@ -81,7 +82,6 @@ export default function GenreSelect({ selected, onChange }: Props) {
         };
     }, []);
 
-
     function toggleGenre(id: string) {
         if (selected.includes(id)) {
             onChange(selected.filter((g) => g !== id));
@@ -99,11 +99,14 @@ export default function GenreSelect({ selected, onChange }: Props) {
             return;
         }
         try {
-            const res = await fetch("/api/genres", {
+            const res = await fetch(`${settings.apiBaseUrl}/api/genres`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                credentials: "include", // if cookies are used
-                body: JSON.stringify({ name: newName.trim(), description: newDescription.trim() }),
+                credentials: "include",
+                body: JSON.stringify({
+                    name: newName.trim(),
+                    description: newDescription.trim(),
+                }),
             });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const payload = await res.json();
@@ -121,40 +124,58 @@ export default function GenreSelect({ selected, onChange }: Props) {
         }
     }
 
-    if (loading) return <div>Loading genres...</div>;
-    if (error) return <div style={{ color: "red" }}>Error: {error}</div>;
+    if (loading) return <div className="genre-select-loading">Loading genres...</div>;
+    if (error) return <div className="genre-select-error">Error: {error}</div>;
 
     return (
-        <div style={{ display: "grid", gap: "8px" }}>
-            <div>
+        <div className="genre-select">
+            <div className="genre-select-grid">
                 {genres.map((genre) => (
-                    <label key={genre._id} style={{ display: "block" }}>
+                    <label
+                        key={genre._id}
+                        className="genre-select-item"
+                    >
                         <input
                             type="checkbox"
                             checked={selected.includes(genre._id)}
                             onChange={() => toggleGenre(genre._id)}
                         />
-                        {genre.name}
+                        <span className="genre-select-name">{genre.name}</span>
                     </label>
                 ))}
             </div>
-            <button type="button" onClick={() => setShowNewForm(!showNewForm)}>
+
+            <button
+                type="button"
+                className="genre-select-new-btn"
+                onClick={() => setShowNewForm(!showNewForm)}
+            >
                 {showNewForm ? "Cancel" : "+ New Genre"}
             </button>
+
             {showNewForm && (
-                <div style={{ border: "1px solid #ccc", padding: "8px", marginTop: "8px" }}>
+                <div className="genre-select-new-form">
                     <input
+                        className="genre-select-new-name"
                         placeholder="Genre name"
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                     />
                     <textarea
+                        className="genre-select-new-description"
                         placeholder="Description (optional)"
                         value={newDescription}
                         onChange={(e) => setNewDescription(e.target.value)}
                     />
-                    {createError && <div style={{ color: "red" }}>{createError}</div>}
-                    <button type="button" onClick={handleCreateGenre} disabled={creating}>
+                    {createError && (
+                        <div className="genre-select-create-error">{createError}</div>
+                    )}
+                    <button
+                        type="button"
+                        onClick={handleCreateGenre}
+                        disabled={creating}
+                        className="genre-select-create-btn"
+                    >
                         {creating ? "Creating..." : "Create Genre"}
                     </button>
                 </div>

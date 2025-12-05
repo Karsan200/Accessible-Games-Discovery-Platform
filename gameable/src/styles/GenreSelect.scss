@@ -1,0 +1,71 @@
+/* File: src/styles/GenreSelect.scss */
+
+.genre-select {
+  margin-top: 0.25rem;
+
+  .genre-select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .genre-select-item {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.25rem;
+    padding: 0.35rem 0.5rem;
+    background-color: #fff;
+
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      margin: 0;
+    }
+
+    .genre-select-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .genre-select-new-btn {
+    margin-top: 0.5rem;
+  }
+
+  .genre-select-new-form {
+    margin-top: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    .genre-select-new-name,
+    .genre-select-new-description {
+      width: 100%;
+    }
+
+    .genre-select-create-error {
+      color: red;
+      font-size: 0.85rem;
+    }
+
+    .genre-select-create-btn {
+      align-self: flex-start;
+    }
+  }
+
+  .genre-select-loading,
+  .genre-select-error {
+    font-size: 0.9rem;
+  }
+
+  .genre-select-error {
+    color: red;
+  }
+}
